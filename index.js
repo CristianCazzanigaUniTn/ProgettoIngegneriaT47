@@ -32,7 +32,8 @@ const swaggerDocs = swaggerJsDoc(swaggerOptions);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 //Qua le rotte
-app.use('/api/partecipazioni', partecipazioniRouter);
+app.use('', partecipazioniRouter);
+
 
 
 app.listen(port, () => {
