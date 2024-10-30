@@ -4,6 +4,52 @@ const connection = require('../db');
 
 /**
  * @swagger
+ * tags:
+ *   name: Commenti
+ *   description: Gestione dei commenti
+ */
+
+
+/**
+ * @swagger
+ * /api/Commenti/{id}:
+ *   get:
+ *     summary: Recupera un commento specifico tramite ID
+ *     tags: [Commenti]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         description: ID del commento da recuperare
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Dettagli del commento
+ *       404:
+ *         description: Commento non trovato
+ *       500:
+ *         description: Errore durante il recupero del commento
+ */
+router.get('/api/Commenti/:id', (req, res) => {
+    const commentoId = req.params.id;
+    connection.query(
+        'SELECT * FROM commenti WHERE id = ?',
+        [commentoId],
+        (err, results) => {
+            if (err) return res.status(500).json({ error: 'Errore nel recupero del commento' });
+            if (results.length === 0) {
+                return res.status(404).json({ error: 'Commento non trovato' });
+            }
+            res.status(200).json(results[0]); // Restituisce il primo risultato come singolo oggetto
+        }
+    );
+});
+
+
+
+/**
+ * @swagger
  * /api/Commenti/Post/{id}:
  *   get:
  *     summary: Recupera utenti partecipanti ad un evento

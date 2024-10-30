@@ -4,6 +4,7 @@ const swaggerJsDoc = require('swagger-jsdoc');
 //qua le costanti delle rotte
 const partecipazioniRouter = require('./routes/partecipazioni');
 const commentiRouter = require('./routes/commenti');
+const likesRouter = require('./routes/like');
 const connection = require('./db'); 
 
 const app = express();
@@ -36,6 +37,8 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 app.use('', partecipazioniRouter);
 
 app.use('', commentiRouter);
+
+app.use('', likesRouter);
 
 app.listen(port, () => {
     console.log(`Server in ascolto su http://localhost:${port}`);
