@@ -71,15 +71,10 @@ router.get('/api/utenti/:id', (req, res) => {
  *             properties:
  *               nome:
  *                 type: string
- *               cognome:
- *                 type: string
  *               email:
  *                 type: string
  *               password:
  *                 type: string
- *               data_registrazione:
- *                 type: string
- *                 format: date-time
  *               ruolo:
  *                 type: string
  *     responses:
@@ -87,11 +82,10 @@ router.get('/api/utenti/:id', (req, res) => {
  *         description: Utente creato
  */
 router.post('/api/utenti', (req, res) => {
-    const { nome, cognome, email, password, data_registrazione, ruolo } = req.body;
-    const formattedDataRegistrazione = data_registrazione.replace('T', ' ').slice(0, 19);
+    const { nome, email, password, ruolo } = req.body;
     connection.query(
-        'INSERT INTO utenti (nome, cognome, email, password, data_registrazione, ruolo, preferenze_notifica) VALUES (?, ?, ?, ?, ?, ?, ?)', 
-        [nome, cognome, email, password, formattedDataRegistrazione, ruolo, '{"email": true, "sms": true}'],
+        'INSERT INTO utenti (nome, email, password, data_registrazione, ruolo, preferenze_notifica) VALUES (?, ?, ?, NOW(), ?, ?)', 
+        [nome, email, password, ruolo, '{"email": true, "sms": true}'],
         (err, results) => {
             if (err) {
                 console.error('Errore nella creazione dell\'utente:', err); 
@@ -163,43 +157,61 @@ router.put('/api/utenti/:id', (req, res) => {
  *         description: Errore nell'eliminazione dell'utente
  */
 router.delete('/api/utenti/:id', (req, res) => {
-    connection.query('DELETE FROM utenti WHERE id = ?', [req.params.id], (err) => {
-        if (err) return res.status(500).json({ error: 'Errore nell\'eliminazione dell\'utente' });
-        res.status(204).send();
-    });
+  const userId = req.params.id;
+
+  // Prima elimina tutti i post associati
+  connection.query('DELETE FROM post WHERE utente_id = ?', [userId], (err) => {
+      if (err) return res.status(500).json({ error: 'Errore nell\'eliminazione dei post' });
+
+      // Poi elimina l'utente
+      connection.query('DELETE FROM utenti WHERE id = ?', [userId], (err) => {
+          if (err) return res.status(500).json({ error: 'Errore nell\'eliminazione dell\'utente' });
+          res.status(204).send();
+      });
+  });
 });
+
 
 /**
  * @swagger
- * /api/utenti:
- *    get:
- *      summary: Recupera gli utenti di un ruolo specifico
- *      tags: [Utenti]
- *      parameters:
- *         - name: ruolo
- *           in: path
- *           required: true
- *           description: Ruolo dell'utente
- *           schema:
- *             type: string
+ * /api/utenti/ruolo/{ruolo}:
+ *   get:
+ *     summary: Recupera gli utenti di un ruolo specifico
+ *     tags: [Utenti]
+ *     parameters:
+ *       - name: ruolo
+ *         in: query
+ *         required: true
+ *         description: Ruolo dell'utente
+ *         schema:
+ *           type: string
  *     responses:
  *       200:
- *          description: Utenti trovati
- *       404: 
- *          description: Utenti non trovati   
+ *         description: Utenti trovati
+ *       404:
+ *         description: Utenti non trovati
+ *       500:
+ *         description: Errore del server
  */
-router.get('/api/utenti/', (req,res) => {
-   connection.query('SELECT * FROM utenti WHERE ruolo = ?', [req.params.ruolo], (err, results) => {
-      if (err) return res.status(500).json({ error: 'Errore nel recupero degli utenti' });
-      if (results.length === 0) return res.status(404).json({ error: 'Utenti non trovati' });
-   });
-});
+router.get('/api/utenti/ruolo/:ruolo', (req, res) => {
+    const ruolo = req.query.ruolo;
+    
+    if (!ruolo) {
+       return res.status(400).json({ error: 'Parametro ruolo mancante' });
+    }
+ 
+    connection.query('SELECT * FROM utenti WHERE ruolo = ?', [ruolo], (err, results) => {
+       if (err) return res.status(500).json({ error: 'Errore nel recupero degli utenti' });
+       if (results.length === 0) return res.status(404).json({ error: 'Utenti non trovati' });
+       res.status(200).json(results);
+    });
+ });
 
 
 
 /**
  * @swagger
- * /api/utenti/{id}/username:
+ * /api/utenti/username/{id}:
  *   patch:
  *     summary: Aggiorna lo username di un utente specifico
  *     tags: [Utenti]
@@ -223,7 +235,7 @@ router.get('/api/utenti/', (req,res) => {
  *       204:
  *         description: Username aggiornato con successo
  */
-router.patch('/api/utenti/:id/username', (req, res) => {
+router.patch('/api/utenti/username/:id', (req, res) => {
     const { username } = req.body;
     const userId = req.params.id;
 
@@ -246,7 +258,7 @@ router.patch('/api/utenti/:id/username', (req, res) => {
 
 /**
  * @swagger
- * /api/utenti/{id}/profilo:
+ * /api/utenti/profilo/{id}:
  *   get:
  *     summary: Recupera il profilo di un utente con i suoi post giornalieri
  *     tags: [Utenti]
@@ -293,8 +305,17 @@ router.patch('/api/utenti/:id/username', (req, res) => {
  *                       data_creazione:
  *                         type: string
  *                         format: date-time
+ *                       luogo:
+ *                         type: string
+ *                       posizione_geografica:
+ *                         type: object
+ *                         properties:
+ *                          lat:
+ *                            type: number
+ *                          lng:
+ *                            type: number
  */
-router.get('/api/utenti/:id/profilo', (req, res) => {
+router.get('/api/utenti/profilo/:id', (req, res) => {
     const userId = req.params.id;
 
     connection.query('SELECT * FROM utenti WHERE id = ?', [userId], (err, utenteResults) => {

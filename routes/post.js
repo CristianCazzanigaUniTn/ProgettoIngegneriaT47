@@ -149,8 +149,8 @@ router.post('/api/post', (req, res) => {
     }
 
     connection.query(
-        'INSERT INTO post (utente_id, titolo, contenuto, data_creazione) VALUES (?, ?, ?, ?)',
-        [utente_id, titolo, contenuto, data_creazione],
+        'INSERT INTO post (utente_id, titolo, contenuto, data_creazione) VALUES (?, ?, ?, NOW())',
+        [utente_id, titolo, contenuto],
         (err, results) => {
             if (err) {
                 console.error('Errore nella creazione del post:', err);
@@ -226,7 +226,7 @@ router.delete('/api/post/:id', (req, res) => {
 
 /**
  * @swagger
- * /api/post/luogo:
+ * /api/postluogo:
  *   get:
  *     summary: Recupera i post in base alle coordinate geografiche
  *     tags: [Post]
@@ -251,16 +251,15 @@ router.delete('/api/post/:id', (req, res) => {
  *       500:
  *         description: Errore nel recupero dei post
  */
-router.get('/api/post/luogo', (req, res) => {
+router.get('/api/postluogo', (req, res) => {
     const { latitudine, longitudine } = req.query;
 
     if (!latitudine || !longitudine) {
         return res.status(400).json({ error: 'Coordinate mancanti o non valide' });
     }
 
-    // chiedi cri e pie
     connection.query(
-        'SELECT * FROM post WHERE posizione_geografica_latitudine = ? AND posizione_geografica_longitudine = ?',
+        'SELECT * FROM post WHERE ST_X(posizione_geografica) = ? AND  ST_Y(posizione_geografica)= ?',
         [latitudine, longitudine],
         (err, results) => {
             if (err) {
@@ -279,7 +278,7 @@ router.get('/api/post/luogo', (req, res) => {
  *     summary: Recupera i post di un utente specifico
  *     tags: [Post]
  *     parameters:
- *       - name: idUtente
+ *       - name: id
  *         in: path
  *         required: true
  *         description: ID dell'utente di cui recuperare i post
@@ -293,8 +292,8 @@ router.get('/api/post/luogo', (req, res) => {
  *       500:
  *         description: Errore nel recupero dei post
  */
-router.get('/api/post/utente/:idUtente', (req, res) => {
-    const idUtente = req.params.idUtente;
+router.get('/api/post/utente/:id', (req, res) => {
+    const idUtente = req.params.id; // Use 'id' instead of 'idUtente'
 
     connection.query('SELECT * FROM post WHERE utente_id = ?', [idUtente], (err, results) => {
         if (err) return res.status(500).json({ error: 'Errore nel recupero dei post' });
@@ -302,6 +301,7 @@ router.get('/api/post/utente/:idUtente', (req, res) => {
         res.status(200).json(results);
     });
 });
+
 
 
 module.exports = router;

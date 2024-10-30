@@ -3,6 +3,7 @@ const swaggerUi = require('swagger-ui-express');
 const swaggerJsDoc = require('swagger-jsdoc');
 //qua le costanti delle rotte
 const utentiRouter = require('./routes/utenti');
+const postRouter = require('./routes/post');
 const connection = require('./db'); 
 const app = express();
 const port = 3000;
@@ -32,6 +33,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 //Qua le rotte
 app.use('', utentiRouter);
+app.use('', postRouter);
 
 app.listen(port, () => {
     console.log('Server in ascolto su http://localhost:${port}');
