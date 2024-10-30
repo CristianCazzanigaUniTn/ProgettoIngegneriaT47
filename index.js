@@ -4,6 +4,7 @@ const swaggerJsDoc = require('swagger-jsdoc');
 //qua le costanti delle rotte
 const eventiRouter = require('./routes/eventi');
 const partyRouter = require('./routes/party');
+const faqeventiRouter = require('./routes/faqeventi');
 const connection = require('./db'); 
 
 const app = express();
@@ -35,6 +36,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 //Qua le rotte
 app.use('', eventiRouter);
 app.use('', partyRouter);
+app.use('', faqeventiRouter);
 
 
 app.listen(port, () => {
