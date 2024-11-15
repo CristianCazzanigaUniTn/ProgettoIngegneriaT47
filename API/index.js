@@ -1,44 +1,68 @@
+// index.js
+require('dotenv').config();
 const express = require('express');
+const mongoose = require('mongoose');
 const swaggerUi = require('swagger-ui-express');
-const swaggerJsDoc = require('swagger-jsdoc');
-//qua le costanti delle rotte
-const eventiRouter = require('./routes/eventi');
-const partyRouter = require('./routes/party');
-const faqeventiRouter = require('./routes/faqeventi');
-const connection = require('./db'); 
-
+const swaggerJsdoc = require('swagger-jsdoc');
+const authRoutes = require('./routes/authRoutes');
+const userRoutes = require('./routes/userRoutes');
 const app = express();
-const port = 3000;
+
+const PORT = process.env.PORT || 3000;
+const DB = process.env.DB;
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 
 const swaggerOptions = {
-    swaggerDefinition: {
+    definition: {
         openapi: '3.0.0',
         info: {
-            title: 'API di Evently',
+            title: 'API Documentation',
             version: '1.0.0',
-            description: 'Documentazione delle API per il progetto Evently',
+            description: 'A simple Express API application for user authentication',
         },
         servers: [
             {
                 url: 'http://localhost:3000',
             },
         ],
+        components: {
+            securitySchemes: {
+                bearerAuth: {
+                    type: 'http',
+                    scheme: 'bearer',
+                    bearerFormat: 'JWT',
+                },
+            },
+        },
+        security: [
+            {
+                bearerAuth: [],
+            },
+        ],
     },
-    apis: ['./routes/*.js'], 
+    apis: ['./routes/authRoutes.js', './routes/userRoutes.js'], 
 };
 
-const swaggerDocs = swaggerJsDoc(swaggerOptions);
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
-
-//Qua le rotte
-app.use('', eventiRouter);
-app.use('', partyRouter);
-app.use('', faqeventiRouter);
+const swaggerSpec = swaggerJsdoc(swaggerOptions);
 
 
-app.listen(port, () => {
-    console.log(`Server in ascolto su http://localhost:${port}`);
-});
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+
+app.use(authRoutes);
+app.use(userRoutes);
+
+
+mongoose.connect(DB)
+    .then(() => {
+        console.log('Connected to MongoDB');
+        app.listen(PORT, () => {
+            console.log(`Example app listening at http://localhost:${PORT}`);
+        });
+    })
+    .catch((err) => {
+        console.log('Failed to connect to MongoDB', err);
+    });
