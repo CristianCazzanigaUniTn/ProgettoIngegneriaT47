@@ -6,6 +6,7 @@ const swaggerUi = require('swagger-ui-express');
 const swaggerJsdoc = require('swagger-jsdoc');
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
+const commentiRoutes = require('./routes/commentiRoutes');
 const app = express();
 
 const PORT = process.env.PORT || 3000;
@@ -36,14 +37,9 @@ const swaggerOptions = {
                     bearerFormat: 'JWT',
                 },
             },
-        },
-        security: [
-            {
-                bearerAuth: [],
-            },
-        ],
+        }
     },
-    apis: ['./routes/authRoutes.js', './routes/userRoutes.js'], 
+    apis: ['./routes/authRoutes.js', './routes/userRoutes.js', './routes/commentiRoutes.js'], 
 };
 
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
@@ -54,7 +50,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use(authRoutes);
 app.use(userRoutes);
-
+app.use(commentiRoutes);
 
 mongoose.connect(DB)
     .then(() => {
