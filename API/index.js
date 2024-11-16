@@ -7,6 +7,7 @@ const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const eventRoutes = require('./routes/eventRoutes');
 const partyRoutes = require('./routes/partyRoutes');
+const faqRoutes = require('./routes/faqRoutes');
 const app = express();
 
 const PORT = process.env.PORT || 3000;
@@ -44,7 +45,7 @@ const swaggerOptions = {
             },
         ],
     },
-    apis: ['./routes/authRoutes.js', './routes/userRoutes.js', './routes/eventRoutes.js', './routes/partyRoutes.js'], 
+    apis: ['./routes/authRoutes.js', './routes/userRoutes.js', './routes/eventRoutes.js', './routes/partyRoutes.js', './routes/faqRoutes.js'], 
 };
 
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
@@ -57,6 +58,7 @@ app.use(authRoutes);
 app.use(userRoutes);
 app.use(eventRoutes);
 app.use(partyRoutes);
+app.use(faqRoutes);
 
 mongoose.connect(DB)
     .then(() => {

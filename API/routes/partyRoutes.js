@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 const Party = require('../model/Party'); // Assicurati che il percorso sia corretto
-const User = require('../model/User');
 const Category = require('../model/Category');
 const tokenChecker = require('../src/TokenChecker');
 

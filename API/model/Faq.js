@@ -1,14 +1,34 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-var CategorySchema = new Schema({
-    nome: {
+var FaqSchema = new Schema({
+    
+    evento: {
+        type: Schema.Types.ObjectId,
+        ref: 'Event',
+        required: true,
+    },
+    utente: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        required: true,
+    },
+    domanda: {
         type: String,
         required: true,
         trim: true,
-    }
+    },
+    risposta: {
+        type: String,
+        trim: true,
+    },
+    data_creazione: {
+        type: Date,
+        default: Date.now,
+    },
+
 });
 
-const Category = mongoose.model('Categorie', CategorySchema, 'Categorie');
+const Faq = mongoose.model('Faq', FaqSchema, 'Faq');
 
-module.exports = Category;
+module.exports = Faq;

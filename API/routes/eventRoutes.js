@@ -125,7 +125,7 @@ router.post('/api/eventi', tokenChecker, async (req, res) => {
             return res.status(403).json({ error: 'Utente non autenticato' });
 
         if(req.user.ruolo.toString() != "organizzatore")
-            return res.status(403).json({ error: 'Non autorizzato a eliminare questo evento' });
+            return res.status(403).json({ error: 'Non autorizzato a creare questo evento' });
 
         const lat = 0;
         const lng = 0;
