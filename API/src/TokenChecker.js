@@ -12,7 +12,6 @@ const tokenChecker = (req, res, next) => {
         if (err) {
             return res.status(401).json({ success: false, message: 'Failed to authenticate token' });
         }
-        
         req.user = decoded;
         next();
     });
