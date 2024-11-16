@@ -1,4 +1,3 @@
-
 const express = require('express');
 const User = require('../model/User');
 const tokenChecker = require('../src/TokenChecker');
@@ -24,23 +23,32 @@ const router = express.Router();
  */
 router.get('/api/v1/users', tokenChecker, async (req, res) => {
     try {
-        const user = await User.findOne({ username: req.user.username }).exec();
+        console.log("Dati utente nel controller:", req.user);
+        if (!req.user || !req.user._id) {
+            return res.status(401).json({ success: false, message: 'Token not valid or missing' });
+        }
+        const user = await User.findOne({ _id: req.user._id }).exec();  
         if (user) {
             res.status(200).json({
-                self: 'api/v1/users/' + user._id,
-                username: user.username,
-                email: user.email,
-                genere: user.genere,
-                data_registrazione: user.data_registrazione,
-                preferenze_notifiche: user.preferenze_notifiche,
-                ruolo: user.ruolo
+                success: true,
+                user: {
+                    self: 'api/v1/users/' + user._id,
+                    username: user.username,
+                    email: user.email,
+                    genere: user.genere,
+                    data_registrazione: user.data_registrazione,
+                    preferenze_notifiche: user.preferenze_notifiche,
+                    ruolo: user.ruolo
+                }
             });
         } else {
             res.status(404).json({ success: false, message: 'User not found' });
         }
     } catch (err) {
-        res.status(500).json({ success: false, message: 'Server error', error: err });
+        console.error('Error fetching user:', err);
+        res.status(500).json({ success: false, message: 'Server error', error: err.message || err });
     }
 });
+
 
 module.exports = router;

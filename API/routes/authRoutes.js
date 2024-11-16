@@ -1,4 +1,3 @@
-
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const User = require('../model/User');
@@ -38,7 +37,7 @@ router.post('/api/v1/authentications', async (req, res) => {
         if (user) {
             const isMatch = await user.comparePassword(password);
             if (isMatch) {
-                const token = jwt.sign({ username: user.username }, SECRET, { expiresIn: '1h' });
+                const token = jwt.sign({ _id: user._id, ruolo: user.ruolo}, SECRET, { expiresIn: '1h' });
                 res.status(200).json({
                     success: true,
                     message: 'Authentication success',
@@ -55,4 +54,4 @@ router.post('/api/v1/authentications', async (req, res) => {
     }
 });
 
-module.exports = router;
+module.exports = router;

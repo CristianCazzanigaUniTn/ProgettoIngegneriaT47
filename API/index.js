@@ -1,4 +1,3 @@
-// index.js
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
@@ -6,6 +5,8 @@ const swaggerUi = require('swagger-ui-express');
 const swaggerJsdoc = require('swagger-jsdoc');
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
+const eventRoutes = require('./routes/eventRoutes');
+const partyRoutes = require('./routes/partyRoutes');
 const app = express();
 
 const PORT = process.env.PORT || 3000;
@@ -43,7 +44,7 @@ const swaggerOptions = {
             },
         ],
     },
-    apis: ['./routes/authRoutes.js', './routes/userRoutes.js'], 
+    apis: ['./routes/authRoutes.js', './routes/userRoutes.js', './routes/eventRoutes.js', './routes/partyRoutes.js'], 
 };
 
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
@@ -54,7 +55,8 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use(authRoutes);
 app.use(userRoutes);
-
+app.use(eventRoutes);
+app.use(partyRoutes);
 
 mongoose.connect(DB)
     .then(() => {

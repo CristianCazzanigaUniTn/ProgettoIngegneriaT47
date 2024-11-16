@@ -40,7 +40,7 @@ var UserSchema = new Schema({
     },
     ruolo: {
         type: String,
-        enum: ['organizzatore', 'partecipante', 'amministratore'], 
+        enum: ['organizzatore', 'utente_base', 'amministratore'], 
         required: true,
     }
 });
@@ -57,6 +57,6 @@ UserSchema.methods.comparePassword = function(password) {
     // return bcrypt.compare(password, this.password); 
 };
 
-const User = mongoose.model('User', UserSchema, 'User');  
+const User = mongoose.model('Utenti', UserSchema, 'Utenti');  
 
 module.exports = User;
