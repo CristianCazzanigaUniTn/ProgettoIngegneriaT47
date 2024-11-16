@@ -7,6 +7,7 @@ const swaggerJsdoc = require('swagger-jsdoc');
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const likeRoutes = require('./routes/likeRoutes');
+const partecipazioniRoutes = require('./routes/partecipazioniRoutes');
 const commentiRoutes = require('./routes/commentiRoutes');
 const app = express();
 
@@ -40,7 +41,7 @@ const swaggerOptions = {
             },
         }
     },
-    apis: ['./routes/authRoutes.js', './routes/userRoutes.js', './routes/commentiRoutes.js', './routes/likeRoutes.js'], 
+    apis: ['./routes/authRoutes.js', './routes/userRoutes.js', './routes/commentiRoutes.js', './routes/likeRoutes.js', './routes/partecipazioniRoutes.js'], 
 };
 
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
@@ -53,7 +54,7 @@ app.use(authRoutes);
 app.use(userRoutes);
 app.use(commentiRoutes);
 app.use(likeRoutes);
-
+app.use(partecipazioniRoutes);
 mongoose.connect(DB)
     .then(() => {
         console.log('Connected to MongoDB');

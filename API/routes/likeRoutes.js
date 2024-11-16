@@ -35,21 +35,15 @@ const router = express.Router();
 router.post('/api/like/:post_id', tokenChecker, async (req, res) => {
     const { post_id } = req.params;
     const user_id = req.user._id;
-
     try {
-        // Verifica se il post esiste
         const post = await Post.findById(post_id);
         if (!post) {
             return res.status(404).json({ error: 'Post non trovato' });
         }
-
-        // Verifica se l'utente ha già messo un like a questo post
         const existingLike = await Like.findOne({ post_id, utente_id: user_id });
         if (existingLike) {
             return res.status(400).json({ error: 'Hai già messo un like su questo post' });
         }
-
-        // Crea il nuovo like
         const nuovoLike = new Like({
             data_creazione: new Date(),
             post_id,
@@ -181,14 +175,10 @@ router.post('/api/commenti/:commento_id/like', tokenChecker, async (req, res) =>
         if (!commento) {
             return res.status(404).json({ error: 'Commento non trovato' });
         }
-
-        // Verifica se l'utente ha già messo un like a questo commento
         const existingLike = commento.like.find((like) => like.utente_id.toString() === user_id.toString());
         if (existingLike) {
             return res.status(400).json({ error: 'Hai già messo un like a questo commento' });
         }
-
-        // Aggiungi il like
         commento.like.push({
             utente_id: user_id,
         });
@@ -229,23 +219,17 @@ router.post('/api/commenti/:commento_id/like', tokenChecker, async (req, res) =>
 router.delete('/api/commenti/:commento_id/like', tokenChecker, async (req, res) => {
     const { commento_id } = req.params;
     const user_id = req.user._id;
-
     try {
         const commento = await Commento.findById(commento_id);
         if (!commento) {
             return res.status(404).json({ error: 'Commento non trovato' });
         }
-
-        // Verifica se l'utente ha messo un like
         const likeIndex = commento.like.findIndex((like) => like.utente_id.toString() === user_id.toString());
         if (likeIndex === -1) {
             return res.status(404).json({ error: 'Non hai messo un like a questo commento' });
         }
-
-        // Rimuovi il like
         commento.like.splice(likeIndex, 1);
         await commento.save();
-
         res.status(200).json({ message: 'Like rimosso con successo' });
     } catch (err) {
         console.error('Errore nella rimozione del like:', err);
