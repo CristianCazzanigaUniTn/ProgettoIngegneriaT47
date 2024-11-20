@@ -52,7 +52,7 @@ router.get('/api/Commenti/:id', (req, res) => {
  * @swagger
  * /api/Commenti/Post/{id}:
  *   get:
- *     summary: Recupera utenti partecipanti ad un evento
+ *     summary: Recupera commenti di un post
  *     tags: [Commenti]
  *     parameters:
  *       - name: id
