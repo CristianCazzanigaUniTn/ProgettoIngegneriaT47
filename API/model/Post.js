@@ -37,15 +37,16 @@ const postSchema = new Schema({
         type: String,
         required: true,
     },
-
-
     posizione: {
-        type: Schema.Types.ObjectId,
-        ref: 'Posizione',
-        required: true
+        latitudine: {
+            type: Number,
+            required: true,
+        },
+        longitudine: {
+            type: Number,
+            required: true,
+        }
     },
-
-
     data_creazione: {
         type: Date,
         default: Date.now,
