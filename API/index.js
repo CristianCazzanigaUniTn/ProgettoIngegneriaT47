@@ -1,3 +1,4 @@
+// index.js
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
@@ -5,9 +6,9 @@ const swaggerUi = require('swagger-ui-express');
 const swaggerJsdoc = require('swagger-jsdoc');
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
-const eventRoutes = require('./routes/eventRoutes');
-const partyRoutes = require('./routes/partyRoutes');
-const faqRoutes = require('./routes/faqRoutes');
+const likeRoutes = require('./routes/likeRoutes');
+const partecipazioniRoutes = require('./routes/partecipazioniRoutes');
+const commentiRoutes = require('./routes/commentiRoutes');
 const app = express();
 
 const PORT = process.env.PORT || 3000;
@@ -38,14 +39,9 @@ const swaggerOptions = {
                     bearerFormat: 'JWT',
                 },
             },
-        },
-        security: [
-            {
-                bearerAuth: [],
-            },
-        ],
+        }
     },
-    apis: ['./routes/authRoutes.js', './routes/userRoutes.js', './routes/eventRoutes.js', './routes/partyRoutes.js', './routes/faqRoutes.js'], 
+    apis: ['./routes/authRoutes.js', './routes/userRoutes.js', './routes/commentiRoutes.js', './routes/likeRoutes.js', './routes/partecipazioniRoutes.js'], 
 };
 
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
@@ -56,10 +52,9 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use(authRoutes);
 app.use(userRoutes);
-app.use(eventRoutes);
-app.use(partyRoutes);
-app.use(faqRoutes);
-
+app.use(commentiRoutes);
+app.use(likeRoutes);
+app.use(partecipazioniRoutes);
 mongoose.connect(DB)
     .then(() => {
         console.log('Connected to MongoDB');

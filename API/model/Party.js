@@ -1,8 +1,9 @@
 const mongoose = require('mongoose');
+
 const Schema = mongoose.Schema;
 
 
-const PartySchema = new Schema({
+const EventoSchema = new Schema({
     nome: {
         type: String,
         required: true
@@ -54,6 +55,6 @@ const PartySchema = new Schema({
 });
 
 
-const Party = mongoose.model('Party', PartySchema, 'Party');
+const Party = mongoose.model('Party', EventoSchema, 'Party');
 
 module.exports = Party;
