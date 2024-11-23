@@ -64,6 +64,8 @@ router.post('/api/like/:post_id', tokenChecker, async (req, res) => {
  *   delete:
  *     summary: Rimuovi un like da un post
  *     tags: [Like]
+ *     security:
+ *       - bearerAuth: []  # Protegge la rotta con il JWT
  *     parameters:
  *       - name: like_id
  *         in: path

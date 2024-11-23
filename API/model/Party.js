@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const Posizione = require('./Posizione'); 
+
 const Schema = mongoose.Schema;
 
 
