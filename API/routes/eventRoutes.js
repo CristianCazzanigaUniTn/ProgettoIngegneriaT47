@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
-const Event = require('../model/Event'); // Assicurati che il percorso sia corretto
+const Event = require('../model/Evento'); // Assicurati che il percorso sia corretto
 const tokenChecker = require('../src/TokenChecker')
-const Category = require('../model/Category');
+const Category = require('../model/Categoria');
 
 /**
  * @swagger
@@ -165,9 +165,9 @@ router.post('/api/eventi', tokenChecker, async (req, res) => {
             },
             numero_massimo_partecipanti,
             foto,
-            organizzatore: req.user._id, 
+            Organizzatore: req.user._id, 
             data_creazione: data_creazione ? new Date(data_creazione) : undefined,
-            categoria: id_categoria 
+            Categoria: id_categoria 
         });
 
         const eventoCreato = await nuovoEvento.save();
@@ -211,7 +211,7 @@ router.delete('/api/eventi/:id', tokenChecker, async (req, res) => {
             return res.status(404).json({ error: 'Evento non trovato' });
         if(!req.user)
             return res.status(403).json({ error: 'Utente non autenticato' });
-        if(evento.organizzatore.toString() != req.user._id.toString())
+        if(evento.Organizzatore.toString() != req.user._id.toString())
             return res.status(403).json({ error: 'Non autorizzato a eliminare questo evento' });
         await Event.findByIdAndDelete(eventoId);
         res.status(200).json({ message: 'Evento eliminato con successo' });
@@ -292,7 +292,7 @@ router.get('/api/eventi/organizzatore/:organizzatore_id', async (req, res) => {
         const organizzatoreId = new mongoose.Types.ObjectId(req.params.organizzatore_id);
 
         // Cerca gli eventi associati a quell'organizzatore
-        const events = await Event.find({ organizzatore: organizzatoreId });
+        const events = await Event.find({ Organizzatore: organizzatoreId });
 
         if (events.length === 0) {
             return res.status(404).json({ error: 'Nessun evento trovato' });
@@ -326,7 +326,7 @@ router.get('/api/eventi/organizzatore/:organizzatore_id', async (req, res) => {
  */
 router.get('/api/eventi/categoria/:categoria', async (req, res) => {
     try {
-        const events = await Event.find({ categoria: req.params.categoria });
+        const events = await Event.find({ Categoria: req.params.categoria });
         if (events.length === 0) {
             return res.status(404).json({ error: 'Nessun evento trovato' });
         }

@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 const Party = require('../model/Party'); // Assicurati che il percorso sia corretto
-const Category = require('../model/Category');
+const Category = require('../model/Categoria');
 const tokenChecker = require('../src/TokenChecker');
 
 
@@ -165,9 +165,9 @@ router.post('/api/party', tokenChecker, async (req, res) => {
             },
             numero_massimo_partecipanti,
             foto,
-            organizzatore: req.user._id, // Assumendo che sia un ObjectId valido
+            Organizzatore: req.user._id, // Assumendo che sia un ObjectId valido
             data_creazione: data_creazione ? new Date(data_creazione) : undefined,
-            categoria: id_categoria // Assumendo che sia un ObjectId valido
+            Categoria: id_categoria // Assumendo che sia un ObjectId valido
         });
 
         const savedParty = await newParty.save();
@@ -210,7 +210,7 @@ router.delete('/api/party/:id', tokenChecker, async (req, res) => {
             return res.status(404).json({ error: 'Party non trovato' });
         if(!req.user)
             return res.status(403).json({ error: 'Utente non autenticato' });
-        if(party.organizzatore.toString() != req.user._id.toString())
+        if(party.Organizzatore.toString() != req.user._id.toString())
             return res.status(403).json({ error: 'Non autorizzato a eliminare questo party' });
         await Party.findByIdAndDelete(partyId);
         res.status(200).json({ message: 'Party eliminato con successo' });
@@ -288,7 +288,7 @@ router.post('/api/party/coordinate', async (req, res) => {
  */
 router.get('/api/party/organizzatore/:organizzatore_id', async (req, res) => {
     try {
-        const parties = await Party.find({ organizzatore: req.params.organizzatore_id });
+        const parties = await Party.find({ Organizzatore: req.params.organizzatore_id });
         if (parties.length === 0) {
             return res.status(404).json({ error: 'Nessun party trovato' });
         }
@@ -319,7 +319,7 @@ router.get('/api/party/organizzatore/:organizzatore_id', async (req, res) => {
  */
 router.get('/api/party/categoria/:categoria', async (req, res) => {
     try {
-        const parties = await Party.find({ categoria: req.params.categoria });
+        const parties = await Party.find({ Categoria: req.params.categoria });
         if (parties.length === 0) {
             return res.status(404).json({ error: 'Nessun party trovato' });
         }

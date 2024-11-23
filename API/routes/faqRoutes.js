@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
-const Event = require('../model/Event'); // Assicurati che il percorso sia corretto
+const Event = require('../model/Evento'); // Assicurati che il percorso sia corretto
 const tokenChecker = require('../src/TokenChecker');
 const Faq = require('../model/Faq');
 

@@ -1,24 +1,23 @@
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-var EventSchema = new Schema({
+
+const EventoSchema = new Schema({
     nome: {
         type: String,
-        required: true,
-        trim: true,
+        required: true
     },
     descrizione: {
         type: String,
-        required: true,
-        trim: true,
+        required: true
     },
     data_inizio: {
         type: Date,
-        default: Date.now,
-    }, 
+        required: true
+    },
     luogo: {
         type: String,
-        required: true,
+        required: true
     },
     posizione: {
         latitudine: {
@@ -32,28 +31,29 @@ var EventSchema = new Schema({
     },
     numero_massimo_partecipanti: {
         type: Number,
-        required: false,
+        required: true
     },
     foto: {
         type: String,
-        required: false,
+        required: true
     },
-    organizzatore: {
+    Organizzatore: {
         type: Schema.Types.ObjectId,
-        ref: 'User',
-        required: true,
+        ref: 'User', 
+        required: true
     },
     data_creazione: {
         type: Date,
-        default: Date.now,
+        default: Date.now
     },
-    categoria: {
+    Categoria: {
         type: Schema.Types.ObjectId,
-        ref: 'Category', 
-        required: true,
+        ref: 'Categoria', 
+        required: true
     }
 });
 
-const Event = mongoose.model('Eventi', EventSchema, 'Eventi');
 
-module.exports = Event;
+const Evento = mongoose.model('Evento', EventoSchema, 'Evento');
+
+module.exports = Evento;
