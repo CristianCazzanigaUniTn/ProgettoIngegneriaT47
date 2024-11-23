@@ -21,9 +21,14 @@ const EventoSchema = new Schema({
         required: true
     },
     posizione: {
-        type: Schema.Types.ObjectId,  
-        ref: 'Posizione',            
-        required: true
+        latitudine: {
+            type: Number,
+            required: true,
+        },
+        longitudine: {
+            type: Number,
+            required: true,
+        }
     },
     numero_massimo_partecipanti: {
         type: Number,
