@@ -33,7 +33,6 @@ body {
     top: 0;
     margin-top: 2%;
     width: calc(100% - 160px); 
-    margin-left: 80px;
     border-radius: 10px; 
     z-index: 1000;
 }
@@ -49,6 +48,15 @@ body {
 .navbar-left {
     position: absolute;
     left: 40px; 
+    display: flex;
+    align-items: center;
+}
+.navbar-left h1{
+    margin-left: 20px;
+    font-family: "Rubik Glitch", system-ui;
+    font-weight: 400;
+    font-size: 40px;
+    font-style: normal;
 }
 
 .navbar-left .logo {

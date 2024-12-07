@@ -16,57 +16,76 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <script type="module" src='./script/mapPage/map.js'></script>
+    <script type="text/javascript" src='./script/mapPage/loader.js'></script>
     <link href="https://fonts.googleapis.com/css2?family=Rubik+Glitch&display=swap" rel="stylesheet">
     <title>Pagina con Sfondo</title>
 </head>
 
 <body>
-    <nav class="navbar">
-        <div class="navbar-left">
-            <img src="./image/logo.png" alt="Logo" class="logo">
+    <div id="loader">
+        <div class="left-curtain"></div>
+        <div class="right-curtain"></div>
+        <div class="center-content">
+            <h1>Loading..</h1>
+            <img src="/image/attendi.png" alt="Logoload" class="logoload">
         </div>
-        <div class="navbar-center">
-            <a id="home" href="login.html">HOME</a>
-            <a id="mappa" href="mappa.html">MAPPA</a>
-            <a id="profilo" href="profilo.html">PROFILO</a>
-            <a id="chisiamo" href="#chi-siamo">CHI SIAMO</a>
-        </div>
-        <div class="navbar-right">
-            <input type="text" placeholder="Cerca" class="search-bar">
-            <img src="./image/imp.png" alt="Impostazioni" class="settings-icon">
-        </div>
-    </nav>
-    <div class="container-box">
-        <div class="left">
-            <aside class="sidebar">
-            </aside>
-        </div>
-        <div class="right">
-            <div id="popupDiv">
-                <button id="chiusura">×</button>
-                <div class="instagram-card">
-                  <div class="instagram-card-header">
-                    <img id="popupFotoProfilo" class="instagram-card-user-image" />
-                    <div>
-                      <a class="instagram-card-user-name" id="popupNomeProfilo">ciucgamer</a>
-                      <div class="instagram-card-time">13:02</div>
-                    </div>
-                  </div>
-                  <div class="instagram-card-image">
-                    <img id="popupImg" src="" alt="Foto" />
-                  </div>
-                  <div class="instagram-card-content">
-                    <p id="popupText" class="likes">Questa è una breve descrizione del marker.</p>
-                  </div>
+    </div>
+
+    <div class="content">
+        <nav class="navbar">
+            <div class="navbar-left">
+                <img src="./image/logo.png" alt="Logo" class="logo">
+                <h1>Evently</h1>
+            </div>
+            <div class="navbar-center">
+                <div></div>
+                <a id="home" href="login.html">CoomingSoon</a>
+                <a id="mappa" style="color: rgb(24, 198, 18); font-weight: bold;" href="mappa.html">MAPPA</a>
+                <a id="profilo" style="color: rgb(255, 255, 255);" href="profilo.html">PROFILO</a>
+                <a id="chisiamo" href="#chi-siamo">CHI SIAMO</a>
+            </div>
+            <div class="navbar-right">
+                <input type="text" placeholder="Cerca" class="search-bar">
+                <img src="./image/imp.png" alt="Impostazioni" class="settings-icon">
+            </div>
+        </nav>
+        <div class="container-box">
+            <div class="left">
+                <div class="filtri">
+                    <img src="image/filtri.png">
+                    <img src="image/ordina.png">
                 </div>
-              </div>
-            <div id="markers-on-the-map">
-                <div id="map"></div>
+                <aside class="sidebar">
+                </aside>
+            </div>
+            <div class="right">
+                <div id="popupDiv">
+                    <button id="chiusura">×</button>
+                    <div class="instagram-card">
+                        <div class="instagram-card-header">
+                            <img id="popupFotoProfilo" class="instagram-card-user-image" />
+                            <div>
+                                <a class="instagram-card-user-name" id="popupNomeProfilo">ciucgamer</a>
+                                <div class="instagram-card-time">13:02</div>
+                            </div>
+                        </div>
+                        <div class="instagram-card-image">
+                            <img id="popupImg" src="" alt="Foto" />
+                        </div>
+                        <div class="instagram-card-content">
+                            <p id="popupText" class="likes">Questa è una breve descrizione del marker.</p>
+                        </div>
+                    </div>
+                </div>
+                <div id="markers-on-the-map">
+                    <div id="map"></div>
+                </div>
+
             </div>
 
         </div>
-
     </div>
+
 
 
 </body>
