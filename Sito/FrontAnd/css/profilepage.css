@@ -83,7 +83,7 @@
 .right {
     scrollbar-width: none; /* Firefox */
 }
-.listaPost
+.listacards
 {
     border-radius: 55px;
     width: 65%;
@@ -95,7 +95,7 @@
     padding-top: 20px;  
 }
 
-.post {
+.card {
     width: 90%;
     height: 0;
     padding-top: 50%;
@@ -103,7 +103,37 @@
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4); 
     background-size: cover;
     background-repeat: no-repeat; 
+    background-position: center;
+    display: flex;
+    position: relative;
     overflow: hidden; 
+}
+
+.card-content {
+    background-color: rgba(0, 0, 0, 0.5);  /* Sfondo semi-trasparente per la parte del contenuto */
+    color: white;
+    padding: 15px;
+    border-radius: 15px;
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    text-align: center;
+}
+
+.card-title {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.card-description {
+    font-size: 14px;
+    font-weight: lighter;
+}
+
+.card:hover {
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6); /* Aggiungi un effetto di hover per il bordo */
+    transform: scale(1.05); /* Leggero ingrandimento al passaggio del mouse */
+    transition: all 0.3s ease; /* Aggiungi transizione fluida */
 }
 
 .titoloOggi
