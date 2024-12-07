@@ -1,0 +1,128 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0; 
+    overflow: hidden;
+    background-image: url('/image/background.png');
+    background-size: cover; 
+    background-repeat: no-repeat; 
+    background-position: center;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    height: 100vh;
+    font-family: "Montserrat", sans-serif;
+    width: 100vw;
+    background-color: #000;
+    color: white;
+}
+
+
+.navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 40px 40px; 
+    background-color: rgba(0, 0, 0, 0); 
+    position: fixed;
+    top: 0;
+    margin-top: 2%;
+    width: calc(100% - 160px); 
+    margin-left: 80px;
+    border-radius: 10px; 
+    z-index: 1000;
+}
+
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #000; 
+    color: white;
+}
+
+
+.navbar-left {
+    position: absolute;
+    left: 40px; 
+}
+
+.navbar-left .logo {
+    height: 80px;
+    cursor: pointer;
+}
+
+.navbar-center {
+    display: flex;
+    gap: 70px; 
+    position: absolute;
+    left: 50%; 
+    transform: translateX(-50%); 
+}
+
+.navbar-center a {
+    color: white;
+    text-decoration: none;
+    font-size: 25px;
+    transition: color 0.3s;
+}
+
+.navbar-center a:hover {
+    color: #00bcd4; 
+}
+
+
+.navbar-right {
+    position: absolute; 
+    right: 40px; 
+    display: flex;
+    align-items: center;
+    gap: 40px;
+}
+
+.search-bar {
+    padding: 5px 10px;
+    border: 2px solid white;
+    border-radius: 20px;
+    background-color: transparent;
+    color: white;
+    font-weight:lighter;
+    outline: none;
+    font-size: 14px;
+    height: 40px;
+    width: 280px;
+}
+
+#home{
+    font-weight: bold;
+}
+
+#mappa{
+    color: gray;
+}
+
+#profilo{
+    color: gray;
+}
+
+#chisiamo{
+    font-weight:lighter;
+}
+.search-bar::placeholder {
+    color: white;
+    opacity: 0.7;
+}
+
+.settings-icon {
+    height: 35px;
+    cursor: pointer;
+    transition: transform 0.3s;
+}
+
+.settings-icon:hover {
+    transform: rotate(90deg); 
+}

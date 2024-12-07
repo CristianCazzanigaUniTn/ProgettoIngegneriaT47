@@ -1,0 +1,105 @@
+/* Login Box */
+.login-box {
+    background-color: rgba(64, 111, 187, 0.311); 
+    padding: 40px 30px;
+    border-radius: 55px;
+    text-align: center;
+    width: 400px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.small-text {
+    font-size: 16px;
+    color: #000000;
+    margin: 0 auto 15px;
+    max-width: 200px;
+    font-weight: bold;
+    font-family: "Montserrat", sans-serif;
+    word-wrap: break-word;
+}
+
+
+.title {
+    font-size: 52px;
+    color: #ffffff;
+    font-family: "Rubik Glitch", system-ui;
+    font-weight: 400;
+    font-style: normal;
+    margin-bottom: 20px;
+}
+
+.sub-text {
+    font-family: "Montserrat", sans-serif;
+    font-size: 18px;
+    font-weight:bold;
+    color: #ffffff;
+    margin-bottom: 30px;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.input-field {
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    font-size: 14px;
+    color: #ffffff;
+    background-color: #c7c5c5;
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.btn {
+    padding: 10px 20px;
+    width: 180px;
+    border: none;
+    border-radius: 25px;
+    font-family: "Montserrat", sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.access {
+    background-color: #36d598; 
+    color: white;
+}
+
+.access:hover {
+    background-color: #0097a7; 
+}
+
+.register {
+    background-color: #36d598; 
+    color: white;
+}
+
+.register:hover {
+    background-color: #0097a7; 
+}
+
+/* Google Icon */
+.google-login {
+    margin-top: 20px;
+}
+
+.google-icon {
+    height: 50px;
+    cursor: pointer;
+    transition: transform 0.3s;
+}
+
+.google-icon:hover {
+    transform: scale(1.1); /* Ingrandisce leggermente al passaggio del mouse */
+}
