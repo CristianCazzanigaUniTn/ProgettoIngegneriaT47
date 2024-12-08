@@ -1,5 +1,6 @@
 // index.js
 require('dotenv').config();
+const cors = require('cors'); // Importa il pacchetto cors
 const express = require('express');
 const mongoose = require('mongoose');
 const swaggerUi = require('swagger-ui-express');
@@ -12,6 +13,7 @@ const commentiRoutes = require('./routes/commentiRoutes');
 const eventRoutes = require('./routes/eventRoutes');
 const partyRoutes = require('./routes/partyRoutes');
 const faqRoutes = require('./routes/faqRoutes');
+const postRoutes = require('./routes/postRoutes');
 
 
 const app = express();
@@ -46,7 +48,7 @@ const swaggerOptions = {
             },
         }
     },
-    apis: ['./routes/authRoutes.js', './routes/userRoutes.js', './routes/commentiRoutes.js', './routes/likeRoutes.js', './routes/partecipazioniRoutes.js', './routes/eventRoutes.js', './routes/partyRoutes.js', './routes/faqRoutes.js'], 
+    apis: ['./routes/authRoutes.js', './routes/userRoutes.js', './routes/commentiRoutes.js', './routes/likeRoutes.js', './routes/partecipazioniRoutes.js', './routes/eventRoutes.js', './routes/partyRoutes.js', './routes/faqRoutes.js', './routes/postRoutes.js'], 
 };
 
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
@@ -54,6 +56,7 @@ const swaggerSpec = swaggerJsdoc(swaggerOptions);
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
+app.use(cors());
 
 app.use(authRoutes);
 app.use(userRoutes);
@@ -63,6 +66,7 @@ app.use(partecipazioniRoutes);
 app.use(eventRoutes);
 app.use(partyRoutes);
 app.use(faqRoutes);
+app.use(postRoutes);
 
 mongoose.connect(DB)
     .then(() => {

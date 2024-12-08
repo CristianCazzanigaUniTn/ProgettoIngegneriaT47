@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/global.css">
+    <link rel="stylesheet" href="./css/profilepage.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik+Glitch&display=swap" rel="stylesheet">
+    <title>Pagina con Sfondo</title>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="navbar-left">
+            <img src="./image/logo.png" alt="Logo" class="logo">
+        </div>
+        <div class="navbar-center">
+            <a id="home" href="#home">HOME</a>
+            <a id="mappa" href="#mappa">MAPPA</a>
+            <a id="profilo" href="#profilo">PROFILO</a>
+            <a id="chisiamo" href="#chi-siamo">CHI SIAMO</a>
+        </div>
+        <div class="navbar-right">
+            <input type="text" placeholder="Cerca" class="search-bar">
+            <img src="./image/imp.png" alt="Impostazioni" class="settings-icon">
+        </div>
+    </nav>
+    <div class="container-box">
+
+        <div class="left">
+            <h2 id="vue-app" class="nomeUtente">{{nome_utente}}</h2>
+            <img class="fotoProfilo" style="background-image: url('./image/image.png');">
+        </div>
+
+        <div class="right">
+            <h2 class="titoloOggi">POST DI OGGI</h2>
+            <div class="listaPost">
+                <div class="post" style="background-image: url('./image/image\ copy.png');"></div>
+                <div class="post" style="background-image: url('./image/image\ copy\ 2.png');"></div>
+                <div class="post" style="background-image: url('./image/image\ copy\ 3.png');"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <script type="module">
+        import { createApp, ref } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js';
+
+        const utente_base_id = "6735e4672b45400acaf45657";
+        const org_id = "6735e4672b45400acaf4565a";
+
+        const id = utente_base_id;
+
+        createApp({
+            setup() {
+                // Stato reattivo per i dati
+                const eventi = ref([]);
+                const party = ref([]);
+                const post = ref([]);
+                const errorMessage = ref(null);
+                const ruolo_utente = ref(null); // Variabile reattiva per ruolo
+                const nome_utente = ref(null); // Variabile reattiva per nome
+
+                const getUser = async () => {
+                    try {
+                        const response = await fetch(`http://localhost:3000/api/Utenti/${id}`);
+                        if (!response.ok) {
+                            throw new Error('Utente non trovato');
+                        }
+
+                        const data = await response.json();
+                        nome_utente.value = data.user.username; // Assegna al valore reattivo
+                        ruolo_utente.value = data.user.ruolo; // Assegna al valore reattivo
+                        console.log(data);
+                        console.log("NOME: ", nome_utente.value);
+                        console.log("RUOLO: ", ruolo_utente.value);
+                    } catch (error) {
+                        errorMessage.value = error.message;
+                    }
+                };
+
+                const getEventi = async () => {
+                    try {
+                        const response = await fetch(`http://localhost:3000/api/eventi/organizzatore/${id}`);
+                        if (!response.ok) {
+                            throw new Error('Eventi non trovati');
+                        }
+
+                        eventi.value = await response.json();
+                        console.log("EVENTI: ", eventi.value);
+                    } catch (error) {
+                        errorMessage.value = error.message;
+                    }
+                };
+
+                const getParty = async () => {
+                    try {
+                        const response = await fetch(`http://localhost:3000/api/party/organizzatore/${id}`);
+                        if (!response.ok) {
+                            throw new Error('Party non trovati');
+                        }
+
+                        party.value = await response.json();
+                        console.log("PARTY: ", party.value);
+                    } catch (error) {
+                        errorMessage.value = error.message;
+                    }
+                };
+
+                const getPost = async () => {
+                    try {
+                        const response = await fetch(`http://localhost:3000/api/post/${id}`);
+                        if (!response.ok) {
+                            throw new error('Post non trovati');
+                        }
+
+                        post.value = await response.json();
+                        console.log("POST: ", post.value);
+                    } catch (error) {
+                        errorMessage.value = error.message;
+                    }
+                };
+
+                // Inizializza i dati e determina cosa caricare
+                const init = async () => {
+                    await getUser(); // Aspetta il caricamento dell'utente
+                    if (ruolo_utente.value === "utente_base") {
+                        await getParty();
+                        await getPost();
+                    } else if (ruolo_utente.value === "organizzatore") {
+                        await getEventi();
+                    } else {
+                        console.error("Ruolo indefinito: ", ruolo_utente.value);
+                    }
+                };
+
+                // Avvia l'inizializzazione
+                init();
+
+                return { eventi, party, post, errorMessage, ruolo_utente, nome_utente };
+            }
+        }).mount('#vue-app');
+    </script>
+
+
+
+</body>
+
+</html>

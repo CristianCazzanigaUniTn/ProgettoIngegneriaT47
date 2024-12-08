@@ -126,8 +126,8 @@ router.post('/api/party', tokenChecker, async (req, res) => {
         if(req.user.ruolo.toString() != "utente_base")
             return res.status(403).json({ error: 'Non autorizzato a eliminare questo party' });
 
-        const lat = 0;
-        const lng = 0;
+        let lat = 0;
+        let lng = 0;
 
         // Verifica che la posizione sia valida
         if (posizione && posizione.latitudine && posizione.longitudine) {

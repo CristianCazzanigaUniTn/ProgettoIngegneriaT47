@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/loginpage.css">
+    <link rel="stylesheet" href="./css/global.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik+Glitch&display=swap" rel="stylesheet">
+    <title>Pagina con Sfondo</title>
+</head>
+
+<body>
+    <!-- Aggiungi un div con id="vue-app" -->
+    <div id="vue-app">
+        <nav class="navbar">
+            <div class="navbar-left">
+                <img src="./image/logo.png" alt="Logo" class="logo">
+            </div>
+            <div class="navbar-center">
+                <a id="home" href="#home">HOME</a>
+                <a id="mappa" href="#mappa">MAPPA</a>
+                <a id="profilo" href="#profilo">PROFILO</a>
+                <a id="chisiamo" href="#chi-siamo">CHI SIAMO</a>
+            </div>
+            <div class="navbar-right">
+                <input type="text" placeholder="Cerca" class="search-bar">
+                <img src="./image/imp.png" alt="Impostazioni" class="settings-icon">
+            </div>
+        </nav>
+
+        <div class="login-box">
+            <p class="small-text">IL SOCIAL NETWORK DI CUI HAI BISOGNO</p>
+            <h1 class="title">EVENTLY</h1>
+            <p class="sub-text">ENTRA e partecipa ad EVENTI</p>
+
+            <form class="login-form" @submit.prevent="authenticate">
+                <input v-model="username" type="text" placeholder="Email, Username o Telefono" class="input-field"
+                    required>
+                <input v-model="password" type="password" placeholder="Password" class="input-field" required>
+                <div class="buttons">
+                    <button type="submit" class="btn access">Accedi</button>
+                    <button type="button" class="btn register">Registrati</button>
+                </div>
+            </form>
+
+            <!-- Mostra un messaggio di errore se presente -->
+            <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
+        </div>
+    </div>
+
+    <script type="module">
+        import { createApp, ref } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js';
+
+        createApp({
+            setup() {
+                const username = ref('');
+                const password = ref('');
+                const errorMessage = ref(null);
+
+                // Funzione per autenticarsi
+                const authenticate = async () => {
+                    // Pulisci eventuali errori precedenti
+                    errorMessage.value = null;
+
+                    // Fai la richiesta POST con username e password
+                    try {
+                        const response = await fetch('http://localhost:3000/api/v1/authentications', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                username: username.value,
+                                password: password.value
+                            })
+                        });
+
+                        if (!response.ok) {
+                            throw new Error('Errore nell autenticazione');
+                        }
+
+                        // Se la risposta è ok, puoi gestire il successo (es. reindirizzare)
+                        const data = await response.json();
+
+                        console.log('Autenticazione riuscita:', data);
+
+                        localStorage.setItem('authToken', data.token);
+
+                        fetchProtectedData();
+
+                    } catch (error) {
+                        // Gestisci eventuali errori e mostra il messaggio
+                        errorMessage.value = error.message;
+                    }
+                };
+
+                // Esegui una richiesta autenticata usando il token JWT
+                const fetchProtectedData = async () => {
+                    const tokenFromStorage = localStorage.getItem('authToken');
+                    if (tokenFromStorage) {
+                        try {
+                            const response = await fetch('http://localhost:3000/api/v1/users', {
+                                method: 'GET',
+                                headers: {
+                                    'Authorization': `Bearer ${tokenFromStorage}`
+                                }
+                            });
+
+                            if (!response.ok) throw new Error('Accesso ai dati protetti non riuscito');
+                            const data = await response.json();
+                            console.log('Dati protetti:', data);
+
+                        } catch (error) {
+                            console.error('Errore durante il recupero dei dati protetti:', error);
+                        }
+                    } else {
+                        console.log('Token non trovato, utente non autenticato.');
+                    }
+                };
+
+                return { username, password, errorMessage, authenticate };
+            }
+        }).mount('#vue-app');
+    </script>
+</body>
+
+</html>

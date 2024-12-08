@@ -127,8 +127,8 @@ router.post('/api/eventi', tokenChecker, async (req, res) => {
         if(req.user.ruolo.toString() != "organizzatore")
             return res.status(403).json({ error: 'Non autorizzato a creare questo evento' });
 
-        const lat = 0;
-        const lng = 0;
+        let lat = 0;
+        let lng = 0;
 
         // Verifica che la posizione sia valida
         if (posizione && posizione.latitudine && posizione.longitudine) {

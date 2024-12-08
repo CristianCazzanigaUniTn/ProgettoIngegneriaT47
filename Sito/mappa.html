@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/global.css">
+    <link rel="stylesheet" href="./css/mappapage.css">
+    <script type="text/javascript" src='./mapPage/test-credentials.js'></script>
+    <script src="https://js.api.here.com/v3/3.1/mapsjs-core.js"></script>
+    <script src="https://js.api.here.com/v3/3.1/mapsjs-service.js"></script>
+    <script src="https://js.api.here.com/v3/3.1/mapsjs-ui.js"></script>
+    <script src="https://js.api.here.com/v3/3.1/mapsjs-mapevents.js"></script>
+    <script src="https://js.api.here.com/v3/3.1/mapsjs-animation.js"></script>
+    <script src="https://js.api.here.com/v3/3.1/mapsjs-style.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <script type="module" src='./mapPage/map.js'></script>
+    <script type="text/javascript" src='./mapPage/loader.js'></script>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik+Glitch&display=swap" rel="stylesheet">
+    <title>Pagina con Sfondo</title>
+</head>
+
+<body>
+    <div id="loader">
+        <div class="left-curtain"></div>
+        <div class="right-curtain"></div>
+        <div class="center-content">
+            <h1>Loading..</h1>
+            <img src="./image/attendi.png" alt="Logoload" class="logoload">
+        </div>
+    </div>
+
+    <div class="content">
+        <nav class="navbar">
+            <div class="navbar-left">
+                <img src="./image/logo.png" alt="Logo" class="logo">
+                <h1>Evently</h1>
+            </div>
+            <div class="navbar-center">
+                <div></div>
+                <a id="home" href="login.html">CoomingSoon</a>
+                <a id="mappa" style="color: rgb(24, 198, 18); font-weight: bold;" href="mappa.html">MAPPA</a>
+                <a id="profilo" style="color: rgb(255, 255, 255);" href="profilo.html">PROFILO</a>
+                <a id="chisiamo" href="#chi-siamo">CHI SIAMO</a>
+            </div>
+            <div class="navbar-right">
+                <input type="text" placeholder="Cerca" class="search-bar">
+                <img src="./image/imp.png" alt="Impostazioni" class="settings-icon">
+            </div>
+        </nav>
+        <div class="container-box">
+            <div class="left">
+                <div class="filtri">
+                    <img src="./image/filtri.png">
+                    <img src="./image/ordina.png">
+                </div>
+                <aside class="sidebar">
+                </aside>
+            </div>
+            <div class="right">
+                <div id="popupDiv">
+                    <button id="chiusura">×</button>
+                    <div class="instagram-card">
+                        <div class="instagram-card-header">
+                            <img id="popupFotoProfilo" class="instagram-card-user-image" />
+                            <div>
+                                <a class="instagram-card-user-name" id="popupNomeProfilo">ciucgamer</a>
+                                <div class="instagram-card-time">13:02</div>
+                            </div>
+                        </div>
+                        <div class="instagram-card-image">
+                            <img id="popupImg" src="" alt="Foto" />
+                        </div>
+                        <div class="instagram-card-content">
+                            <p id="popupText" class="likes">Questa è una breve descrizione del marker.</p>
+                        </div>
+                    </div>
+                </div>
+                <div id="markers-on-the-map">
+                    <div id="map"></div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+
+
+</body>
+
+</html>
