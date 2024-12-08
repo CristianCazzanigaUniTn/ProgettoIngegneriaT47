@@ -7,15 +7,21 @@ const swaggerJsdoc = require('swagger-jsdoc');
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const likeRoutes = require('./routes/likeRoutes');
+const cloudFotoRoutes = require('./routes/cloudFotoRoutes');
 const partecipazioniRoutes = require('./routes/partecipazioniRoutes');
 const commentiRoutes = require('./routes/commentiRoutes');
 const app = express();
+const cors = require('cors');
+
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 const PORT = process.env.PORT || 3000;
 const DB = process.env.DB;
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+
+
 
 
 const swaggerOptions = {
@@ -41,7 +47,7 @@ const swaggerOptions = {
             },
         }
     },
-    apis: ['./routes/authRoutes.js', './routes/userRoutes.js', './routes/commentiRoutes.js', './routes/likeRoutes.js', './routes/partecipazioniRoutes.js'], 
+    apis: ['./routes/cloudFotoRoutes.js','./routes/authRoutes.js', './routes/userRoutes.js', './routes/commentiRoutes.js', './routes/likeRoutes.js', './routes/partecipazioniRoutes.js'], 
 };
 
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
@@ -54,6 +60,7 @@ app.use(authRoutes);
 app.use(userRoutes);
 app.use(commentiRoutes);
 app.use(likeRoutes);
+app.use(cloudFotoRoutes);
 app.use(partecipazioniRoutes);
 mongoose.connect(DB)
     .then(() => {
