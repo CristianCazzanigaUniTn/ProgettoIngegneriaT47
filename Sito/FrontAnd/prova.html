@@ -1,58 +1,55 @@
-A<!DOCTYPE html>
+A
+<!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Carica Foto su Cloudinary</title>
 </head>
+
 <body>
-    <h1>Carica una Foto su Cloudinary</h1>
+    <form id="upload-form">
+        <input type="file" id="file-input" name="file" />
+        <button type="submit">Carica immagine</button>
+        <img id="uploaded-image" src="" alt="Immagine caricata" />
+    </form>
 
-    <!-- Form per il caricamento dell'immagine -->
-    <input type="file" id="fileInput" />
-    <button onclick="uploadImage()">Carica Foto</button>
-
-    <!-- Mostrare il link dell'immagine dopo il caricamento -->
-    <p id="imageUrl"></p>
 
     <script>
-        async function uploadImage() {
-            const fileInput = document.getElementById('fileInput');
-            const file = fileInput.files[0];
-            
-            if (!file) {
-                alert("Seleziona un'immagine da caricare.");
-                return;
-            }
-
-            // Chiedi al server di generare il "signature" e "timestamp"
-            const response = await fetch('http://localhost:3000/generate-signed-url', {
+        document.getElementById('upload-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const file = document.getElementById('file-input').files[0];
+            fetch('http://localhost:3000/generate-signed-url-post', {
                 method: 'POST',
-            });
-            const data = await response.json();
-
-            const formData = new FormData();
-            formData.append("file", file);
-            formData.append("api_key", 'tuo_api_key');  // API Key pubblica
-            formData.append("timestamp", data.timestamp);
-            formData.append("signature", data.signature);
-            formData.append("upload_preset", data.upload_preset);  // Nome del preset
-
-            // Carica l'immagine su Cloudinary
-            fetch("https://api.cloudinary.com/v1_1/tuo_cloud_name/image/upload", {
-                method: "POST",
-                body: formData
             })
-            .then(response => response.json())
-            .then(data => {
-                const imageUrl = data.secure_url;
-                document.getElementById("imageUrl").textContent = `Immagine caricata: ${imageUrl}`;
-                console.log("Link immagine: ", imageUrl);
-            })
-            .catch(error => {
-                console.error("Errore nel caricamento dell'immagine: ", error);
-            });
-        }
+                .then(response => response.json())
+                .then(data => {
+                    const formData = new FormData();
+                    console.log(data.upload_Preset);
+                    formData.append("file", file);
+                    formData.append("upload_preset", data.upload_preset);  // Usa il preset ottenuto dal backend
+                    formData.append("timestamp", data.timestamp);          // Usa il timestamp ottenuto dal backend
+                    formData.append("signature", data.signature);          // Usa la signature ottenuta dal backend
+                    formData.append("api_key", data.api_key);
+                    return fetch('https://api.cloudinary.com/v1_1/dc2ga9rlo/image/upload', {
+                        method: 'POST',
+                        body: formData
+                    });
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Immagine caricata con successo', data);
+                    // Mostra l'immagine caricata (URL di Cloudinary)
+                    const imageUrl = data.secure_url; // URL sicuro dell'immagine
+                    
+                    document.getElementById('uploaded-image').src = imageUrl; // Mostra l'immagine nel DOM
+                    console.log(imageUrl);
+                })
+                .catch(error => console.error('Errore nel caricamento:', error));
+        });
+
     </script>
 </body>
+
 </html>
