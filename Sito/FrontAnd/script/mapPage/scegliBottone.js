@@ -1,9 +1,11 @@
 
 function creaPost()
 {
+    chiudiCreaParty();
     const contenitore = document.getElementById('creapost');
     contenitore.style.display = 'flex';
 }
+
 
 function chiudiCreaPost() {
     document.getElementById('postImage').style.display = 'block'; 
@@ -14,7 +16,19 @@ function chiudiCreaPost() {
     contenitore.style.display = 'none';
   }
 
-
+function chiudiCreaParty() {
+    document.getElementById('partyImage').style.display = 'block'; 
+    document.getElementById('imagePreviews').style.display = 'none';
+    document.getElementById('partyDescription').value = ''; 
+    const contenitore = document.getElementById('creaParty');
+    contenitore.style.display = 'none';
+}
+function creaParty()
+{
+    chiudiCreaPost();
+    const contenitore = document.getElementById('creaParty');
+    contenitore.style.display = 'flex';
+}
 
 function creaBottone(ruolo) {
     const contenitore = document.getElementById('floatingButton');
@@ -25,7 +39,7 @@ function creaBottone(ruolo) {
         contenitore.innerHTML = sottobottoni;
     }
     else if(ruolo == "utente_base"){
-        var sottobottoni = '<span class="plus">+</span><span class="text1" onclick="creaPost()">Post</span><span class="text2">Party</span>';
+        var sottobottoni = '<span class="plus">+</span><span class="text1" onclick="creaPost()">Post</span><span class="text2"  onclick="creaParty()">Party</span>';
         contenitore.innerHTML = sottobottoni;
     }
 }

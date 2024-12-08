@@ -16,3 +16,35 @@ const postImageInput = document.getElementById('postImage');
         reader.readAsDataURL(file);
       }
     });
+
+
+    const partyImageInput = document.getElementById('partyImage');
+    const imagePreviews = document.getElementById('imagePreviews');
+    const previewImgs = document.getElementById('previewImgs');
+    const removeImageButton = document.getElementById('removeImage');
+
+    partyImageInput.addEventListener('change', function () {
+      const file = this.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          previewImgs.src = e.target.result;
+          imagePreviews.style.display = 'block';
+        }
+        reader.readAsDataURL(file);
+      }
+    });
+
+    removeImageButton.addEventListener('click', function () {
+      partyImageInput.value = '';
+      previewImgs.src = '';
+      imagePreviews.style.display = 'none';
+    });
+
+    const createPartyForm = document.getElementById('createPartyForm');
+    createPartyForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      alert('Party creato con successo!');
+      createPartyForm.reset();
+      imagePreviews.style.display = 'none';
+    });
