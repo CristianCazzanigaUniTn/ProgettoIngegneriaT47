@@ -1,6 +1,7 @@
 import { abilitaInterazione, disabilitaInterazione } from './map.js';
 
 
+
 //sezione popup attaccati ai marker evento quando si passa sopra
 export function mostraPopupTextual(evt, contenuto, profilo, map) {
     var marker = evt.target;

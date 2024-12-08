@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crea Post</title>
+  <link href="css/creapostPopUp.css" rel="stylesheet">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <!-- Font Awesome per le icone -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+</head>
+
+<body>
+
+  <div class="overlay"></div>
+
+  <div class="popup-container">
+    <div class="popup-header">
+      <h2>Crea Post</h2>
+      <span class="close-button">&times;</span>
+    </div>
+
+    <div class="form-group">
+      <div class="image-upload">
+        <label id="label" for="postImage"><i class="fas fa-upload"></i> Carica una foto</label>
+        <input type="file" id="postImage" name="postImage" accept="image/*" required>
+        <div class="image-preview" id="imagePreview">
+          <img id="previewImg" src="" alt="Anteprima Immagine">
+        </div>
+      </div>
+
+      <div class="description-container">
+        <div class="fixed-location">
+          <strong>Posizione:</strong> <span>46.0667, 11.1167</span>
+        </div>
+        <div class="fixed-time">
+          <strong>Data e Ora:</strong> <span>2 Ottobre 2024, 14:12</span>
+        </div>
+        <p for="postDescription">2</p>
+        <div class="form-group">
+
+          <strong for="postDescription">Descrizione:</strong>
+
+        </div>
+        <textarea id="postDescription" name="postDescription" placeholder="Scrivi una descrizione..."
+          required></textarea>
+      </div>
+    </div>
+
+    <button type="submit" class="submit-button">Pubblica</button>
+  </div>
+
+  <!-- JavaScript per la gestione dell'immagine e il form -->
+  <script type="text/javascript" src='./script/mapPage/aggiungiFotoCreaPost.js'></script>
+</body>
+
+</html>
