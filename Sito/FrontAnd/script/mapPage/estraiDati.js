@@ -1,4 +1,4 @@
-import { mostraPopup, mostraPopupDiv, mostraPopupTextual, chiudiPopup, chiudiPopupDiv} from './popup.js';
+import { mostraPopup, mostraPopupDiv, mostraPopupTextual, chiudiPopup, apriPopupPartyEvento} from './popup.js';
 
 
 //funzioni per aggiungere i marker
@@ -22,6 +22,18 @@ function aggiungiParty(posizione, contenuto, profilo, map) {
 
     var icona = new H.map.Icon('img/party.png', { size: { w: 60, h: 60 } });
     var marker = new H.map.Marker(punto, { icon: icona });
+    console.log(contenuto);
+    marker.addEventListener('tap', function (evt) {
+        apriPopupPartyEvento(
+            'Mario Rossi',                    
+            'https://via.placeholder.com/50',  
+            'https://via.placeholder.com/400', 
+            'Questo è un party molto divertente, non perdertelo!', 
+            ['Divertimento', 'Musica', 'Amici'], 
+            2,                               
+            contenuto.MaxPersone,                              
+            'iscriviti', map, punto)
+    });
     map.addObject(marker);
 
 }

@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="./css/mappapage.css">
     <link rel="stylesheet" href="./css/creapostPopUp.css">
     <link rel="stylesheet" href="./css/creaPartyPopUp.css">
+    <link rel="stylesheet" href="./css/viewpartyevento.css">
     <link rel="stylesheet" href="./css/creaEventoPopUp.css">
     <script type="text/javascript" src='./script/mapPage/test-credentials.js'></script>
 
@@ -67,6 +68,33 @@
                 </aside>
             </div>
             <div class="right">
+                <div id="popupPartyDiv">
+                    <button id="chiusuraParty">×</button>
+                    <div class="instagram-card">
+                        <div class="instagram-card-header">
+                            <img id="fotoProfiloParty" class="instagram-card-user-image" />
+                            <div>
+                                <a class="instagram-card-user-name" id="nomeUtenteParty">utente_esempio</a>
+                                <div class="instagram-card-time">14:30</div>
+                            </div>
+                        </div>
+                        <div class="instagram-card-image">
+                            <img id="immagineParty" src="" alt="Foto del party" />
+                        </div>
+                        <div class="instagram-card-content">
+                            <p id="descrizioneParty" class="likes">Descrizione del party qui.</p>
+                            <div class="categorie">
+                                <span>#Divertimento</span>
+                                <span>#Musica</span>
+                                <span>#Amici</span>
+                            </div>
+                            <p class="partecipanti">
+                                <span id="partecipantiAttuali">20</span> / <span id="partecipantiMassimi">50</span> partecipanti
+                            </p>
+                        </div>
+                        <button id="azionePartyButton" class="button-iscrizione">Iscriviti</button>
+                    </div>
+                </div>
                 <div id="popupDiv">
                     <button id="chiusura">×</button>
                     <div class="instagram-card">

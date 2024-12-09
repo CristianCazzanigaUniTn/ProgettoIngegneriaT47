@@ -59,7 +59,7 @@ export function chiudiPopup(evt, map) {
 }
 //
 
-export function chiudiPopupDiv(map) {
+function chiudiPopupDiv(map) {
     chiudiPopUpAnim(map);
     document.getElementById('popupDiv').style.display = 'none';
     map.addEventListener('mapviewchangeend', function () {
@@ -72,7 +72,6 @@ export function chiudiPopupDiv(map) {
 
 export function mostraPopupDiv(contenuto, profilo, posizione, map) {
     disabilitaInterazione();
-    var animDuration = 2;
     apriPopUpAnim(posizione, map);
     document.getElementById('chiusura').onclick = function() {
         chiudiPopupDiv(map);
@@ -90,6 +89,57 @@ export function mostraPopupDiv(contenuto, profilo, posizione, map) {
     }, { once: true });
 }
 
+
+function chiudiPopupPartyEventoDiv(map)
+{
+    chiudiPopUpAnim(map);
+    document.getElementById('popupPartyDiv').style.display = 'none';
+    map.addEventListener('mapviewchangeend', function () {
+        abilitaInterazione();
+        
+    }, { once: true });
+}
+
+export function apriPopupPartyEvento(utente, fotoProfilo, immagineParty, descrizione, categorie, attuali, massimi, tipoAzione, map, posizione) {
+    disabilitaInterazione();
+    apriPopUpAnim(posizione, map);
+    document.getElementById('chiusuraParty').onclick = function() {
+        chiudiPopupPartyEventoDiv(map);
+    };
+    document.getElementById('popupPartyDiv').style.display = 'none';
+    map.addEventListener('mapviewchangeend', function () {
+        document.getElementById('nomeUtenteParty').textContent = utente;
+        document.getElementById('fotoProfiloParty').src = fotoProfilo;
+        document.getElementById('immagineParty').src = immagineParty;
+        document.getElementById('descrizioneParty').textContent = descrizione;
+    
+        const categorieContainer = document.querySelector('.categorie');
+        categorieContainer.innerHTML = '';
+        categorie.forEach(cat => {
+            const span = document.createElement('span');
+            span.textContent = `#${cat}`;
+            categorieContainer.appendChild(span);
+        });
+    
+        document.getElementById('partecipantiAttuali').textContent = attuali;
+        document.getElementById('partecipantiMassimi').textContent = massimi;
+    
+        const bottone = document.getElementById('azionePartyButton');
+        if (tipoAzione === 'iscriviti') {
+            bottone.textContent = 'Iscriviti';
+            bottone.onclick = () => alert('Ti sei iscritto al party!');
+        } else if (tipoAzione === 'disiscriviti') {
+            bottone.textContent = 'Disiscriviti';
+            bottone.onclick = () => alert('Ti sei disiscritto dal party!');
+        } else if (tipoAzione === 'elimina') {
+            bottone.textContent = 'Elimina';
+            bottone.onclick = () => alert('Hai eliminato il party!');
+        }
+    
+        document.getElementById('popupPartyDiv').style.display = 'block';
+    }, { once: true });
+   
+}
 
 //
 
