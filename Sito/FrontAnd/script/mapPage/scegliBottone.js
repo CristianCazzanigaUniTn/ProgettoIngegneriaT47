@@ -1,6 +1,7 @@
 
 function creaPost()
 {
+    chiudiCreaEvento();
     chiudiCreaParty();
     const contenitore = document.getElementById('creapost');
     contenitore.style.display = 'flex';
@@ -16,8 +17,22 @@ function chiudiCreaPost() {
     contenitore.style.display = 'none';
   }
 
+  function creaEvento()
+  {
+      chiudiCreaParty();
+      chiudiCreaPost();
+      const contenitore = document.getElementById('creaEvento');
+      contenitore.style.display = 'flex';
+  }
+
+  function chiudiCreaEvento() {
+    document.getElementById('anteprimaImmagine').style.display = 'none';
+    document.getElementById('descrizioneEvento').value = ''; 
+    const contenitore = document.getElementById('creaEvento');
+    contenitore.style.display = 'none';
+}
+
 function chiudiCreaParty() {
-    document.getElementById('partyImage').style.display = 'block'; 
     document.getElementById('imagePreviews').style.display = 'none';
     document.getElementById('partyDescription').value = ''; 
     const contenitore = document.getElementById('creaParty');
@@ -25,6 +40,7 @@ function chiudiCreaParty() {
 }
 function creaParty()
 {
+    chiudiCreaEvento();
     chiudiCreaPost();
     const contenitore = document.getElementById('creaParty');
     contenitore.style.display = 'flex';
@@ -35,7 +51,7 @@ function creaBottone(ruolo) {
     contenitore.innerHTML = '';
 
     if (ruolo == "organizzatore") {
-        var sottobottoni = '<span class="plus">+</span><span class="text3">Evento</span>';
+        var sottobottoni = '<span class="plus" >+</span><span onclick="creaEvento()" class="text3">Evento</span>';
         contenitore.innerHTML = sottobottoni;
     }
     else if(ruolo == "utente_base"){

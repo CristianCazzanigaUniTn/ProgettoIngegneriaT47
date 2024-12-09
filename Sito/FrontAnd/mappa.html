@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="./css/mappapage.css">
     <link rel="stylesheet" href="./css/creapostPopUp.css">
     <link rel="stylesheet" href="./css/creaPartyPopUp.css">
+    <link rel="stylesheet" href="./css/creaEventoPopUp.css">
     <script type="text/javascript" src='./script/mapPage/test-credentials.js'></script>
 
     <script src="https://js.api.here.com/v3/3.1/mapsjs-core.js"></script>
@@ -84,7 +85,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="event-form-container" id = "creaParty">
+                <div class="event-form-container" id="creaParty">
                     <div class="event-form-header">
                         <h2>Crea il Tuo Party</h2>
                         <p>Divertiti e condividi il tuo evento con amici!</p>
@@ -140,49 +141,107 @@
                         <button type="submit" class="submit-button">Crea Party</button>
                     </form>
                 </div>
-            </div>
-            <div id="creapost" class="popup-container">
-                <div class="popup-header">
-                    <h2>Crea Post</h2>
-                    <span onclick="chiudiCreaPost()" id="close-button" class="close-button">&times;</span>
+
+                <div class="contenitore-form-evento" id="creaEvento">
+                    <div class="intestazione-form-evento">
+                        <h2>Crea un Nuovo Evento</h2>
+                        <p>Organizza e condividi il tuo evento con facilità</p>
+                        <span onclick="chiudiCreaEvento()" class="close-button">&times;</span>
+                    </div>
+                    <form id="formCreaEvento">
+                        <div class="gruppo-campo">
+                            <label for="nomeEvento">Nome Evento</label>
+                            <input type="text" id="nomeEvento" name="nomeEvento" placeholder="Es: Festa di Primavera"
+                                required>
+                        </div>
+                        <div class="gruppo-campo">
+                            <label for="dataEvento">Data e Ora</label>
+                            <input type="datetime-local" id="dataEvento" name="dataEvento" required>
+                        </div>
+                        <div class="gruppo-campo">
+                            <label for="luogoEvento">Luogo</label>
+                            <input type="text" id="luogoEvento" name="luogoEvento" placeholder="Es: Piazza Duomo"
+                                required>
+                        </div>
+                        <div class="gruppo-campo">
+                            <label for="tipologiaEvento">Tipologia</label>
+                            <select id="tipologiaEvento" name="tipologiaEvento" required>
+                                <option value="" disabled selected>Scegli una tipologia</option>
+                                <option value="networking">Networking</option>
+                                <option value="workshop">Workshop</option>
+                                <option value="seminario">Seminario</option>
+                                <option value="concerto">Concerto</option>
+                                <option value="festa">Festa</option>
+                            </select>
+                        </div>
+                        <div class="gruppo-campo">
+                            <label for="numeroPartecipanti">Numero Massimo di Partecipanti</label>
+                            <input type="number" id="numeroPartecipanti" name="numeroPartecipanti" placeholder="Es: 100"
+                                min="1" required>
+                        </div>
+                        <div class="gruppo-campo larghezza-completa">
+                            <label for="descrizioneEvento">Descrizione</label>
+                            <textarea id="descrizioneEvento" name="descrizioneEvento"
+                                placeholder="Descrivi il tuo evento..." required></textarea>
+                        </div>
+                        <div class="gruppo-campo larghezza-completa">
+                            <label class="etichetta-immagine">Immagine Evento</label>
+                            <div class="caricamento-immagine">
+                                <label for="immagineEvento"><i class="fas fa-upload"></i> Carica Immagine</label>
+                                <input type="file" id="immagineEvento" name="immagineEvento" accept="image/*" required>
+                            </div>
+                            <div class="anteprima-immagine" id="anteprimaImmagine">
+                                <img src="" alt="Anteprima Immagine" id="immagineAnteprima">
+                                <button type="button" class="rimuovi-immagine" id="rimuoviImmagine"><i
+                                        class="fas fa-times"></i></button>
+                            </div>
+                        </div>
+                        <button type="submit" class="pulsante-invio">Crea Evento</button>
+                    </form>
                 </div>
 
-                <div class="form-group">
-                    <div class="image-upload">
-                        <label id="label" for="postImage"><i class="fas fa-upload"></i> Carica una foto</label>
-                        <input type="file" id="postImage" name="postImage" accept="image/*" required>
-                        <div class="image-preview" id="imagePreview">
-                            <img id="previewImg" src="" alt="Anteprima Immagine">
+                <div id="creapost" class="popup-container">
+                    <div class="popup-header">
+                        <h2>Crea Post</h2>
+                        <span onclick="chiudiCreaPost()" id="close-button" class="close-button">&times;</span>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="image-upload">
+                            <label id="label" for="postImage"><i class="fas fa-upload"></i> Carica una foto</label>
+                            <input type="file" id="postImage" name="postImage" accept="image/*" required>
+                            <div class="image-preview" id="imagePreview">
+                                <img id="previewImg" src="" alt="Anteprima Immagine">
+                            </div>
+                        </div>
+
+                        <div class="description-container">
+                            <div class="fixed-location">
+                                <strong>Posizione:</strong> <span>46.0667, 11.1167</span>
+                            </div>
+                            <div class="fixed-time">
+                                <strong>Data e Ora:</strong> <span>2 Ottobre 2024, 14:12</span>
+                            </div>
+                            <p for="postDescription">2</p>
+                            <div class="form-group">
+
+                                <strong for="postDescription">Descrizione:</strong>
+
+                            </div>
+                            <textarea id="postDescription" name="postDescription"
+                                placeholder="Scrivi una descrizione..." required></textarea>
                         </div>
                     </div>
 
-                    <div class="description-container">
-                        <div class="fixed-location">
-                            <strong>Posizione:</strong> <span>46.0667, 11.1167</span>
-                        </div>
-                        <div class="fixed-time">
-                            <strong>Data e Ora:</strong> <span>2 Ottobre 2024, 14:12</span>
-                        </div>
-                        <p for="postDescription">2</p>
-                        <div class="form-group">
-
-                            <strong for="postDescription">Descrizione:</strong>
-
-                        </div>
-                        <textarea id="postDescription" name="postDescription" placeholder="Scrivi una descrizione..."
-                            required></textarea>
-                    </div>
+                    <button type="submit" class="submit-button">Pubblica</button>
+                </div>
+                <div id="markers-on-the-map">
+                    <div id="map"></div>
                 </div>
 
-                <button type="submit" class="submit-button">Pubblica</button>
-            </div>
-            <div id="markers-on-the-map">
-                <div id="map"></div>
             </div>
 
         </div>
-
-    </div>
     </div>
     <script type="module" src='./script/mapPage/anteprimaFotoPost.js'></script>
     <script type="module" src='./script/mapPage/map.js'></script>
