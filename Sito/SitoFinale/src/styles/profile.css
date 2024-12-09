@@ -1,0 +1,147 @@
+
+.container-box {
+    padding: 40px 30px;
+    border-radius: 55px;
+    text-align: center;
+    display: flex;
+    padding: 20px; 
+    overflow: hidden;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    font-family: "Montserrat", sans-serif;
+    color: white;
+    width: 90vw;
+    height: 100vh;
+}
+
+.left
+{
+    padding: 40px 30px;
+    width: 30%;
+    height: 60%;
+    border-radius: 55px;
+    background-size: cover; 
+    background-repeat: no-repeat; 
+    background-position: center;
+    justify-content: center;
+    display: flex; 
+    flex-direction: column;
+    align-items: center;
+    margin-right: 5%;
+    text-align: center;
+}
+
+.nomeUtente{
+    max-width: 70%;
+    font-size: 50px;
+    margin-bottom: 20px;
+    text-shadow: 0 6px 15px rgb(0, 0, 0); 
+    word-wrap: break-word;
+}
+
+.fotoProfilo {
+    width: 50%;
+    background-image: url('../image/logo.png');
+    height: 0;
+    padding-top: 50%; 
+    border-radius: 50%;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4); 
+    background-size:cover;
+    background-repeat: no-repeat; 
+    overflow: hidden; 
+}
+
+
+.right {
+    background-color: rgba(15, 31, 58, 0.713); 
+    padding: 40px 30px;
+    border-radius: 55px;
+    width: 70%;
+    background-size: cover; 
+    border: 3px solid rgb(97, 109, 185);
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    box-shadow: 4px 4px 8px rgba(255, 255, 255, 0.3);
+    height: 60%;
+    margin-left: 5%;
+    overflow-y: auto; 
+    scroll-behavior: smooth;
+    padding-top: 20px;  
+}
+
+.right::-webkit-scrollbar {
+    width: 0; 
+    height: 0; 
+}
+
+.right {
+    scrollbar-width: none; /* Firefox */
+}
+.listacards
+{
+    border-radius: 55px;
+    width: 65%;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    height: 60%;
+    padding-top: 20px;  
+}
+
+.card {
+    width: 90%;
+    height: 0;
+    padding-top: 50%;
+    margin-bottom: 20px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4); 
+    background-size: cover;
+    background-repeat: no-repeat; 
+    background-position: center;
+    display: flex;
+    position: relative;
+    overflow: hidden; 
+}
+
+.card-content {
+    background-color: rgba(0, 0, 0, 0.5);  /* Sfondo semi-trasparente per la parte del contenuto */
+    color: white;
+    padding: 15px;
+    border-radius: 15px;
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    text-align: center;
+}
+
+.card-title {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.card-description {
+    font-size: 14px;
+    font-weight: lighter;
+}
+
+.card:hover {
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6); /* Aggiungi un effetto di hover per il bordo */
+    transform: scale(1.05); /* Leggero ingrandimento al passaggio del mouse */
+    transition: all 0.3s ease; /* Aggiungi transizione fluida */
+}
+
+.titoloOggi
+{
+    text-shadow: 0 6px 15px rgb(0, 0, 0); 
+    font-weight: bold;
+    font-size: 40px;
+    margin-top: 2%;
+    margin-bottom: 2%;
+}
+
+
+
+
