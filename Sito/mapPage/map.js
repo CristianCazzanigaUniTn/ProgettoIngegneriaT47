@@ -44,7 +44,7 @@ function interleave(map) {
 
             aggiungiDati(dati, map);
 
-            aggiornaSidebar(dati.posts, dati.textuals, map);
+            aggiornaSidebar(dati, map);
         }
     }
     style.addEventListener('change', changeListener);

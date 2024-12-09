@@ -1,4 +1,4 @@
-import { mostraPopup, mostraPopupDiv, mostraPopupTextual, chiudiPopup, chiudiPopupDiv} from './popUp.js';
+import { mostraPopup, mostraPopupDiv, mostraPopupTextual, chiudiPopup, apriPopupPartyEvento} from './popUp.js';
 //funzioni per aggiungere i marker
 
 export function aggiungiDati(dati, map) {
@@ -47,19 +47,26 @@ function aggiungiMessaggio(text, map) {
 }
 
 function aggiungiParty(party, map) {
-    var punto = new H.geo.Point(party.party.posizione.latitudine, party.party.posizione.longitudine);
+    var punto = new H.geo.Point(party.cont.posizione.latitudine, party.cont.posizione.longitudine);
 
     var icona = new H.map.Icon('./image/party.png', { size: { w: 60, h: 60 } });
     var marker = new H.map.Marker(punto, { icon: icona });
     map.addObject(marker);
 
+    marker.addEventListener('tap', function (evt) {
+        apriPopupPartyEvento(party, map, "Party")
+    });
+
 }
 
 function aggiungiEvento(evento, map) {
-    var punto = new H.geo.Point(evento.evento.posizione.latitudine, evento.evento.posizione.longitudine);
+    var punto = new H.geo.Point(evento.cont.posizione.latitudine, evento.cont.posizione.longitudine);
 
     var icona = new H.map.Icon('./image/shop.png', { size: { w: 60, h: 60 } });
     var marker = new H.map.Marker(punto, { icon: icona });
     map.addObject(marker);
 
+    marker.addEventListener('tap', function (evt) {
+        apriPopupPartyEvento(evento, map, "Evento")
+    });
 }

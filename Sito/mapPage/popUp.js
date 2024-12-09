@@ -1,4 +1,9 @@
 import { abilitaInterazione, disabilitaInterazione } from './map.js';
+import {
+    fetchProtectedData, estraiPartecipazioniParty, estraiInformazioniEventi,
+    eliminaEvento, eliminaParty, partecipaEvento,
+    partecipaParty, disinscriviEvento, disinscriviParty
+} from './estraiDati.js';
 
 
 //sezione popup attaccati ai marker evento quando si passa sopra
@@ -32,7 +37,7 @@ export function mostraPopup(evt, post, map) {
 
     var contenutoPopup = `
         <div style="text-align:center; max-width: 200px; background: white; border: 1px solid #ccc; border-radius: 10px; padding: 10px; box-shadow: 0 0 5px rgba(0,0,0,0.3);">
-            <img src="./image/super.png" alt="Foto" style="width:100%; height:auto; border-radius:10px; margin-bottom: 10px;">
+            <img src="` + post.post.contenuto + `" alt="Foto" style="width:100%; height:auto; border-radius:10px; margin-bottom: 10px;">
             <div style="font-size: 14px; color: #333;">
                 <strong>Descrizione:</strong>
                 <p>` + post.post.descrizione + `</p>
@@ -78,7 +83,7 @@ export function mostraPopupDiv(post, map) {
     document.getElementById('popupDiv').style.display = 'none';
     map.addEventListener('mapviewchangeend', function () {
         var popupDiv = document.getElementById('popupDiv');
-        document.getElementById('popupImg').src = './image/super.png';
+        document.getElementById('popupImg').src = post.post.contenuto;
         document.getElementById('popupText').textContent = post.post.descrizione;
         document.getElementById('popupFotoProfilo').src = './image/download.png';
         document.getElementById('popupNomeProfilo').textContent = post.utente.username;
@@ -88,11 +93,88 @@ export function mostraPopupDiv(post, map) {
     }, { once: true });
 }
 
+function chiudiPopupPartyEventoDiv(map)
+{
+    chiudiPopUpAnim(map);
+    document.getElementById('popupPartyDiv').style.display = 'none';
+    map.addEventListener('mapviewchangeend', function () {
+        abilitaInterazione();
+        
+    }, { once: true });
+}
+
+export async function apriPopupPartyEvento(cont, map, partyoev) {
+    console.log("sososos")
+    disabilitaInterazione();
+    apriPopUpAnim(cont.cont.posizione, map);
+    document.getElementById('chiusuraParty').onclick = function() {
+        chiudiPopupPartyEventoDiv(map);
+    };
+
+    const utenteid = fetchProtectedData()._id;
+
+    var info;
+
+    if(partyoev == "Party"){
+        info = await estraiPartecipazioniParty(cont.cont._id, utenteid);
+    } else if (partyoev == "Evento") {
+        info = await estraiInformazioniEventi(cont.cont._id, utenteid);
+        
+    }
+
+    const org = cont.cont.Organizzatore == utenteid;
+
+    document.getElementById('popupPartyDiv').style.display = 'none';
+    map.addEventListener('mapviewchangeend', function () {
+        document.getElementById('nomeUtenteParty').textContent = cont.utente.username;
+        document.getElementById('fotoProfiloParty').src = './image/download.png';
+        document.getElementById('immagineParty').src = cont.cont.foto;
+        document.getElementById('descrizioneParty').textContent = cont.cont.descrizione;
+    
+        const categorieContainer = document.querySelector('.categorie');
+        categorieContainer.innerHTML = '';
+
+        const span = document.createElement('span');
+        span.textContent = `#${cont.cont.Categoria}`;
+        categorieContainer.appendChild(span);
+        
+    
+        document.getElementById('partecipantiAttuali').textContent = info.numero_partecipazioni;
+        document.getElementById('partecipantiMassimi').textContent = cont.cont.numero_massimo_partecipanti;
+    
+        const bottone = document.getElementById('azionePartyButton');
+        if (!info.partecipa && !org && utenteid) {
+            if (partyoev == "Party") {
+                bottone.onclick = partecipaParty(cont.cont._id);
+            } else if(partyoev == "Evento") {
+                bottone.onclick = partecipaEvento(cont.cont._id);
+            }
+        } else if (info.partecipa && !org) {
+            if (partyoev == "Party") {
+                bottone.onclick = disinscriviParty(cont.cont._id);
+            } else if(partyoev == "Evento") {
+                bottone.onclick = disinscriviEvento(cont.cont._id);
+            }
+        }else if (org) {
+            if (partyoev == "Party") {
+                bottone.onclick = eliminaParty(cont.cont._id);
+            } else if(partyoev == "Evento") {
+                bottone.onclick = eliminaEvento(cont.cont._id);
+            }
+        } else {
+            bottone.style.display = 'none';
+        }
+    
+        document.getElementById('popupPartyDiv').style.display = 'block';
+    }, { once: true });
+   
+}
+
 
 //
 
 //animazione per i popup
-function apriPopUpAnim(posizione, map){
+export function apriPopUpAnim(posizione, map){
     disabilitaInterazione();
     map.getViewModel().setLookAtData({
         position: {lat: posizione.latitudine, lng: posizione.longitudine},
@@ -102,7 +184,7 @@ function apriPopUpAnim(posizione, map){
     
 }
 
-function chiudiPopUpAnim(map){
+export function chiudiPopUpAnim(map){
     abilitaInterazione();
     map.getViewModel().setLookAtData({
         zoom: 16,

@@ -1,7 +1,7 @@
-const postImageInput = document.getElementById('partyImage');
-const imagePreview = document.getElementById('imagePreviews');
-const previewImg = document.getElementById('previewImgs');
-const label = document.getElementById('labels');
+const postImageInput = document.getElementById('immagineEvento');
+const imagePreview = document.getElementById('anteprimaImmagine');
+const previewImg = document.getElementById('immagineAnteprima');
+const removeImageButton = document.getElementById('rimuoviImmagine');
 
 postImageInput.addEventListener('change', function () {
     const file = this.files[0];

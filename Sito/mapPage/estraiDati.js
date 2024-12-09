@@ -76,9 +76,9 @@ async function estraiPartyDaFile(lat, lng, rad, parties) {
         const temp = await response.json();
 
         // Itera su tutti i party e aggiungi l'utente
-        for (const party of temp) {
-            const utente = await estraiUtente(party.Organizzatore); // Assicurati che l'utente sia caricato
-            parties.value.push({ party, utente });
+        for (const cont of temp) {
+            const utente = await estraiUtente(cont.Organizzatore); // Assicurati che l'utente sia caricato
+            parties.value.push({ cont, utente });
         }
 
     } catch (error) {
@@ -150,9 +150,9 @@ async function estraiEventiDaFile(lat, lng, rad, eventi) {
         const temp = await response.json();
 
         // Itera su tutti gli eventi e aggiungi l'utente
-        for (const evento of temp) {
-            const utente = await estraiUtente(evento.Organizzatore); // Assicurati che l'utente sia caricato
-            eventi.value.push({ evento, utente });
+        for (const cont of temp) {
+            const utente = await estraiUtente(cont.Organizzatore); // Assicurati che l'utente sia caricato
+            eventi.value.push({ cont, utente });
         }
         
     } catch (error) {
@@ -240,13 +240,16 @@ async function estraiInformazioniPost(id) {
 
 }
 
-async function estraiPartecipazioniParty(id, utente_id){
+export async function estraiPartecipazioniParty(id, utente_id){
     try {
         const response = await fetch(`http://localhost:3000/api/Partecipazioni/Party/${id}`);
+        
+        var part = false;
+        var npart = 0;
 
         if (response.status === 404) {
             console.warn("Nessun partecipante trovato.");
-            return 0;
+            return {numero_partecipazioni: npart, partecipa: part};
         }
 
         if (!response.ok) {
@@ -254,41 +257,42 @@ async function estraiPartecipazioniParty(id, utente_id){
         }
 
         const partecipazioni = await response.json(); 
-        const partecipa = false;
-        const numero_partecipazioni = partecipazioni.lenght;
 
-        
-        partecipazioni.forEach(part => {
-            if (part.utente_id == utente_id)
-                partecipa = true;
-        });
+        npart = partecipazioni.length;
 
-        return {numero_partecipazioni, partecipa};
+        if (utente_id) {
+            partecipazioni.forEach(part => {
+                if (part.utente_id == utente_id)
+                    part = true;
+            });
+        }
+
+        return {numero_partecipazioni: npart, partecipa: part};
 
     } catch (error) {
         console.error("Errore durante l'estrazione delle partecipazioni:", error);
-        return null;
+        return {numero_partecipazioni: 0, partecipa: []};
     }
 
 }
 
-async function estraiInformazioniEventi(id, utente_id) {
-    const partecipazioni = 0;
+export async function estraiInformazioniEventi(id, utente_id) {
+    const numero_partecipazioni = 0;
     const partecipa = false;
-    const faq = [];
-    const res = { partecipazioni, partecipa, faq};
+    //const faq = [];
+    const res = { numero_partecipazioni, partecipa};
     
     try {
         const p = await fetch(`http://localhost:3000/api/Partecipazioni/Eventi/${id}`);
-        const f = await fetch(`http://localhost:3000/api/faqeventi/evento/${id}`);
+        //const f = await fetch(`http://localhost:3000/api/faqeventi/evento/${id}`);
 
-        if (f.status === 404) {
-            console.warn("Nessuna faq trovata.");
-        }
+        // if (f.status === 404) {
+        //     console.warn("Nessuna faq trovata.");
+        // }
 
-        if (!f.ok) {
-            throw new Error(`Errore nella richiesta: ${p.status} ${p.statusText}`);
-        }
+        // if (!f.ok) {
+        //     throw new Error(`Errore nella richiesta: ${p.status} ${p.statusText}`);
+        // }
 
         if (p.status === 404) {
             console.warn("Nessun partecipante trovato.");
@@ -299,14 +303,16 @@ async function estraiInformazioniEventi(id, utente_id) {
         }
 
         const partecipazioni = await p.json();
-        res.faq.value = await f.json();
+        //res.faq.value = await f.json();
 
         res.partecipazioni.value = partecipazioni.lenght;
 
-        partecipazioni.forEach(part => {
-            if (part.utente_id == utente_id)
-                res.partecipa.value = true;
-        });
+        if(utente_id){
+            partecipazioni.forEach(part => {
+                if (part.utente_id == utente_id)
+                    res.partecipa.value = true;
+            });
+        }
 
         return res;
 
@@ -315,4 +321,156 @@ async function estraiInformazioniEventi(id, utente_id) {
         return res;
     }
 
+}
+
+export async function fetchProtectedData(){
+    const tokenFromStorage = localStorage.getItem('authToken');
+    if (tokenFromStorage) {
+        try {
+            const response = await fetch('http://localhost:3000/api/v1/users', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${tokenFromStorage}`
+                }
+            });
+
+            if (!response.ok) throw new Error('Accesso ai dati protetti non riuscito');
+
+            const data = await response.json();
+
+        } catch (error) {
+            console.error('Errore durante il recupero dei dati protetti:', error);
+        }
+    } else {
+        console.log('Token non trovato, utente non autenticato.');
+    }
+};
+
+export async function partecipaParty(id_party) {
+    try {
+        const response = await fetch(`http://localhost:3000/api/Partecipazioni/Party/${id_party}`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${tokenFromStorage}`
+                }
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error(`Errore nella richiesta: ${p.status} ${p.statusText}`);
+        }
+
+        const partecipazione = await response.json();
+
+        console.log(partecipazione);
+
+    } catch (error) {
+        console.error("Errore durante l'iscrizione:", error);
+        return res;
+    }
+}
+
+export async function partecipaEvento(id_evento) {
+    try {
+        const response = await fetch(`http://localhost:3000/api/Partecipazioni/Eventi/${id_evento}`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${tokenFromStorage}`
+                }
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error(`Errore nella richiesta: ${p.status} ${p.statusText}`);
+        }
+
+        const partecipazione = await response.json();
+
+        console.log(partecipazione);
+
+    } catch (error) {
+        console.error("Errore durante l'iscrizione:", error);
+        return res;
+    }
+}
+
+export async function disinscriviParty(id_party) {
+    try {
+        const response = await fetch(`http://localhost:3000/api/Partecipazioni/Party/${id_party}`, {
+            method: 'DELETE', 
+            headers: {
+                'Authorization': `Bearer ${tokenFromStorage}`
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`Errore nella richiesta: ${response.status} ${response.statusText}`);
+        }
+
+        console.log("Partecipazione eliminata con successo!");
+
+    } catch (error) {
+        console.error("Errore durante l'eliminazione della partecipazione:", error);
+    }
+}
+
+export async function disinscriviEvento(id_evento) {
+    try {
+        const response = await fetch(`http://localhost:3000/api/Partecipazioni/Eventi/${id_evento}`, {
+            method: 'DELETE', 
+            headers: {
+                'Authorization': `Bearer ${tokenFromStorage}`
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`Errore nella richiesta: ${response.status} ${response.statusText}`);
+        }
+
+        console.log("Partecipazione eliminata con successo!");
+
+    } catch (error) {
+        console.error("Errore durante l'eliminazione della partecipazione:", error);
+    }
+    
+}
+
+export async function eliminaParty(id_party) {
+    try {
+        const response = await fetch(`http://localhost:3000/api/party/${id_party}`, {
+            method: 'DELETE', 
+            headers: {
+                'Authorization': `Bearer ${tokenFromStorage}`
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`Errore nella richiesta: ${response.status} ${response.statusText}`);
+        }
+
+        console.log("Party eliminato con successo!");
+
+    } catch (error) {
+        console.error("Errore durante l'eliminazione del party:", error);
+    }
+}
+
+export async function eliminaEvento(id_evento) {
+    try {
+        const response = await fetch(`http://localhost:3000/api/eventi/${id_evento}`, {
+            method: 'DELETE', 
+            headers: {
+                'Authorization': `Bearer ${tokenFromStorage}`
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`Errore nella richiesta: ${response.status} ${response.statusText}`);
+        }
+
+        console.log("Evento eliminato con successo!");
+
+    } catch (error) {
+        console.error("Errore durante l'eliminazione dell'evento:", error);
+    }
 }
