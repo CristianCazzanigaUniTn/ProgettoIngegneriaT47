@@ -160,3 +160,159 @@ async function estraiEventiDaFile(lat, lng, rad, eventi) {
         eventi.value = [];
     }
 }
+
+async function estraiLikeAiCommenti(id) {
+    try {
+        const l = await fetch(`http://localhost:3000/api/commenti/${id}/like`);
+
+        if (f.status === 404) {
+            return 0;
+        }
+
+        if (!p.ok) {
+            throw new Error(`Errore nella richiesta: ${p.status} ${p.statusText}`);
+        }
+        
+        const likes = await l.json();
+
+        return likes.lenght;
+        
+    } catch (error){
+        console.error("Errore durante l'estrazione dei like:", error);
+        return null;
+    }
+}
+
+
+async function estraiInformazioniPost(id) {
+    const like = [];
+    const commento_like = [];
+    const res = { like, commento_like};
+    
+    try {
+        const l = await fetch(`http://localhost:3000/api/like/post/${id}`);
+        const c = await fetch(`http://localhost:3000/api/commenti/post/${id}`);
+
+        if (l.status === 404) {
+            console.warn("Nessuna like trovato.");
+        }
+
+        if (!l.ok) {
+            throw new Error(`Errore nella richiesta: ${l.status} ${l.statusText}`);
+        }
+
+        if (c.status === 404) {
+            console.warn("Nessun commento trovato.");
+        }
+
+        if (!c.ok) {
+            throw new Error(`Errore nella richiesta: ${c.status} ${c.statusText}`);
+        }
+
+        const likes = await l.json();
+        var ut, utUsername, utId;
+
+        likes.forEach(like => {
+            ut = estraiUtente(like.utente_id);
+            utUsername = ut.username;
+            utId = ut._id;
+            like.push({utId, utUsername});
+        });
+
+        const commenti = await c.json();
+        var nlike, testocommento;
+
+        commenti.forEach(commento => {
+            ut = estraiUtente(commento.utente_id);
+            utUsername = ut.username;
+            utId = ut._id;
+            nlike = estraiLikeAiCommenti(commento.utente_id);
+            testocommento = commento.commento;
+            commento_like.push({ utId, utUsername, testocommento, nlike });
+        });
+
+        return res;
+
+    } catch (error) {
+        console.error("Errore durante l'estrazione degli eventi:", error);
+        return res;
+    }
+
+}
+
+async function estraiPartecipazioniParty(id, utente_id){
+    try {
+        const response = await fetch(`http://localhost:3000/api/Partecipazioni/Party/${id}`);
+
+        if (response.status === 404) {
+            console.warn("Nessun partecipante trovato.");
+            return 0;
+        }
+
+        if (!response.ok) {
+            throw new Error(`Errore nella richiesta: ${response.status} ${response.statusText}`);
+        }
+
+        const partecipazioni = await response.json(); 
+        const partecipa = false;
+        const numero_partecipazioni = partecipazioni.lenght;
+
+        
+        partecipazioni.forEach(part => {
+            if (part.utente_id == utente_id)
+                partecipa = true;
+        });
+
+        return {numero_partecipazioni, partecipa};
+
+    } catch (error) {
+        console.error("Errore durante l'estrazione delle partecipazioni:", error);
+        return null;
+    }
+
+}
+
+async function estraiInformazioniEventi(id, utente_id) {
+    const partecipazioni = 0;
+    const partecipa = false;
+    const faq = [];
+    const res = { partecipazioni, partecipa, faq};
+    
+    try {
+        const p = await fetch(`http://localhost:3000/api/Partecipazioni/Eventi/${id}`);
+        const f = await fetch(`http://localhost:3000/api/faqeventi/evento/${id}`);
+
+        if (f.status === 404) {
+            console.warn("Nessuna faq trovata.");
+        }
+
+        if (!f.ok) {
+            throw new Error(`Errore nella richiesta: ${p.status} ${p.statusText}`);
+        }
+
+        if (p.status === 404) {
+            console.warn("Nessun partecipante trovato.");
+        }
+
+        if (!p.ok) {
+            throw new Error(`Errore nella richiesta: ${p.status} ${p.statusText}`);
+        }
+
+        const partecipazioni = await p.json();
+        res.faq.value = await f.json();
+
+        res.partecipazioni.value = partecipazioni.lenght;
+
+        partecipazioni.forEach(part => {
+            if (part.utente_id == utente_id)
+                res.partecipa.value = true;
+        });
+
+        return res;
+
+    } catch (error) {
+        console.error("Errore durante l'estrazione delle partecipazioni:", error);
+        return res;
+    }
+
+}

@@ -12,11 +12,11 @@ export function aggiungiDati(dati, map) {
     });
 
     dati.parties.forEach(party => {
-        aggiungiParty(party, map)
+        aggiungiParty(party, map);
     });
 
     dati.eventi.forEach(evento => {
-        aggiungiEvento(evento, map)
+        aggiungiEvento(evento, map);
     });
 
 }

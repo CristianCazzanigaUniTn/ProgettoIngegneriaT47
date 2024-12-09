@@ -2,6 +2,7 @@ import { estraiDati } from './estraiDati.js';
 import { aggiungiDati } from './aggiornamappa.js';
 import { aggiornaSidebar } from './sidebar.js';
 
+
 var rad = 1000;
 var lat = 46.066667;
 var lng = 11.133333;
@@ -39,7 +40,6 @@ function interleave(map) {
     var changeListener = async () => {
         if (style.getState() === H.map.Style.State.READY) {
             style.removeEventListener('change', changeListener);
-
             const dati = await estraiDati(lat, lng, rad);
 
             aggiungiDati(dati, map);

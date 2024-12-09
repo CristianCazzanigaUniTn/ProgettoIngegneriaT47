@@ -28,15 +28,15 @@
             <img src="./image/imp.png" alt="Impostazioni" class="settings-icon">
         </div>
     </nav>
-    <div class="container-box">
+    <div id="vue-app" class="container-box">
 
         <div class="left">
-            <h2 id="vue-app" class="nomeUtente">{{nome_utente}}</h2>
+            <h2 class="nomeUtente">{{nome_utente}}</h2>
             <img class="fotoProfilo" style="background-image: url('./image/image.png');">
         </div>
 
         <div class="right">
-            <h2 class="titoloOggi">POST DI OGGI</h2>
+            <h2 class="titoloOggi">{{messaggio_ruolo}}</h2>
             <div class="listaPost">
                 <div class="post" style="background-image: url('./image/image\ copy.png');"></div>
                 <div class="post" style="background-image: url('./image/image\ copy\ 2.png');"></div>
@@ -52,7 +52,7 @@
         const utente_base_id = "6735e4672b45400acaf45657";
         const org_id = "6735e4672b45400acaf4565a";
 
-        const id = utente_base_id;
+        const id = org_id;
 
         createApp({
             setup() {
@@ -63,6 +63,7 @@
                 const errorMessage = ref(null);
                 const ruolo_utente = ref(null); // Variabile reattiva per ruolo
                 const nome_utente = ref(null); // Variabile reattiva per nome
+                const messaggio_ruolo = ref(null);
 
                 const getUser = async () => {
                     try {
@@ -130,8 +131,10 @@
                     if (ruolo_utente.value === "utente_base") {
                         await getParty();
                         await getPost();
+                        messaggio_ruolo.value = "Post di oggi e Party organizzati";
                     } else if (ruolo_utente.value === "organizzatore") {
                         await getEventi();
+                        messaggio_ruolo.value = "Eventi organizzati";
                     } else {
                         console.error("Ruolo indefinito: ", ruolo_utente.value);
                     }
@@ -140,7 +143,9 @@
                 // Avvia l'inizializzazione
                 init();
 
-                return { eventi, party, post, errorMessage, ruolo_utente, nome_utente };
+                
+
+                return { eventi, party, post, errorMessage, ruolo_utente, nome_utente, messaggio_ruolo};
             }
         }).mount('#vue-app');
     </script>

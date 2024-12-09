@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./css/global.css">
     <link rel="stylesheet" href="./css/mappapage.css">
+    <link rel="stylesheet" href="./css/creapostPopUp.css">
+    <link rel="stylesheet" href="./css/creaPartyPopUp.css">
     <script type="text/javascript" src='./mapPage/test-credentials.js'></script>
     <script src="https://js.api.here.com/v3/3.1/mapsjs-core.js"></script>
     <script src="https://js.api.here.com/v3/3.1/mapsjs-service.js"></script>
@@ -15,7 +17,6 @@
     <script src="https://js.api.here.com/v3/3.1/mapsjs-style.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <script type="module" src='./mapPage/map.js'></script>
     <script type="text/javascript" src='./mapPage/loader.js'></script>
     <link href="https://fonts.googleapis.com/css2?family=Rubik+Glitch&display=swap" rel="stylesheet">
     <title>Pagina con Sfondo</title>
@@ -32,6 +33,10 @@
     </div>
 
     <div class="content">
+        <div id="floatingButton">
+
+        </div>
+
         <nav class="navbar">
             <div class="navbar-left">
                 <img src="./image/logo.png" alt="Logo" class="logo">
@@ -49,6 +54,7 @@
                 <img src="./image/imp.png" alt="Impostazioni" class="settings-icon">
             </div>
         </nav>
+
         <div class="container-box">
             <div class="left">
                 <div class="filtri">
@@ -77,17 +83,112 @@
                         </div>
                     </div>
                 </div>
-                <div id="markers-on-the-map">
-                    <div id="map"></div>
+                <div class="event-form-container" id="creaParty">
+                    <div class="event-form-header">
+                        <h2>Crea il Tuo Party</h2>
+                        <p>Divertiti e condividi il tuo evento con amici!</p>
+                        <span onclick="chiudiCreaParty()" class="close-button">&times;</span>
+                    </div>
+                    <form id="createPartyForm">
+                        <div class="form-group">
+                            <label for="partyName">Nome Party</label>
+                            <input type="text" id="partyName" name="partyName" placeholder="Es: Compleanno di Anna"
+                                required>
+                        </div>
+                        <div class="form-group">
+                            <label for="partyDate">Data e Ora</label>
+                            <input type="datetime-local" id="partyDate" name="partyDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="partyLocation">Luogo</label>
+                            <input type="text" id="partyLocation" name="partyLocation" placeholder="Es: Casa di Marco"
+                                required>
+                        </div>
+                        <div class="form-group">
+                            <label for="partyType">Tipologia</label>
+                            <select id="partyType" name="partyType" required>
+                                <option value="" disabled selected>Scegli una tipologia</option>
+                                <option value="compleanno">Compleanno</option>
+                                <option value="festa">Festa Privata</option>
+                                <option value="barbecue">Barbecue</option>
+                                <option value="picnic">Picnic</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="partyParticipants">Numero Massimo di Partecipanti</label>
+                            <input type="number" id="partyParticipants" name="partyParticipants" placeholder="Es: 50"
+                                min="1" required>
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="partyDescription">Descrizione</label>
+                            <textarea id="partyDescription" name="partyDescription"
+                                placeholder="Descrivi il tuo party..." required></textarea>
+                        </div>
+                        <div class="form-group full-width">
+                            <label class="image-label">Immagine Party</label>
+                            <div class="image-upload">
+                                <label for="partyImage" id = "labels"><i class="fas fa-upload"></i> Carica Immagine</label>
+                                <input type="file" id="partyImage" name="partyImage" accept="image/*" required>
+                            </div>
+                            <div class="image-preview" id="imagePreviews">
+                                <img src="" alt="Anteprima Immagine" id="previewImgs">
+                                <button type="button" class="remove-image" id="removeImage"><i
+                                        class="fas fa-times"></i></button>
+                            </div>
+                        </div>
+                        <button type="submit" class="submit-button" onclick="partyformHandler()">Crea Party</button>
+                    </form>
+                </div>
+            </div>
+            <div id="creapost" class="popup-container">
+                <div class="popup-header">
+                    <h2>Crea Post</h2>
+                    <span onclick="chiudiCreaPost()" id="close-button" class="close-button">&times;</span>
                 </div>
 
+                <form class="form-group">
+                    <div class="image-upload">
+                        <label id="label" for="postImage"><i class="fas fa-upload"></i> Carica una foto</label>
+                        <input type="file" id="postImage" name="postImage" accept="image/*" required>
+                        <div class="image-preview" id="imagePreview">
+                            <img id="previewImg" src="" alt="Anteprima Immagine">
+                        </div>
+                    </div>
+                
+                    <div class="description-container">
+                        <div class="fixed-location">
+                            <strong>Posizione:</strong> <span>46.0667, 11.1167</span>
+                        </div>
+                        <div class="fixed-time">
+                            <strong>Data e Ora:</strong> <span>2 Ottobre 2024, 14:12</span>
+                        </div>
+                        <p for="postDescription">2</p>
+                        <div class="form-group">
+                            <strong for="postDescription">Descrizione:</strong>
+                        </div>
+                        <textarea id="postDescription" name="postDescription" placeholder="Scrivi una descrizione..."
+                            required></textarea>
+                    </div>
+                
+                </form>
+
+                <button type="submit" class="submit-button" onclick="postformHandler()">Pubblica</button>
+
+            </div>
+            <div id="markers-on-the-map">
+                <div id="map"></div>
             </div>
 
         </div>
+
     </div>
-
-
-
+    </div>
+    <script type="module" src='./mapPage/anteprimaFotoPost.js'></script>
+    <script type="module" src='./mapPage/anteprimaFotoParty.js'></script>
+    <script type="module" src='./mapPage/map.js'></script>
+    <script type="text/javascript" src='./mapPage/scegliBottone.js'></script>
+    <script src="./mapPage/formHandler.js"></script>
+    
 </body>
 
 </html>

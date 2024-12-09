@@ -14,6 +14,7 @@ const eventRoutes = require('./routes/eventRoutes');
 const partyRoutes = require('./routes/partyRoutes');
 const faqRoutes = require('./routes/faqRoutes');
 const postRoutes = require('./routes/postRoutes');
+const cloudFotoRoutes = require('./routes/cloudFotoRoutes');
 
 
 const app = express();
@@ -48,7 +49,7 @@ const swaggerOptions = {
             },
         }
     },
-    apis: ['./routes/authRoutes.js', './routes/userRoutes.js', './routes/commentiRoutes.js', './routes/likeRoutes.js', './routes/partecipazioniRoutes.js', './routes/eventRoutes.js', './routes/partyRoutes.js', './routes/faqRoutes.js', './routes/postRoutes.js'], 
+    apis: ['./routes/authRoutes.js', './routes/userRoutes.js', './routes/commentiRoutes.js', './routes/likeRoutes.js', './routes/partecipazioniRoutes.js', './routes/eventRoutes.js', './routes/partyRoutes.js', './routes/faqRoutes.js', './routes/postRoutes.js', './routes/cloudFotoRoutes.js' ] 
 };
 
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
@@ -67,6 +68,8 @@ app.use(eventRoutes);
 app.use(partyRoutes);
 app.use(faqRoutes);
 app.use(postRoutes);
+app.use(cloudFotoRoutes);
+
 
 mongoose.connect(DB)
     .then(() => {
