@@ -22,7 +22,7 @@ var UserSchema = new Schema({
         type: String,
         required: true,
         unique: true,
-        match: '/.+@.+\..+/' 
+        match: /.+@.+\..+/
     },
     genere: {
         type: String,
@@ -40,7 +40,7 @@ var UserSchema = new Schema({
     },
     ruolo: {
         type: String,
-        enum: ['organizzatore', 'partecipante', 'amministratore'], 
+        enum: ['utente_base', 'organizzatore', 'amministratore'], 
         required: true,
     }
 });

@@ -1,0 +1,134 @@
+{
+  "textuals": [
+    {
+      "posizione": {
+        "lat": 46.0650,
+        "long": 11.1200
+      },
+      "contenuto": {
+        "descrizione": "Un bellissimo tramonto a Trento."
+      },
+      "profilo": {
+        "nome": "Lucrezia Rossi",
+        "foto_profilo": "img/fotoprofilo/fp1.png"
+      }
+    },
+    {
+      "posizione": {
+        "lat": 46.0780,
+        "long": 11.1270
+      },
+      "contenuto": {
+        "descrizione": "Passeggiata nel centro storico di Trento."
+      },
+      "profilo": {
+        "nome": "Sophie Dupont",
+        "foto_profilo": "img/fotoprofilo/fp2.png"
+      }
+    },
+    {
+      "posizione": {
+        "lat": 46.1710,
+        "long": 11.1310
+      },
+      "contenuto": {
+        "descrizione": "Vista delle Dolomiti vicino a Trento."
+      },
+      "profilo": {
+        "nome": "John Smith",
+        "foto_profilo": "img/fotoprofilo/fp3.png"
+      }
+    },
+    {
+      "posizione": {
+        "lat": 46.0260,
+        "long": 11.1230
+      },
+      "contenuto": {
+        "descrizione": "Esplorazione dei castelli trentini."
+      },
+      "profilo": {
+        "nome": "Yuki Tanaka",
+        "foto_profilo": "img/fotoprofilo/fp4.png"
+      }
+    },
+    {
+      "posizione": {
+        "lat": 46.0100,
+        "long": 11.1120
+      },
+      "contenuto": {
+        "descrizione": "Il mercato di Natale di Trento."
+      },
+      "profilo": {
+        "nome": "Emma Johnson",
+        "foto_profilo": "img/fotoprofilo/fp5.png"
+      }
+    },
+    {
+      "posizione": {
+        "lat": 46.0360,
+        "long": 11.1320
+      },
+      "contenuto": {
+        "descrizione": "Passeggiata in Piazza Duomo a Trento."
+      },
+      "profilo": {
+        "nome": "James Brown",
+        "foto_profilo": "img/fotoprofilo/fp6.png"
+      }
+    },
+    {
+      "posizione": {
+        "lat": 46.0310,
+        "long": 11.1360
+      },
+      "contenuto": {
+        "descrizione": "Vista panoramica dalla funivia di Sardagna."
+      },
+      "profilo": {
+        "nome": "Lily Martinez",
+        "foto_profilo": "img/fotoprofilo/fp7.png"
+      }
+    },
+    {
+      "posizione": {
+        "lat": 46.0190,
+        "long": 11.1450
+      },
+      "contenuto": {
+        "descrizione": "Esplorando i musei di Trento."
+      },
+      "profilo": {
+        "nome": "Ivan Petrov",
+        "foto_profilo": "img/fotoprofilo/fp8.png"
+      }
+    },
+    {
+      "posizione": {
+        "lat": 46.0720,
+        "long": 11.1620
+      },
+      "contenuto": {
+        "descrizione": "Scoperta dei vini locali della Valle dei Laghi."
+      },
+      "profilo": {
+        "nome": "Fernanda Costa",
+        "foto_profilo": "img/fotoprofilo/fp9.png"
+      }
+    },
+    {
+      "posizione": {
+        "lat": 46.0670,
+        "long": 11.1180
+      },
+      "contenuto": {
+        "descrizione": "Un'escursione sulle colline trentine."
+      },
+      "profilo": {
+        "nome": "Hans Müller",
+        "foto_profilo": "img/fotoprofilo/fp10.png"
+      }
+    }
+  ]
+}

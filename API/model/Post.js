@@ -1,17 +1,5 @@
 const mongoose = require('mongoose');
-const Posizione = require('./Posizione');
 const Schema = mongoose.Schema;
-
-const posizioneSchema = new mongoose.Schema({
-    latitudine: {
-        type: Number,
-        required: true,
-    },
-    longitudine: {
-        type: Number,
-        required: true,
-    },
-});
 
 const postSchema = new Schema({
     _id: {
@@ -40,9 +28,14 @@ const postSchema = new Schema({
 
 
     posizione: {
-        type: Schema.Types.ObjectId,
-        ref: 'Posizione',
-        required: true
+        latitudine: {
+            type: Number,
+            required: true,
+        },
+        longitudine: {
+            type: Number,
+            required: true,
+        }
     },
 
 

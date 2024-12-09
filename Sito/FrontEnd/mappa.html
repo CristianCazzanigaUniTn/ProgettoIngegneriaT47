@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/global.css">
+    <link rel="stylesheet" href="./css/mappapage.css">
+    <script type="text/javascript" src='./script/mapPage/test-credentials.js'></script>
+
+    <script src="https://js.api.here.com/v3/3.1/mapsjs-core.js"></script>
+    <script src="https://js.api.here.com/v3/3.1/mapsjs-service.js"></script>
+    <script src="https://js.api.here.com/v3/3.1/mapsjs-ui.js"></script>
+    <script src="https://js.api.here.com/v3/3.1/mapsjs-mapevents.js"></script>
+    <script src="https://js.api.here.com/v3/3.1/mapsjs-animation.js"></script>
+    <script src="https://js.api.here.com/v3/3.1/mapsjs-style.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <script type="text/javascript" src='./script/mapPage/loader.js'></script>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik+Glitch&display=swap" rel="stylesheet">
+    <title>Pagina con Sfondo</title>
+</head>
+
+<body>
+    <div id="loader">
+        <div class="left-curtain"></div>
+        <div class="right-curtain"></div>
+        <div class="center-content">
+            <h1>Loading..</h1>
+            <img src="/image/attendi.png" alt="Logoload" class="logoload">
+        </div>
+    </div>
+    
+    <div class="content">
+        <div id="floatingButton">
+            
+        </div>
+        
+        <nav class="navbar">
+            <div class="navbar-left">
+                <img src="./image/logo.png" alt="Logo" class="logo">
+                <h1>Evently</h1>
+            </div>
+            <div class="navbar-center">
+                <div></div>
+                <a id="home" href="login.html">CoomingSoon</a>
+                <a id="mappa" style="color: rgb(24, 198, 18); font-weight: bold;" href="mappa.html">MAPPA</a>
+                <a id="profilo" style="color: rgb(255, 255, 255);" href="profilo.html">PROFILO</a>
+                <a id="chisiamo" href="#chi-siamo">CHI SIAMO</a>
+            </div>
+            <div class="navbar-right">
+                <input type="text" placeholder="Cerca" class="search-bar">
+                <div class="settings-container">
+                    <img src="./image/imp.png" alt="Impostazioni" class="settings-icon" onclick="toggleSettingsMenu()" />
+                    <div class="settings-menu">
+                        <ul>
+                            <li>Gestione eventi <span>></span></li>
+                            <li>Lingua <span>></span></li>
+                            <li>Centro sulla privacy <span>></span></li>
+                            <li>Archivio Post <span>></span></li>
+                            <li>Autorizzazioni del sito web <span>></span></li>
+                            <li>Utenti bloccati <span>></span></li>
+                            <li>Elimina account <span>></span></li>
+                        </ul>
+                    
+                    </div>
+                    <script>
+                        function toggleSettingsMenu() {
+                            const menu = document.querySelector('.settings-menu');
+                            menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+                        }
+                    
+                        // Close the menu if clicked outside
+                        document.addEventListener('click', function (event) {
+                            const settingsContainer = document.querySelector('.settings-container');
+                            const settingsMenu = document.querySelector('.settings-menu');
+                            if (!settingsContainer.contains(event.target)) {
+                                settingsMenu.style.display = 'none';
+                            }
+                        });
+                    </script>
+                    
+                </div>
+            </div>
+        </nav>
+        <div class="container-box">
+            <div class="left">
+                <div class="filtri">
+                    <div class="filter-container">
+                        <img src="image/filtri.png" alt="Filter Icon" style="cursor:pointer;" />
+                        <div class="filter-window">
+                            <h4>Visualizza</h4>
+                            <div class="filter-options">
+                                <div>
+                                    <label><input type="checkbox" name="Post">post</label>
+                                    <label><input type="checkbox" name="Party">party</label>
+                                </div>
+                                <div>
+                                    <label><input type="checkbox" name="Eventi">eventi</label>
+                                    <label><input type="checkbox" name="Text">text</label>
+                                </div>
+                            </div>
+                            <hr style="border: none; border-top: 1px solid #ccc; margin: 10px 0;"> 
+                            <div class="filter-options">
+                                <div>
+                                    <label><input type="checkbox" name="placeholder1">Placeholder 1</label>
+                                    <label><input type="checkbox" name="placeholder2">Placeholder 2</label>
+                                </div>
+                                <div>
+                                    <label><input type="checkbox" name="placeholder3">Placeholder 3</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="filter-container">
+                    <img src="image/ordina.png" alt="Filter Icon" style="cursor:pointer;" />
+                        <div class="filter-window">
+                            <h4>Visualizza</h4>
+                            <div class="filter-options">
+                                <div>
+                                    <label><input type="checkbox" name="placeholder1">Placeholder 1</label>
+                                    <label><input type="checkbox" name="placeholder2">Placeholder 2</label>
+                                </div>
+                                <div>
+                                    <label><input type="checkbox" name="placeholder3">Placeholder 3</label>
+                                    <label><input type="checkbox" name="placeholder4">Placeholder 4</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <aside class="sidebar">
+                </aside>
+            </div>
+            <div class="right">
+                <div id="popupDiv">
+                    <button id="chiusura">×</button>
+                    <div class="instagram-card">
+                        <div class="instagram-card-header">
+                            <img id="popupFotoProfilo" class="instagram-card-user-image" />
+                            <div>
+                                <a class="instagram-card-user-name" id="popupNomeProfilo">ciucgamer</a>
+                                <div class="instagram-card-time">13:02</div>
+                            </div>
+                        </div>
+                        <div class="instagram-card-image">
+                            <img id="popupImg" src="" alt="Foto" />
+                        </div>
+                        <div class="instagram-card-content">
+                            <p id="popupText" class="likes">Questa è una breve descrizione del marker.</p>
+                        </div>
+                    </div>
+                </div>
+                <div id="markers-on-the-map">
+                    <div id="map"></div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <script type="module" src='./script/mapPage/map.js'></script>
+    <script type="text/javascript" src='./script/mapPage/scegliBottone.js'></script>
+</body>
+
+</html>

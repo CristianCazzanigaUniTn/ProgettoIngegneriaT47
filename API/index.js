@@ -9,6 +9,8 @@ const userRoutes = require('./routes/userRoutes');
 const likeRoutes = require('./routes/likeRoutes');
 const partecipazioniRoutes = require('./routes/partecipazioniRoutes');
 const commentiRoutes = require('./routes/commentiRoutes');
+const postRoutes = require('./routes/postRoutes');
+
 const app = express();
 
 const PORT = process.env.PORT || 3000;
@@ -41,7 +43,7 @@ const swaggerOptions = {
             },
         }
     },
-    apis: ['./routes/authRoutes.js', './routes/userRoutes.js', './routes/commentiRoutes.js', './routes/likeRoutes.js', './routes/partecipazioniRoutes.js'], 
+    apis: ['./routes/authRoutes.js', './routes/userRoutes.js', './routes/commentiRoutes.js', './routes/likeRoutes.js', './routes/partecipazioniRoutes.js', './routes/postRoutes.js',],
 };
 
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
@@ -55,6 +57,8 @@ app.use(userRoutes);
 app.use(commentiRoutes);
 app.use(likeRoutes);
 app.use(partecipazioniRoutes);
+app.use(postRoutes);
+
 mongoose.connect(DB)
     .then(() => {
         console.log('Connected to MongoDB');

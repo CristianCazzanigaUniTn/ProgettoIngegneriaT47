@@ -9,8 +9,8 @@ const SECRET = process.env.SECRET;
  * @swagger
  * /api/v1/authentications:
  *   post:
- *     summary: Authenticate user and return a token
- *     description: Authenticates a user by username and password, then returns a JWT token.
+ *     summary: Autentica l'utente e restituisce un token
+ *     description: Autentica un utente tramite username e password, quindi restituisce un token JWT.
  *     requestBody:
  *       required: true
  *       content:
@@ -24,11 +24,11 @@ const SECRET = process.env.SECRET;
  *                 type: string
  *     responses:
  *       200:
- *         description: Authentication success with token
+ *         description: Autenticazione avvenuta con successo con token
  *       401:
- *         description: Authentication failed
+ *         description: Autenticazione fallita
  *       500:
- *         description: Server error
+ *         description: Errore del server
  */
 router.post('/api/v1/authentications', async (req, res) => {
     const { username, password } = req.body;

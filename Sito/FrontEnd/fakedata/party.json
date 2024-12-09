@@ -1,0 +1,49 @@
+{
+  "Parties": [
+    {
+      "posizione": {
+        "lat": 46.0567,
+        "long": 11.1417
+      },
+      "contenuto": {
+        "descrizione": "Un bellissimo tramonto a Trento.",
+        "MaxPersone": 2,
+        "Persone attuali": 1
+      },
+      "profilo": {
+        "nome": "Mario Rossi",
+        "foto_profilo": "img/fotoprofilo/fp1.png"
+      }
+    },
+    {
+      "posizione": {
+        "lat": 46.0667,
+        "long": 11.1417
+      },
+      "contenuto": {
+        "descrizione": "Un bellissimo tramonto a Trento.",
+        "MaxPersone": 2,
+        "Persone attuali": 1
+      },
+      "profilo": {
+        "nome": "Mario Rossi",
+        "foto_profilo": "img/fotoprofilo/fp1.png"
+      }
+    },
+    {
+      "posizione": {
+        "lat": 46.0567,
+        "long": 11.1147
+      },
+      "contenuto": {
+        "descrizione": "Un bellissimo tramonto a Trento.",
+        "MaxPersone": 2,
+        "Persone attuali": 1
+      },
+      "profilo": {
+        "nome": "Mario Rossi",
+        "foto_profilo": "img/fotoprofilo/fp1.png"
+      }
+    }
+  ]
+}
