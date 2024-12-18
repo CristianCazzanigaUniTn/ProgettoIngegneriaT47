@@ -28,22 +28,26 @@
             <img src="./image/imp.png" alt="Impostazioni" class="settings-icon">
         </div>
     </nav>
-    <div id="vue-app" class="container-box">
 
+    <div id="vue-app" class="container-box">
         <div class="left">
-            <h2 class="nomeUtente">{{nome_utente}}</h2>
+            <h2 class="nomeUtente">{{ nome_utente }}</h2>
             <img class="fotoProfilo" style="background-image: url('./image/image.png');">
         </div>
 
         <div class="right">
-            <h2 class="titoloOggi">{{messaggio_ruolo}}</h2>
-            <div class="listaPost">
-                <div class="post" style="background-image: url('./image/image\ copy.png');"></div>
-                <div class="post" style="background-image: url('./image/image\ copy\ 2.png');"></div>
-                <div class="post" style="background-image: url('./image/image\ copy\ 3.png');"></div>
+            <h2 class="titoloOggi">{{ messaggio_ruolo }}</h2>
+            <div class="listacards">
+                <!-- Genera dinamicamente le cards -->
+                <div class="card" v-for="(item, index) in cards" :key="index"
+                    :style="{ backgroundImage: 'url(' + item.urlimmagine + ')' }">
+                    <div class="card-content">
+                        <h3 class="card-title">{{ item.titolo }}</h3>
+                        <p class="card-description">{{ item.descrizione }}</p>
+                    </div>
+                </div>
             </div>
         </div>
-
     </div>
 
     <script type="module">
@@ -52,106 +56,115 @@
         const utente_base_id = "6735e4672b45400acaf45657";
         const org_id = "6735e4672b45400acaf4565a";
 
-        const id = org_id;
+        const id = utente_base_id;
 
         createApp({
             setup() {
-                // Stato reattivo per i dati
-                const eventi = ref([]);
-                const party = ref([]);
-                const post = ref([]);
-                const errorMessage = ref(null);
-                const ruolo_utente = ref(null); // Variabile reattiva per ruolo
-                const nome_utente = ref(null); // Variabile reattiva per nome
-                const messaggio_ruolo = ref(null);
+                // Stato reattivo
+                const cards = ref([]); // Contiene tutte le cards da mostrare
+                const nome_utente = ref(null); // Nome dell'utente
+                const ruolo_utente = ref(null); // Ruolo dell'utente
+                const messaggio_ruolo = ref(null); // Messaggio dinamico da mostrare
+                const errorMessage = ref(null); // Messaggio di errore
 
+                // Funzione per ottenere i dati dell'utente
                 const getUser = async () => {
                     try {
                         const response = await fetch(`http://localhost:3000/api/Utenti/${id}`);
                         if (!response.ok) {
                             throw new Error('Utente non trovato');
                         }
-
                         const data = await response.json();
-                        nome_utente.value = data.user.username; // Assegna al valore reattivo
-                        ruolo_utente.value = data.user.ruolo; // Assegna al valore reattivo
-                        console.log(data);
-                        console.log("NOME: ", nome_utente.value);
-                        console.log("RUOLO: ", ruolo_utente.value);
+                        nome_utente.value = data.user.username;
+                        ruolo_utente.value = data.user.ruolo;
                     } catch (error) {
                         errorMessage.value = error.message;
                     }
                 };
 
+                // Funzione per ottenere gli eventi
                 const getEventi = async () => {
                     try {
                         const response = await fetch(`http://localhost:3000/api/eventi/organizzatore/${id}`);
                         if (!response.ok) {
                             throw new Error('Eventi non trovati');
                         }
-
-                        eventi.value = await response.json();
-                        console.log("EVENTI: ", eventi.value);
+                        const eventiData = await response.json();
+                        cards.value = eventiData.map(evento => ({
+                            titolo: evento.nome,
+                            descrizione: evento.descrizione,
+                            urlimmagine: evento.foto
+                        }));
                     } catch (error) {
                         errorMessage.value = error.message;
                     }
                 };
 
+                // Funzione per ottenere i party
                 const getParty = async () => {
                     try {
                         const response = await fetch(`http://localhost:3000/api/party/organizzatore/${id}`);
                         if (!response.ok) {
                             throw new Error('Party non trovati');
                         }
-
-                        party.value = await response.json();
-                        console.log("PARTY: ", party.value);
+                        const partyData = await response.json();
+                        return partyData.map(party => ({
+                            titolo: party.nome,
+                            descrizione: party.descrizione,
+                            urlimmagine: party.foto
+                        }));
                     } catch (error) {
                         errorMessage.value = error.message;
+                        return [];
                     }
                 };
 
+                // Funzione per ottenere i post
                 const getPost = async () => {
                     try {
                         const response = await fetch(`http://localhost:3000/api/post/${id}`);
                         if (!response.ok) {
-                            throw new error('Post non trovati');
+                            throw new Error('Post non trovati');
                         }
+                        const postData = await response.json();
 
-                        post.value = await response.json();
-                        console.log("POST: ", post.value);
+                        // Filtra i post che hanno immagine null o non valida
+                        return postData
+                            .filter(post => post.contenuto !== "null")
+                            .map(post => ({
+                                titolo: "",
+                                descrizione: post.contenuto,
+                                urlimmagine: post.contenuto
+                            }));
                     } catch (error) {
                         errorMessage.value = error.message;
+                        return [];
                     }
                 };
 
-                // Inizializza i dati e determina cosa caricare
+                // Inizializza i dati
                 const init = async () => {
-                    await getUser(); // Aspetta il caricamento dell'utente
+                    await getUser();
                     if (ruolo_utente.value === "utente_base") {
-                        await getParty();
-                        await getPost();
+                        const partyCards = await getParty();
+                        const postCards = await getPost();
+                        cards.value = [...partyCards, ...postCards];
                         messaggio_ruolo.value = "Post di oggi e Party organizzati";
                     } else if (ruolo_utente.value === "organizzatore") {
                         await getEventi();
                         messaggio_ruolo.value = "Eventi organizzati";
                     } else {
-                        console.error("Ruolo indefinito: ", ruolo_utente.value);
+                        console.error("Ruolo indefinito");
                     }
                 };
 
                 // Avvia l'inizializzazione
                 init();
 
-                
-
-                return { eventi, party, post, errorMessage, ruolo_utente, nome_utente, messaggio_ruolo};
+                return { cards, nome_utente, ruolo_utente, messaggio_ruolo, errorMessage };
             }
         }).mount('#vue-app');
     </script>
-
-
-
 </body>
 
 </html>
