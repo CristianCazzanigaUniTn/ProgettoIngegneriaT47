@@ -48,7 +48,7 @@ import Popup from '@/components/Popup.vue'; // Import the Popup component
 export default {
   name: 'Mappa',
   components: {
-    Popup 
+    Popup
   },
   data() {
     return {
@@ -69,12 +69,13 @@ export default {
     initMap() {
       initializeMap();
       inizializeLoader();
+      console.log("ciao");
     },
     openPopup() {
-      this.showPopup = true; // Open the popup when clicking the floating button
+      this.showPopup = true; 
     },
     closePopup() {
-      this.showPopup = false; // Close the popup
+      this.showPopup = false; 
     }
   }
 };
