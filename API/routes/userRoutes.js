@@ -40,7 +40,9 @@ router.get('/api/v1/users', tokenChecker, async (req, res) => {
                     genere: user.genere,
                     data_registrazione: user.data_registrazione,
                     preferenze_notifiche: user.preferenze_notifiche,
-                    ruolo: user.ruolo
+                    ruolo: user.ruolo,
+                    foto_profilo: user.foto_profilo,
+                    verified: user.verified
                 }
             });
         } else {
@@ -66,7 +68,6 @@ router.get('/api/v1/users', tokenChecker, async (req, res) => {
  *         description: Il ruolo degli utenti da filtrare (es., 'organizzatore', 'utente_base', 'amministratore').
  *         schema:
  *           type: string
- *           enum: [organizzatore, utente_base, amministratore]  # Puoi ampliare questa lista in base ai tuoi ruoli
  *     responses:
  *       200:
  *         description: Elenco di utenti con il ruolo specificato
@@ -98,7 +99,9 @@ router.get('/api/Utenti/ruolo', async (req, res) => {
                     genere: user.genere,
                     data_registrazione: user.data_registrazione,
                     preferenze_notifiche: user.preferenze_notifiche,
-                    ruolo: user.ruolo
+                    ruolo: user.ruolo,
+                    foto_profilo: user.foto_profilo,
+                    verified: user.verified
                 }))
             });
         } else {
@@ -151,7 +154,9 @@ router.get('/api/Utenti/:id', async (req, res) => {
                     genere: user.genere,
                     data_registrazione: user.data_registrazione,
                     preferenze_notifiche: user.preferenze_notifiche,
-                    ruolo: user.ruolo
+                    ruolo: user.ruolo,
+                    foto_profilo: user.foto_profilo,
+                    verified: user.verified
                 }
             });
         } else {
@@ -203,7 +208,6 @@ router.get('/api/Utenti/:id', async (req, res) => {
  *                 description: La password dell'utente
  *               genere:
  *                 type: string
- *                 enum: [Female, Male]
  *                 description: Il genere dell'utente
  *               data_registrazione:
  *                 type: string
@@ -211,12 +215,13 @@ router.get('/api/Utenti/:id', async (req, res) => {
  *                 description: La data di registrazione
  *               preferenze_notifiche:
  *                 type: string
- *                 enum: [sms, email, none, email_sms]
  *                 description: Preferenze di notifica dell'utente
  *               ruolo:
  *                 type: string
- *                 enum: [utente_base, organizzatore, amministratore]
  *                 description: Il ruolo dell'utente
+ *               foto_profilo:
+ *                 type: string
+ *                 description: Foto profilo dell'utente
  *     responses:
  *       201:
  *         description: Utente creato con successo
@@ -227,17 +232,18 @@ router.get('/api/Utenti/:id', async (req, res) => {
  */
 router.post('/api/Utenti', async (req, res) => {
     try {
-        const { nome, username, email, password, genere, data_registrazione, preferenze_notifiche, ruolo } = req.body;
+        const { nome, username, email, password, genere, data_registrazione, preferenze_notifiche, ruolo, foto_profilo} = req.body;
 
         if (!nome || !username || !email || !password || !genere || !data_registrazione || !preferenze_notifiche || !ruolo) {
             return res.status(400).json({ success: false, message: 'Missing required fields' });
         }
-        
 
         const existingUser = await User.findOne({ email }).exec();
         if (existingUser) {
             return res.status(400).json({ success: false, message: 'Email already registered' });
         }
+
+        const verified = false;
 
         const newUser = new User({
             nome,
@@ -247,7 +253,9 @@ router.post('/api/Utenti', async (req, res) => {
             genere,
             data_registrazione,
             preferenze_notifiche,
-            ruolo
+            ruolo,
+            foto_profilo,
+            verified
         });
 
         const savedUser = await newUser.save();
@@ -261,7 +269,9 @@ router.post('/api/Utenti', async (req, res) => {
                 genere: savedUser.genere,
                 data_registrazione: savedUser.data_registrazione,
                 preferenze_notifiche: savedUser.preferenze_notifiche,
-                ruolo: savedUser.ruolo
+                ruolo: savedUser.ruolo,
+                foto_profilo: foto_profilo,
+                verified: false
             }
         });
     } catch (err) {
@@ -329,7 +339,9 @@ router.patch('/api/Utenti',tokenChecker,async (req, res) => {
                     genere: updatedUser.genere,
                     data_registrazione: updatedUser.data_registrazione,
                     preferenze_notifiche: updatedUser.preferenze_notifiche,
-                    ruolo: updatedUser.ruolo
+                    ruolo: updatedUser.ruolo,
+                    foto_profilo: updatedUser.foto_profilo,
+                    verified: updatedUser.verified
                 }
             });
         } else {
@@ -437,7 +449,9 @@ router.get('/api/Utenti/profilo/:id', async (req, res) => {
                 genere: user.genere,
                 data_registrazione: user.data_registrazione,
                 preferenze_notifiche: user.preferenze_notifiche,
-                ruolo: user.ruolo
+                ruolo: user.ruolo,
+                foto_profilo: user.foto_profilo,
+                verified: user.verified
             },
             posts: dailyPosts.map(post => ({
                 id: post._id,
@@ -448,6 +462,60 @@ router.get('/api/Utenti/profilo/:id', async (req, res) => {
         });
     } catch (err) {
         console.error('Error fetching profile and posts:', err);
+        res.status(500).json({ success: false, message: 'Server error', error: err.message });
+    }
+});
+
+/**
+ * @swagger
+ * /api/Utenti/verifica:
+ *   patch:
+ *     summary: Verifica l'account dell'utente
+ *     description: Verifica l'account dell'utente.
+ *     tags: [Utenti]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Nome utente aggiornato con successo
+ *       400:
+ *         description: ID o nome utente non valido
+ *       404:
+ *         description: Utente non trovato
+ *       500:
+ *         description: Errore del server
+ */
+router.patch('/api/Utenti/verifica',tokenChecker,async (req, res) => {
+    try {
+        const userId = req.user._id; // Extract the user's ID from the token
+
+        // Find user by ID and update username
+        const updatedUser = await User.findByIdAndUpdate(
+            userId,
+            { verified: true },
+            { new: true, runValidators: true }
+        );
+
+        if (updatedUser) {
+            res.status(200).json({
+                success: true,
+                user: {
+                    id: updatedUser._id,
+                    username: updatedUser.username,
+                    email: updatedUser.email,
+                    genere: updatedUser.genere,
+                    data_registrazione: updatedUser.data_registrazione,
+                    preferenze_notifiche: updatedUser.preferenze_notifiche,
+                    ruolo: updatedUser.ruolo,
+                    foto_profilo: updatedUser.foto_profilo,
+                    verified: updatedUser.verified
+                }
+            });
+        } else {
+            res.status(404).json({ success: false, message: 'User not found' });
+        }
+    } catch (err) {
+        console.error('Error updating username:', err);
         res.status(500).json({ success: false, message: 'Server error', error: err.message });
     }
 });
