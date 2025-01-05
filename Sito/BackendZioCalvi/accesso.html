@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/loginpage.css">
+    <link rel="stylesheet" href="./css/global.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik+Glitch&display=swap" rel="stylesheet">
+    <title>Pagina con Sfondo</title>
+</head>
+
+<body>
+    <!-- Aggiungi un div con id="vue-app" -->
+    <div id="vue-app">
+        <nav class="navbar">
+            <div class="navbar-left">
+                <img src="./image/logo.png" alt="Logo" class="logo">
+            </div>
+            <div class="navbar-center">
+                <a id="home" href="#home">HOME</a>
+                <a id="mappa" href="#mappa">MAPPA</a>
+                <a id="profilo" href="#profilo">PROFILO</a>
+                <a id="chisiamo" href="#chi-siamo">CHI SIAMO</a>
+            </div>
+            <div class="navbar-right">
+                <input type="text" placeholder="Cerca" class="search-bar">
+                <img src="./image/imp.png" alt="Impostazioni" class="settings-icon">
+            </div>
+        </nav>
+
+        <div>
+            <form class="registration-form" @submit.prevent="registerUser">
+                <input v-model="userName" type="text" placeholder="Nome" class="input-field" required />
+                <input v-model="userUsername" type="text" placeholder="Username" class="input-field" required />
+                <input v-model="userEmail" type="email" placeholder="Email" class="input-field" required />
+                <input v-model="userPassword" type="password" placeholder="Password" class="input-field" required />
+                <select v-model="userGender" class="input-field" required>
+                    <option value="" disabled selected>Seleziona Genere</option>
+                    <option value="Male">Maschio</option>
+                    <option value="Female">Femmina</option>
+                    <option value="Other">Altro</option>
+                </select>
+ 
+                <select v-model="userNotifications" class="input-field" required>
+                    <option value="" disabled selected>Seleziona preferenze sulle notifiche</option>
+                    <option value="sms">Sms</option>
+                    <option value="email">Email</option>
+                    <option value="email_sms">Sms e Email</option>
+                </select>
+                
+                <select v-model="userRole" class="input-field" required>
+                    <option value="" disabled selected>Seleziona Ruolo</option>
+                    <option value="utente_base">Utente Base</option>
+                    <option value="organizzatore">Organizzatore</option>
+                </select>
+                
+                <button type="submit" class="btn register-btn">Registrati</button>
+
+            </form>
+        
+            <!-- Messaggi di risposta -->
+            <p v-if="registrationResponse" class="success-message">{{ registrationResponse }}</p>
+            <p v-if="registrationError" class="error-message">{{ registrationError }}</p>
+        </div>
+        <p v-if="emailResponse" class="success-message">{{ emailResponse }}</p>
+        <p v-if="emailError" class="error-message">{{ emailError }}</p>
+
+    </div>
+
+    <script type="module">
+        import { createApp, ref } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js';
+
+        createApp({
+                setup() {
+                    // Dati del form di registrazione
+                    const userName = ref('');
+                    const userUsername = ref('');
+                    const userEmail = ref('');
+                    const userPassword = ref('');
+                    const userGender = ref('');
+                    const userNotifications = ref(false);
+                    const userRole = ref('');
+
+                    // Variabili per la risposta e l'errore dell'email
+                    const emailResponse = ref(null);
+                    const emailError = ref(null);
+                    const registrationResponse = ref(null);
+                    const registrationError = ref(null);
+
+                    // Funzione per inviare un'email di prova
+                    const sendEmail = async () => {
+                        emailResponse.value = null;
+                        emailError.value = null;
+
+                        const emailSubject = 'Messaggio di prova per la registrazione';
+                        const emailMessage = `Ciao ${userName.value},\n\nBenvenuto nel nostro servizio! La tua registrazione è stata ricevuta.`;
+
+                        try {
+                            const response = await fetch('http://localhost:3000/send-email', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify({
+                                    to: userEmail.value,
+                                    subject: emailSubject,
+                                    text: emailMessage,
+                                    html: `<p>${emailMessage.replace(/\n/g, '<br>')}</p>`, // Formattazione HTML
+                                }),
+                            });
+
+                            if (!response.ok) {
+                                throw new Error('Errore durante l\'invio dell\'email');
+                            }
+
+                            const data = await response.json();
+                            emailResponse.value = data.message;
+
+                        } catch (error) {
+                            emailError.value = error.message;
+                        }
+                    };
+
+                    // Funzione per registrare l'utente
+                    const registerUser = async () => {
+                        registrationResponse.value = null;
+                        registrationError.value = null;
+
+                        const dataRegistrazione = new Date().toISOString();
+
+                        try {
+
+                            const response = await fetch('http://localhost:3000/api/Utenti', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify({
+                                    nome: userName.value,
+                                    username: userUsername.value,
+                                    email: userEmail.value,
+                                    password: userPassword.value,
+                                    genere: userGender.value,
+                                    data_registrazione: dataRegistrazione,
+                                    preferenze_notifiche: userNotifications.value,
+                                    ruolo: userRole.value
+                                }),
+                            });
+
+                            if (!response.ok) {
+                                throw new Error('Errore durante la registrazione dell\'utente');
+                            }
+
+                            const data = await response.json();
+                            registrationResponse.value = `Utente ${data.user.username} creato con successo!`;
+
+                        } catch (error) {
+                            registrationError.value = error.message;
+                        }
+                    };
+
+                    // Restituisci tutte le variabili e le funzioni che vengono usate nel template
+                    return {
+                        userName,
+                        userUsername,
+                        userEmail,
+                        userPassword,
+                        userGender,
+                        userNotifications,
+                        userRole,
+                        emailResponse,
+                        emailError,
+                        registrationResponse,
+                        registrationError,
+                        registerUser // Aggiungi `registerUser` qui
+                    };
+                },
+            }).mount('#vue-app');
+    </script>
+</body>
+
+</html>

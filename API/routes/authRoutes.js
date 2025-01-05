@@ -1,4 +1,3 @@
-
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const User = require('../model/User');
@@ -58,4 +57,4 @@ router.post('/api/v1/authentications', async (req, res) => {
     }
 });
 
-module.exports = router;
+module.exports = router;

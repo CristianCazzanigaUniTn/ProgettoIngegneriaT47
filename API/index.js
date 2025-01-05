@@ -1,5 +1,6 @@
 // index.js
 require('dotenv').config();
+const cors = require('cors'); // Importa il pacchetto cors
 const express = require('express');
 const mongoose = require('mongoose');
 const swaggerUi = require('swagger-ui-express');
@@ -14,6 +15,7 @@ const partyRoutes = require('./routes/partyRoutes');
 const faqRoutes = require('./routes/faqRoutes');
 const postRoutes = require('./routes/postRoutes');
 const cloudFotoRoutes = require('./routes/cloudFotoRoutes');
+const emailRoutes = require('./routes/EmailRoutes');
 const app = express();
 const cors = require('cors');
 
@@ -59,6 +61,7 @@ const swaggerSpec = swaggerJsdoc(swaggerOptions);
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
+app.use(cors());
 
 app.use(authRoutes);
 app.use(userRoutes);
@@ -70,6 +73,7 @@ app.use(partyRoutes);
 app.use(faqRoutes);
 app.use(postRoutes);
 app.use(cloudFotoRoutes);
+app.use(emailRoutes);
 
 mongoose.connect(DB)
     .then(() => {

@@ -156,5 +156,4 @@ router.post('/generate-signed-url-Eventi', tokenChecker, (req, res) => {
         api_key: process.env.API_KEY 
     });
 });
-
 module.exports = router;

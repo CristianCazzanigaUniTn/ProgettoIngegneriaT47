@@ -22,11 +22,10 @@ var UserSchema = new Schema({
         type: String,
         required: true,
         unique: true,
-        match: '/.+@.+\..+/' 
+        match: /^[^\s@]+@[^\s@]+\.[^\s@]+$/ 
     },
     genere: {
         type: String,
-        enum: ['Male', 'Female', 'Genderqueer', 'Bigender'], 
         required: true,
     },
     data_registrazione: {
@@ -35,12 +34,18 @@ var UserSchema = new Schema({
     },
     preferenze_notifiche: {
         type: String,
-        enum: ['email', 'sms', 'none', 'email_sms'], 
         required: true,
     },
     ruolo: {
         type: String,
-        enum: ['organizzatore', 'partecipante', 'amministratore'], 
+        required: true,
+    },
+    foto_profilo: {
+        type: String,
+        required: true,
+    },
+    verified: {
+        type: Boolean,
         required: true,
     },
     foto_profilo: {
@@ -51,6 +56,7 @@ var UserSchema = new Schema({
         type: Boolean,
         required: true,
     }
+
 });
 
 UserSchema.pre('save', async function(next) {

@@ -1,0 +1,166 @@
+.contenitore-form-evento {
+    position: fixed;
+    display: none;
+    top: 50%;
+    left: 55%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    max-width: 600px;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 10px 20px rgba(0, 2, 0, 12);
+    max-width: 800px;
+    width: 90%;
+    z-index: 1000;
+    flex-direction: column;
+}
+
+.contenitore-form-evento .close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 1.5rem;
+    color: #007acc;
+    cursor: pointer;
+}
+
+.contenitore-form-evento .intestazione-form-evento {
+    text-align: center;
+    color: #00c3cc;
+}
+
+.contenitore-form-evento .intestazione-form-evento h2 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.contenitore-form-evento .intestazione-form-evento p {
+    color: #007bff;
+    font-size: 1rem;
+}
+
+.contenitore-form-evento form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.contenitore-form-evento .gruppo-campo {
+    flex: 1 1 45%;
+    display: flex;
+    flex-direction: column;
+}
+
+.contenitore-form-evento .gruppo-campo.larghezza-completa {
+    flex: 1 1 100%;
+}
+
+.contenitore-form-evento label {
+    margin-bottom: 8px;
+    font-weight: 700;
+    color: #007bff;
+}
+
+.contenitore-form-evento input[type="text"],
+.contenitore-form-evento input[type="datetime-local"],
+.contenitore-form-evento input[type="number"],
+.contenitore-form-evento select,
+.contenitore-form-evento textarea {
+    padding: 12px 15px;
+    border: 2px solid #00c3cc;
+    border-radius: 25px;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+}
+
+.contenitore-form-evento input[type="text"]:focus,
+.contenitore-form-evento input[type="datetime-local"]:focus,
+.contenitore-form-evento input[type="number"]:focus,
+.contenitore-form-evento select:focus,
+.contenitore-form-evento textarea:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+.contenitore-form-evento textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.contenitore-form-evento .caricamento-immagine {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.contenitore-form-evento .caricamento-immagine label {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+    border: 2px dashed #00c3cc;
+    border-radius: 20px;
+    background-color: #e0f7fa;
+    transition: background-color 0.3s, border-color 0.3s;
+    color: #00c3cc;
+    font-size: 1rem;
+}
+
+.contenitore-form-evento .caricamento-immagine label:hover {
+    background-color: #00c3cc;
+    color: #ffffff;
+}
+
+.contenitore-form-evento .caricamento-immagine input[type="file"] {
+    display: none;
+    width: 200px;
+    height: 200px;
+}
+
+.contenitore-form-evento .anteprima-immagine {
+    display: none;
+    position: relative;
+    width: 200px;
+    height: 200px;
+}
+
+.contenitore-form-evento .anteprima-immagine img {
+    max-width: 100%;
+    border-radius: 10px;
+    margin-top: 10px;
+}
+
+.contenitore-form-evento .anteprima-immagine .rimuovi-immagine {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: rgba(255, 255, 255, 0.7);
+    border: none;
+    border-radius: 50%;
+    padding: 5px;
+    cursor: pointer;
+}
+
+.contenitore-form-evento .pulsante-invio {
+    width: 100%;
+    padding: 15px;
+    background-color: #00c3cc;
+    color: #ffffff;
+    border: none;
+    border-radius: 25px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.contenitore-form-evento .pulsante-invio:hover {
+    background-color: #007bff;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .contenitore-form-evento .gruppo-campo {
+        flex: 1 1 100%;
+    }
+}
