@@ -357,6 +357,7 @@
     font-weight: bold;
     box-shadow: 0px 0px 10px 3px rgba(0, 0, 0, 0.9);
     z-index: 999;
+    display: flex;
     cursor: pointer;
     transition: all 0.3s ease;
 }
@@ -366,6 +367,7 @@
     height: 60px;
     background-color: #000000;
     border-radius: 30px; 
+    display: flex;
 }
 
 #floatingButton span {
@@ -395,6 +397,7 @@
     flex-grow: 1;
     display: none;
     padding: 0 10px;
+    position: absolute;
     flex: 1;
     box-sizing: border-box; 
 }
@@ -409,17 +412,24 @@
     border-top-left-radius: 30px;
     border-bottom-left-radius: 30px;
     border: 2px solid black;
+    left: 0;
+    top: 0;
     border-right: 1px solid black;
 }
 #floatingButton .text2 {
     border-top-right-radius: 30px;
     border-bottom-right-radius: 30px;
     border: 2px solid black;
+    right: 0;
+    top: 0;
     border-left: 1px solid black;
 }
 
 #floatingButton .text3 {
     border-radius: 30px;
+    right: 0;
+    top: 0;
+    width: 100%;
     border: 2px solid black;
     border-left: 1px solid black;
 }

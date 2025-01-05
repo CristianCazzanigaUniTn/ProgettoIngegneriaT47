@@ -42,7 +42,7 @@
 <script setup>
 import { computed, ref } from 'vue';
 import { loggedUser } from '@/states/loggedUser.ts';  
-import router from '../router';
+import router from '../../../router';
 
 const isAuthenticated = computed(() => loggedUser.token !== undefined);
 const userId = computed(() => loggedUser.id);
@@ -151,4 +151,4 @@ async function postFormHandler() {
 }
 </script>
 
-<style src="@/styles/popupCreaPost.css"></style>
+<style scoped src="@/styles/popupCreaPost.css"></style>

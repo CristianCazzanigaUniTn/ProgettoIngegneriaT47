@@ -10,6 +10,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@sendgrid/mail": "^8.1.4",
     "autenticazione": "file:",
     "bcrypt": "^5.1.1",
     "cloudinary": "^2.5.1",
