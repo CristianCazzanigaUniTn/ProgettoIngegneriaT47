@@ -1,79 +1,86 @@
+<script setup>
+import { ref } from 'vue';
+import { loggedUser, setLoggedUser, clearLoggedUser } from '@/states/loggedUser.ts';
+import router from '../router';
+
+const HOST = import.meta.env.VITE_API_HOST || `http://localhost:3000`;
+const API_URL = HOST + `/api/v1`;
+
+const username = ref('');
+const password = ref('');
+const email = ref('');
+const isLoginForm = ref(true);
+
+const emit = defineEmits(['login']);
+
+
+function login() {
+  fetch(API_URL + '/authentications', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username: username.value, password: password.value }),
+  })
+    .then((resp) => resp.json())
+    .then(function (data) {
+      setLoggedUser(data);
+      emit('login', loggedUser);
+      if (loggedUser.token) {
+        router.push("/mappa");
+      }
+      return;
+    })
+    .catch((error) => console.error(error));
+}
+
+
+function register() {
+
+}
+
+// Funzione di logout
+function logout() {
+  clearLoggedUser();
+}
+</script>
+
 <template>
-    <div id="vue-app" class="login-box">
+  <form>
+    <span v-if="loggedUser.token">
+      Welcome <a :href="HOST + '/' + loggedUser.self">{{ loggedUser.username }}</a>
+      <button type="button" @click="logout">LogOut</button>
+    </span>
+
+    <span v-if="!loggedUser.token">
+      <div class="login-box">
         <p class="small-text">IL SOCIAL NETWORK DI CUI HAI BISOGNO</p>
         <h1 class="title">EVENTLY</h1>
         <p class="sub-text">ENTRA e partecipa ad EVENTI</p>
 
-        <form class="login-form" @submit.prevent="authenticate">
-            <input v-model="username" type="text" placeholder="Email, Username o Telefono" class="input-field" />
-            <input v-model="password" type="password" placeholder="Password" class="input-field" />
-            <div class="buttons">
-                <button type="submit" class="btn access">Accedi</button>
-                <button type="button" class="btn register">Registrati</button>
-            </div>
+        <form v-if="isLoginForm" class="login-form">
+          <input v-model="username" type="text" placeholder="Email, Username o Telefono" class="input-field" />
+          <input v-model="password" type="password" placeholder="Password" class="input-field" />
+          <div class="buttons">
+            <button type="button" class="btn access" @click="login">LogIn</button>
+            <button type="button" class="btn register" @click="isLoginForm = false">Registrati</button>
+          </div>
         </form>
 
-        <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
+        <form v-if="!isLoginForm" class="login-form">
+          <input v-model="username" type="text" placeholder="Username" class="input-field" />
+          <input v-model="email" type="email" placeholder="Email" class="input-field" />
+          <input v-model="password" type="password" placeholder="Password" class="input-field" />
+          <div class="buttons">
+            <button type="button" class="btn access" @click="register">Registrati</button>
+            <button type="button" class="btn register" @click="isLoginForm = true">Hai già un account? Accedi</button>
+          </div>
+        </form>
 
         <div class="google-login">
-            <img src="@/assets/goog.png" alt="Accedi con Google" class="google-icon" />
+          <img src="@/assets/goog.png" alt="Accedi con Google" class="google-icon" />
         </div>
-    </div>
+      </div>
+    </span>
+  </form>
 </template>
-<script>
-import { ref } from 'vue';
-import { authState } from '@/scripts/authstate/authState.js'; // Importa authState
-
-export default {
-  name: 'Home',
-  setup() {
-    const username = ref('');
-    const password = ref('');
-    const errorMessage = ref(null);
-
-    const authenticate = async () => {
-      errorMessage.value = null;
-
-      try {
-        const response = await fetch('http://localhost:3000/api/v1/authentications', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            username: username.value,
-            password: password.value,
-          }),
-        });
-
-        if (!response.ok) {
-          throw new Error('Errore nell\'autenticazione');
-        }
-
-        const data = await response.json();
-
-        // Salva il token nella localStorage
-        localStorage.setItem('authToken', data.token);
-        
-        // Aggiorna lo stato di autenticazione
-        authState.setAuth(data.token);
-
-        
-      } catch (error) {
-        errorMessage.value = error.message;
-      }
-    };
-
-    return {
-      username,
-      password,
-      errorMessage,
-      authenticate,
-    };
-  },
-};
-</script>
-
-
 
 <style scoped src="@/styles/login.css"></style>

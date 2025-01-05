@@ -117,7 +117,31 @@
     font-weight: bold;
   }
   
-  #chisiamo {
+  #chiSiamo {
     font-weight: bold;
   }
   
+
+
+
+  .profilo-link.disabled {
+    color: gray;
+    cursor: not-allowed;
+  }
+  
+  .settings-icon {
+    cursor: pointer;
+  }
+  
+  .username {
+    display: flex;
+    align-items: center;
+    gap: 10px; 
+  }
+  
+  .profile-picture {
+    width: 30px; 
+    height: 30px;
+    border-radius: 50%; 
+    object-fit: cover;
+  }

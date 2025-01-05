@@ -42,6 +42,14 @@ var UserSchema = new Schema({
         type: String,
         enum: ['organizzatore', 'partecipante', 'amministratore'], 
         required: true,
+    },
+    foto_profilo: {
+        type: String,
+        required: true,
+    },
+    verified: {
+        type: Boolean,
+        required: true,
     }
 });
 

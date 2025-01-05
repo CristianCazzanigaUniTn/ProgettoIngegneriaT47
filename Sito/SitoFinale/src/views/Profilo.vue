@@ -3,7 +3,7 @@
     <!-- Sezione sinistra: Profilo Utente -->
     <div class="left">
       <UserProfile 
-        :name="userProfile.name" 
+        :name="userProfile.username" 
         :profileImage="userProfile.profileImage" 
       />
     </div>
@@ -25,23 +25,27 @@
 </template>
 
 <script>
-import { getPost } from '@/scripts/ProfilePage/PostCard.ts'; // Importa solo la funzione getPost
-import { userProfile } from '@/scripts/ProfilePage/UserData.ts'; // Import dei dati profilo
+import { getPost } from '@/scripts/ProfilePage/PostCard.ts'; 
+import { getUser } from '@/scripts/ProfilePage/UserData.ts'; 
 import Card from '@/components/profileComponents/PostCard.vue';
 import UserProfile from '@/components/profileComponents/UserData.vue';
-
 export default {
   name: 'Profilo',
   components: { Card, UserProfile },
   data() {
     return {
-      posts: [], // Lista dei post dinamici
-      userProfile, // Dati del profilo utente
+      posts: [], 
+      userProfile: null, 
     };
   },
   async created() {
-    const id = this.$route.params.id;  // Ottieni l'ID dal parametro dell'URL (se usi Vue Router)
-    this.posts = await getPost(id); // Ottieni i post dinamici in base all'ID
+    const id = this.$route.params.id; 
+    try {
+      this.userProfile = await getUser(id);
+      this.posts = await getPost(id);
+    } catch (error) {
+      console.error('Errore durante il caricamento del profilo o dei post:', error);
+    }
   },
 };
 </script>
