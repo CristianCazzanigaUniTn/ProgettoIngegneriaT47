@@ -110,14 +110,14 @@
   }
   
   #mappa {
-    color: gray;
+    font-weight: bold;
   }
   
   #profilo {
-    color: gray;
+    font-weight: bold;
   }
   
   #chisiamo {
-    font-weight: lighter;
+    font-weight: bold;
   }
   

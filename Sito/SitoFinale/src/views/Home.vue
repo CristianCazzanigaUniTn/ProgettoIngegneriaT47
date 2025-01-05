@@ -5,8 +5,8 @@
         <p class="sub-text">ENTRA e partecipa ad EVENTI</p>
 
         <form class="login-form" @submit.prevent="authenticate">
-            <input v-model="username" type="text" placeholder="Email, Username o Telefono" class="input-field">
-            <input v-model="password" type="password" placeholder="Password" class="input-field">
+            <input v-model="username" type="text" placeholder="Email, Username o Telefono" class="input-field" />
+            <input v-model="password" type="password" placeholder="Password" class="input-field" />
             <div class="buttons">
                 <button type="submit" class="btn access">Accedi</button>
                 <button type="button" class="btn register">Registrati</button>
@@ -16,60 +16,64 @@
         <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
 
         <div class="google-login">
-            <img src="@/assets/goog.png" alt="Accedi con Google" class="google-icon">
+            <img src="@/assets/goog.png" alt="Accedi con Google" class="google-icon" />
         </div>
     </div>
 </template>
-
 <script>
 import { ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { authState } from '@/scripts/authstate/authState.js'; // Importa authState
 
 export default {
-    name: 'Home',
-    setup() {
-        const username = ref('');
-        const password = ref('');
-        const errorMessage = ref(null);
-        const router = useRouter();
+  name: 'Home',
+  setup() {
+    const username = ref('');
+    const password = ref('');
+    const errorMessage = ref(null);
 
-        // Funzione per autenticarsi
-        const authenticate = async () => {
-            // Pulisci eventuali errori precedenti
-            errorMessage.value = null;
+    const authenticate = async () => {
+      errorMessage.value = null;
 
-            try {
-                const response = await fetch('http://localhost:3000/api/v1/authentications', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        username: username.value,
-                        password: password.value
-                    })
-                });
+      try {
+        const response = await fetch('http://localhost:3000/api/v1/authentications', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            username: username.value,
+            password: password.value,
+          }),
+        });
 
-                if (!response.ok) {
-                    throw new Error('Errore nell autenticazione');
-                }
+        if (!response.ok) {
+          throw new Error('Errore nell\'autenticazione');
+        }
 
-                const data = await response.json();
+        const data = await response.json();
 
-                console.log('Autenticazione riuscita:', data);
-                localStorage.setItem('authToken', data.token);
+        // Salva il token nella localStorage
+        localStorage.setItem('authToken', data.token);
+        
+        // Aggiorna lo stato di autenticazione
+        authState.setAuth(data.token);
 
-                // Naviga alla pagina mappa
-                router.push('/Mappa');
+        
+      } catch (error) {
+        errorMessage.value = error.message;
+      }
+    };
 
-            } catch (error) {
-                errorMessage.value = error.message;
-            }
-        };
-
-        return { username, password, errorMessage, authenticate };
-    }
+    return {
+      username,
+      password,
+      errorMessage,
+      authenticate,
+    };
+  },
 };
 </script>
+
+
 
 <style scoped src="@/styles/login.css"></style>

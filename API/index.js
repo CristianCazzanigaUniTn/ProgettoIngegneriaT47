@@ -7,9 +7,13 @@ const swaggerJsdoc = require('swagger-jsdoc');
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const likeRoutes = require('./routes/likeRoutes');
-const cloudFotoRoutes = require('./routes/cloudFotoRoutes');
 const partecipazioniRoutes = require('./routes/partecipazioniRoutes');
 const commentiRoutes = require('./routes/commentiRoutes');
+const eventRoutes = require('./routes/eventRoutes');
+const partyRoutes = require('./routes/partyRoutes');
+const faqRoutes = require('./routes/faqRoutes');
+const postRoutes = require('./routes/postRoutes');
+const cloudFotoRoutes = require('./routes/cloudFotoRoutes');
 const app = express();
 const cors = require('cors');
 
@@ -47,7 +51,7 @@ const swaggerOptions = {
             },
         }
     },
-    apis: ['./routes/cloudFotoRoutes.js','./routes/authRoutes.js', './routes/userRoutes.js', './routes/commentiRoutes.js', './routes/likeRoutes.js', './routes/partecipazioniRoutes.js'], 
+    apis: ['./routes/authRoutes.js', './routes/userRoutes.js', './routes/commentiRoutes.js', './routes/likeRoutes.js', './routes/partecipazioniRoutes.js', './routes/eventRoutes.js', './routes/partyRoutes.js', './routes/faqRoutes.js', './routes/postRoutes.js', './routes/cloudFotoRoutes.js', './routes/EmailRoutes.js'] 
 };
 
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
@@ -60,8 +64,13 @@ app.use(authRoutes);
 app.use(userRoutes);
 app.use(commentiRoutes);
 app.use(likeRoutes);
-app.use(cloudFotoRoutes);
 app.use(partecipazioniRoutes);
+app.use(eventRoutes);
+app.use(partyRoutes);
+app.use(faqRoutes);
+app.use(postRoutes);
+app.use(cloudFotoRoutes);
+
 mongoose.connect(DB)
     .then(() => {
         console.log('Connected to MongoDB');

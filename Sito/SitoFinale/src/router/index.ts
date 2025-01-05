@@ -8,7 +8,12 @@ import ChiSiamo from '../views/ChiSiamo.vue';
 const routes = [
   { path: '/', component: Home },
   { path: '/mappa', component: Mappa },
-  { path: '/profilo', component: Profilo },
+  {
+    path: '/profilo/:id',  
+    name: 'profilo',
+    component: Profilo,
+    props: true, 
+  },
   { path: '/chiSiamo', component: ChiSiamo },
 ];
 

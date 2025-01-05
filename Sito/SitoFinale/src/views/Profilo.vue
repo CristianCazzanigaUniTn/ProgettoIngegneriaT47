@@ -1,35 +1,49 @@
 <template>
-    <div class="container-box">
-        <div class="left">
-            <h2 class="nomeUtente">Dean Gambalunga</h2>
-            <img class="fotoProfilo"  style="background-image: url('/image/image.png');">
-        </div>
-        <div class="right">
-            <h2 class="titoloOggi">POST DI OGGI</h2>
-            <div class="listacards">
-                <div class="card" style="background-image: url('/image/image copy.png');">
-                    <div class="card-content">
-                        <h3 class="card-title">Trento, Italy</h3>
-                        <p class="card-description">Questa è una breve descrizione del post. Qui puoi mettere un testo di esempio che spiega di cosa tratta il post.</p>
-                    </div>
-                </div>
-                <div class="card" style="background-image: url('/image/image copy.png');">
-                    <div class="card-content">
-                        <h3 class="card-title">Germania, Italy</h3>
-                        <p class="card-description">Questa è una breve descrizione del post. Qui puoi mettere un testo di esempio che spiega di cosa tratta il post.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
+  <div class="container-box">
+    <!-- Sezione sinistra: Profilo Utente -->
+    <div class="left">
+      <UserProfile 
+        :name="userProfile.name" 
+        :profileImage="userProfile.profileImage" 
+      />
     </div>
-  </template>
-  
-  <script>
-  export default {
-    name: 'Profilo'
-  };
-  </script>
+
+    <!-- Sezione destra: Post dell'utente -->
+    <div class="right">
+      <h2 class="titoloOggi">POST DI OGGI</h2>
+      <div class="listacards">
+        <Card 
+          v-for="(post, index) in posts" 
+          :key="post.id" 
+          :title="post.title" 
+          :description="post.description" 
+          :backgroundImage="post.image" 
+        />
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import { getPost } from '@/scripts/ProfilePage/PostCard.ts'; // Importa solo la funzione getPost
+import { userProfile } from '@/scripts/ProfilePage/UserData.ts'; // Import dei dati profilo
+import Card from '@/components/profileComponents/PostCard.vue';
+import UserProfile from '@/components/profileComponents/UserData.vue';
+
+export default {
+  name: 'Profilo',
+  components: { Card, UserProfile },
+  data() {
+    return {
+      posts: [], // Lista dei post dinamici
+      userProfile, // Dati del profilo utente
+    };
+  },
+  async created() {
+    const id = this.$route.params.id;  // Ottieni l'ID dal parametro dell'URL (se usi Vue Router)
+    this.posts = await getPost(id); // Ottieni i post dinamici in base all'ID
+  },
+};
+</script>
 
 <style scoped src="@/styles/profile.css"></style>
-  
