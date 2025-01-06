@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/global.css">
+    <link rel="stylesheet" href="./css/profilepage.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik+Glitch&display=swap" rel="stylesheet">
+    <title>Pagina con Sfondo</title>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="navbar-left">
+            <img src="./image/logo.png" alt="Logo" class="logo">
+        </div>
+        <div class="navbar-center">
+            <a id="home" href="#home">HOME</a>
+            <a id="mappa" href="#mappa">MAPPA</a>
+            <a id="profilo" href="#profilo">PROFILO</a>
+            <a id="chisiamo" href="#chi-siamo">CHI SIAMO</a>
+        </div>
+        <div class="navbar-right">
+            <input type="text" placeholder="Cerca" class="search-bar">
+            <img src="./image/imp.png" alt="Impostazioni" class="settings-icon">
+        </div>
+    </nav>
+
+    <div id="vue-app" class="container-box">
+        <div class="left">
+            <h2 class="nomeUtente">{{ nome_utente }}</h2>
+            <img class="fotoProfilo" style="background-image: url('./image/image.png');">
+        </div>
+
+        <div class="right">
+            <h2 class="titoloOggi">{{ messaggio_ruolo }}</h2>
+            <div class="listacards">
+                <!-- Genera dinamicamente le cards -->
+                <div class="card" v-for="(item, index) in cards" :key="index"
+                    :style="{ backgroundImage: 'url(' + item.urlimmagine + ')' }">
+                    <div class="card-content">
+                        <h3 class="card-title">{{ item.titolo }}</h3>
+                        <p class="card-description">{{ item.descrizione }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { createApp, ref } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js';
+
+        const utente_base_id = "6735e4672b45400acaf45657";
+        const org_id = "6735e4672b45400acaf4565a";
+
+        const id = utente_base_id;
+
+        createApp({
+            setup() {
+                // Stato reattivo
+                const cards = ref([]); // Contiene tutte le cards da mostrare
+                const nome_utente = ref(null); // Nome dell'utente
+                const ruolo_utente = ref(null); // Ruolo dell'utente
+                const messaggio_ruolo = ref(null); // Messaggio dinamico da mostrare
+                const errorMessage = ref(null); // Messaggio di errore
+
+                // Funzione per ottenere i dati dell'utente
+                const getUser = async () => {
+                    try {
+                        const response = await fetch(`http://localhost:3000/api/Utenti/${id}`);
+                        if (!response.ok) {
+                            throw new Error('Utente non trovato');
+                        }
+                        const data = await response.json();
+                        nome_utente.value = data.user.username;
+                        ruolo_utente.value = data.user.ruolo;
+                    } catch (error) {
+                        errorMessage.value = error.message;
+                    }
+                };
+
+                // Funzione per ottenere gli eventi
+                const getEventi = async () => {
+                    try {
+                        const response = await fetch(`http://localhost:3000/api/eventi/organizzatore/${id}`);
+                        if (!response.ok) {
+                            throw new Error('Eventi non trovati');
+                        }
+                        const eventiData = await response.json();
+                        cards.value = eventiData.map(evento => ({
+                            titolo: evento.nome,
+                            descrizione: evento.descrizione,
+                            urlimmagine: evento.foto
+                        }));
+                    } catch (error) {
+                        errorMessage.value = error.message;
+                    }
+                };
+
+                // Funzione per ottenere i party
+                const getParty = async () => {
+                    try {
+                        const response = await fetch(`http://localhost:3000/api/party/organizzatore/${id}`);
+                        if (!response.ok) {
+                            throw new Error('Party non trovati');
+                        }
+                        const partyData = await response.json();
+                        return partyData.map(party => ({
+                            titolo: party.nome,
+                            descrizione: party.descrizione,
+                            urlimmagine: party.foto
+                        }));
+                    } catch (error) {
+                        errorMessage.value = error.message;
+                        return [];
+                    }
+                };
+
+                // Funzione per ottenere i post
+                const getPost = async () => {
+                    try {
+                        const response = await fetch(`http://localhost:3000/api/post/${id}`);
+                        if (!response.ok) {
+                            throw new Error('Post non trovati');
+                        }
+                        const postData = await response.json();
+
+                        // Filtra i post che hanno immagine null o non valida
+                        return postData
+                            .filter(post => post.contenuto !== "null")
+                            .map(post => ({
+                                titolo: "",
+                                descrizione: post.contenuto,
+                                urlimmagine: post.contenuto
+                            }));
+                    } catch (error) {
+                        errorMessage.value = error.message;
+                        return [];
+                    }
+                };
+
+                // Inizializza i dati
+                const init = async () => {
+                    await getUser();
+                    if (ruolo_utente.value === "utente_base") {
+                        const partyCards = await getParty();
+                        const postCards = await getPost();
+                        cards.value = [...partyCards, ...postCards];
+                        messaggio_ruolo.value = "Post di oggi e Party organizzati";
+                    } else if (ruolo_utente.value === "organizzatore") {
+                        await getEventi();
+                        messaggio_ruolo.value = "Eventi organizzati";
+                    } else {
+                        console.error("Ruolo indefinito");
+                    }
+                };
+
+                // Avvia l'inizializzazione
+                init();
+
+                return { cards, nome_utente, ruolo_utente, messaggio_ruolo, errorMessage };
+            }
+        }).mount('#vue-app');
+    </script>
+</body>
+
+</html>

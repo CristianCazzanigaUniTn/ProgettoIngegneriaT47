@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carica Foto su Cloudinary</title>
+</head>
+
+<body>
+    <div id="vue-app">
+        <form @submit.prevent="uploadFile">
+            <input type="file" @change="e => file = e.target.files[0]" name="file" />
+            <button type="submit">Carica immagine</button>
+            <img v-if="uploadedImageUrl" :src="uploadedImageUrl" alt="Immagine caricata" />
+            <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
+        </form>
+    </div>
+
+
+    <script type="module">
+        import { createApp, ref } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js';
+
+        createApp({
+            setup() {
+                const file = ref(null); // Riferimento al file selezionato
+                const uploadedImageUrl = ref(null); // URL dell'immagine caricata
+                const errorMessage = ref(null); // Messaggio di errore
+
+                // Funzione per caricare il file
+                const uploadFile = async () => {
+                    // Resetta errori precedenti
+                    errorMessage.value = null;
+
+                    try {
+                        if (!file.value) {
+                            throw new Error("Seleziona un file prima di caricare.");
+                        }
+
+                        const tokenFromStorage = localStorage.getItem('authToken');
+
+                        console.log(tokenFromStorage);
+
+                        if (!tokenFromStorage) {
+                            throw new Error("Utente non autenticato!");
+                        }
+
+                        // Richiedi i dati necessari per il caricamento dal backend
+                        const response = await fetch("http://localhost:3000/generate-signed-url-post", {
+                            method: "POST",
+                            headers: {
+                                'Authorization': `Bearer ${tokenFromStorage}`
+                            }
+                        });
+
+                        if (!response.ok) {
+                            throw new Error("Errore nella richiesta al backend.");
+                        }
+
+                        const data = await response.json();
+
+                        // Prepara i dati per l'upload su Cloudinary
+                        const formData = new FormData();
+                        formData.append("file", file.value);
+                        formData.append("upload_preset", data.upload_preset);
+                        formData.append("timestamp", data.timestamp);
+                        formData.append("signature", data.signature);
+                        formData.append("api_key", data.api_key);
+
+                        // Effettua il caricamento su Cloudinary
+                        const uploadResponse = await fetch(
+                            "https://api.cloudinary.com/v1_1/dc2ga9rlo/image/upload",
+                            {
+                                method: "POST",
+                                body: formData,
+                            }
+                        );
+
+                        if (!uploadResponse.ok) {
+                            throw new Error("Errore durante il caricamento su Cloudinary.");
+                        }
+
+                        const uploadData = await uploadResponse.json();
+
+                        // Aggiorna l'URL dell'immagine caricata
+                        uploadedImageUrl.value = uploadData.secure_url;
+                        console.log("Immagine caricata con successo", uploadData);
+                    } catch (error) {
+                        errorMessage.value = error.message;
+                        console.error("Errore:", error);
+                    }
+                };
+
+                return { file, uploadedImageUrl, errorMessage, uploadFile };
+            },
+        }).mount('#vue-app');
+    </script>
+</body>
+
+</html>

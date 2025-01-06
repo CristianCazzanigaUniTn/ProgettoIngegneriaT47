@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Crea Evento</title>
+  <link href="css/creaEventoPopUp.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  
+</head>
+<body>
+
+  <div class="contenitore-form-evento">
+    <div class="intestazione-form-evento">
+      <h2>Crea un Nuovo Evento</h2>
+      <p>Organizza e condividi il tuo evento con facilità</p>
+    </div>
+    <form id="formCreaEvento">
+      <div class="gruppo-campo">
+        <label for="nomeEvento">Nome Evento</label>
+        <input type="text" id="nomeEvento" name="nomeEvento" placeholder="Es: Festa di Primavera" required>
+      </div>
+      <div class="gruppo-campo">
+        <label for="dataEvento">Data e Ora</label>
+        <input type="datetime-local" id="dataEvento" name="dataEvento" required>
+      </div>
+      <div class="gruppo-campo">
+        <label for="luogoEvento">Luogo</label>
+        <input type="text" id="luogoEvento" name="luogoEvento" placeholder="Es: Piazza Duomo" required>
+      </div>
+      <div class="gruppo-campo">
+        <label for="tipologiaEvento">Tipologia</label>
+        <select id="tipologiaEvento" name="tipologiaEvento" required>
+          <option value="" disabled selected>Scegli una tipologia</option>
+          <option value="networking">Networking</option>
+          <option value="workshop">Workshop</option>
+          <option value="seminario">Seminario</option>
+          <option value="concerto">Concerto</option>
+          <option value="festa">Festa</option>
+        </select>
+      </div>
+      <div class="gruppo-campo">
+        <label for="numeroPartecipanti">Numero Massimo di Partecipanti</label>
+        <input type="number" id="numeroPartecipanti" name="numeroPartecipanti" placeholder="Es: 100" min="1" required>
+      </div>
+      <div class="gruppo-campo larghezza-completa">
+        <label for="descrizioneEvento">Descrizione</label>
+        <textarea id="descrizioneEvento" name="descrizioneEvento" placeholder="Descrivi il tuo evento..." required></textarea>
+      </div>
+      <div class="gruppo-campo larghezza-completa">
+        <label class="etichetta-immagine">Immagine Evento</label>
+        <div class="caricamento-immagine">
+          <label for="immagineEvento"><i class="fas fa-upload"></i> Carica Immagine</label>
+          <input type="file" id="immagineEvento" name="immagineEvento" accept="image/*" required>
+        </div>
+        <div class="anteprima-immagine" id="anteprimaImmagine">
+          <img src="" alt="Anteprima Immagine" id="immagineAnteprima">
+          <button type="button" class="rimuovi-immagine" id="rimuoviImmagine"><i class="fas fa-times"></i></button>
+        </div>
+      </div>
+      <button type="submit" class="pulsante-invio">Crea Evento</button>
+    </form>
+  </div>
+
+  <!-- JavaScript per l'anteprima dell'immagine e la rimozione -->
+  <script>
+    const immagineEventoInput = document.getElementById('immagineEvento');
+    const anteprimaImmagine = document.getElementById('anteprimaImmagine');
+    const immagineAnteprima = document.getElementById('immagineAnteprima');
+    const rimuoviImmagineButton = document.getElementById('rimuoviImmagine');
+
+    immagineEventoInput.addEventListener('change', function () {
+      const file = this.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          immagineAnteprima.src = e.target.result;
+          anteprimaImmagine.style.display = 'block';
+        }
+        reader.readAsDataURL(file);
+      }
+    });
+
+    rimuoviImmagineButton.addEventListener('click', function () {
+      immagineEventoInput.value = '';
+      immagineAnteprima.src = '';
+      anteprimaImmagine.style.display = 'none';
+    });
+
+    const formCreaEvento = document.getElementById('formCreaEvento');
+    formCreaEvento.addEventListener('submit', function (e) {
+      e.preventDefault();
+      alert('Evento creato con successo!');
+      formCreaEvento.reset();
+      anteprimaImmagine.style.display = 'none';
+    });
+  </script>
+</body>
+</html>

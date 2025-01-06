@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+    <html>
+
+    <head>
+        <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.14/dist/full.min.css" rel="stylesheet" type="text/css" />
+        <script src="https://cdn.tailwindcss.com"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+
+        </style>
+    </head>
+
+    <body class="bg-blue-200">
+        <div class="bg-blue-500 navbar rounded-box">
+
+            <a class="btn btn-ghost text-l">EasyLib</a>
+
+            <div class="flex flex-1 justify-end px-2">
+                <div class="flex items-stretch">
+
+                    <a class="btn btn-ghost rounded-btn">Login</a>
+
+                    <div class="dropdown dropdown-end">
+                        <div tabindex="0" role="button" class="btn btn-ghost rounded-btn">Pages</div>
+                        <ul tabindex="0" class="menu dropdown-content bg-base-100 rounded-box z-[1] mt-4 w-52 p-2 shadow">
+                            <li><a>Books</a></li>
+                            <li><a>Booklendings</a></li>
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+        <script>
+            var a = 123;
+            document.myB = "Hello";
+        </script>
+
+        <!-- TITOLO -->
+
+        <div class="mt-10 mx-auto text-center">
+            <h1 id="title" class="w-1/2 text-white bg-black text-3xl
+                    font-bold hover:text-red-500 p-2 mx-auto">
+                EasyLib 2
+            </h1>
+        </div>
+
+        <div class="m-10 w-full flex flex-wrap">
+            <div class="w-full sm:w-1/2">
+                <h2>
+                    Here is the list of parties:
+                </h2>
+            </div>
+            <div class="w-full sm:w-1/2">
+                <!-- Questa parte contiene il componente Vue che gestirà la lista dei party -->
+                <div id="vue-app" class="m-10 border-4">
+                    <ul>
+                        <li v-for="party in parties" :key="party._id">
+                            <a :href="`./api/party/${party._id}`">{{ party.nome }}</a>
+                        </li>
+                    </ul>
+                    <p v-if="parties.length === 0">No parties found</p>
+                    <p v-if="errorMessage">{{ errorMessage }}</p>
+                </div>
+            </div>
+        </div>
+
+        <script type="module">
+            import { createApp, ref } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js';
+
+            createApp({
+                setup() {
+                    // Definisci lo stato reattivo per i dati dei party e gli eventuali errori
+                    const parties = ref([]);
+                    const errorMessage = ref(null);
+
+                    // Funzione per recuperare i party
+                    const getParties = async () => {
+                        try {
+                            const response = await fetch('http://localhost:3000/api/party');
+                            if (!response.ok) {
+                                throw new Error('Errore nel recupero dei party');
+                            }
+
+                            // Estrai i dati dalla risposta e assegnali alla variabile reattiva
+                            const data = await response.json();
+                            parties.value = data;
+                            console.log(parties.value);
+                        } catch (error) {
+                            // Gestisci eventuali errori e mostra il messaggio
+                            errorMessage.value = error.message;
+                        }
+                    };
+
+                    // Recupera i party quando l'app Vue è montata
+                    getParties();
+
+                    return { parties, errorMessage };
+                }
+            }).mount('#vue-app');
+        </script>
+
+
+        <footer class="footer footer-center bg-base-300 text-base-content p-4">
+            <aside>
+                <p>Copyright © 2024 - daisyUI Footer</p>
+            </aside>
+        </footer>
+
+    </body>
+
+</html>
