@@ -1,0 +1,125 @@
+#popupPartyDiv {
+    position: fixed;
+    top: 50%;
+    left: 55%;
+    transform: translate(-50%, -50%);
+    width: 60%;
+    max-width: 500px;
+    background: #ffffff;
+    border: 1px solid #f2f2f2;
+    border-radius: 10px;
+    padding: 0;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    overflow: hidden;
+}
+
+#popupPartyDiv .instagram-card-header {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 1px solid #f2f2f2;
+    background-color: #ffffff;
+}
+
+#popupPartyDiv .instagram-card-user-image {
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+}
+
+#popupPartyDiv .instagram-card-header div {
+    display: flex;
+    flex-direction: column;
+    margin-left: 15px;
+}
+
+#popupPartyDiv .instagram-card-user-name {
+    font-weight: bold;
+    color: #262626;
+    font-size: 18px;
+}
+
+#popupPartyDiv .instagram-card-time {
+    color: #999;
+    font-size: 14px;
+}
+
+#popupPartyDiv .instagram-card-image {
+    max-width: 100%;
+    overflow: hidden;
+}
+
+#popupPartyDiv .instagram-card-image img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-bottom: 1px solid #f2f2f2;
+}
+
+#popupPartyDiv .instagram-card-content {
+    padding: 20px;
+    background-color: #fafafa;
+}
+
+#popupPartyDiv .likes {
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+#popupPartyDiv .categorie {
+    margin: 10px 0;
+    color: #666;
+    font-size: 14px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+#popupPartyDiv .categorie span {
+    background: #007bff;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 12px;
+}
+
+#popupPartyDiv .partecipanti {
+    font-size: 16px;
+    color: #555;
+    margin-bottom: 20px;
+}
+
+#popupPartyDiv .button-iscrizione {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    background-color: #007bff;
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 25px;
+    padding: 10px 25px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+#popupPartyDiv .button-iscrizione:hover {
+    background-color: #0056b3;
+}
+
+#popupPartyDiv #chiusuraParty {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    border: none;
+    background: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #333;
+    z-index: 1001;
+}
