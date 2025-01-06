@@ -1,89 +1,122 @@
 <!DOCTYPE html>
 <html lang="it">
+
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="./css/viewpartyevento.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Popup Party</title>
 </head>
+
 <body>
 
-<div id="popupPartyDiv">
-    <button id="chiusuraParty">×</button>
-    <div class="instagram-card">
-        <div class="instagram-card-header">
-            <img id="fotoProfiloParty" class="instagram-card-user-image" />
-            <div>
-                <a class="instagram-card-user-name" id="nomeUtenteParty">utente_esempio</a>
-                <div class="instagram-card-time">14:30</div>
+    <div id="popupPartyDiv">
+        <button id="chiusuraParty">×</button>
+        <div class="instagram-card">
+            <div class="instagram-card-header">
+                <img id="fotoProfiloParty" class="instagram-card-user-image" />
+                <div>
+                    <a class="instagram-card-user-name" id="nomeUtenteParty">utente_esempio</a>
+                    <div class="instagram-card-time">14:30</div>
+                </div>
             </div>
-        </div>
-        <div class="instagram-card-image">
-            <img id="immagineParty" src="" alt="Foto del party" />
-        </div>
-        <div class="instagram-card-content">
-            <p id="descrizioneParty" class="likes">Descrizione del party qui.</p>
-            <div class="categorie">
-                <span>#Divertimento</span>
-                <span>#Musica</span>
-                <span>#Amici</span>
+            <div class="instagram-card-image">
+                <img id="immagineParty" src="" alt="Foto del party" />
             </div>
-            <p class="partecipanti">
-                <span id="partecipantiAttuali">20</span> / <span id="partecipantiMassimi">50</span> partecipanti
-            </p>
+            <div class="instagram-card-content">
+                <p id="descrizioneParty" class="likes">Descrizione del party qui.</p>
+                <div class="categorie">
+                    <span>#Divertimento</span>
+                    <span>#Musica</span>
+                    <span>#Amici</span>
+                </div>
+                <p class="partecipanti">
+                    <span id="partecipantiAttuali">20</span> / <span id="partecipantiMassimi">50</span> partecipanti
+                </p>
+                <button id="azionePartyButton" class="button-iscrizione">Iscriviti</button>
+
+            </div>
+
+            <!-- Sezione FAQ -->
+            <div class="faq-input-container">
+                <textarea id="faqInput" class="faq-input" placeholder="Scrivi una domanda..."></textarea>
+                <button id="faqSubmit" class="faq-submit">
+                    <span class="arrow-icon">&gt;</span>
+                </button>
+            </div>
+            <div class="faq-list"></div>
+
         </div>
-        <button id="azionePartyButton" class="button-iscrizione">Iscriviti</button>
     </div>
-</div>
 
-<script>
-    function apriPopupParty(utente, fotoProfilo, immagineParty, descrizione, categorie, attuali, massimi, tipoAzione) {
-        document.getElementById('nomeUtenteParty').textContent = utente;
-        document.getElementById('fotoProfiloParty').src = fotoProfilo;
-        document.getElementById('immagineParty').src = immagineParty;
-        document.getElementById('descrizioneParty').textContent = descrizione;
+    <script>
+        function apriPopupParty(utente, fotoProfilo, immagineParty, descrizione, categorie, attuali, massimi, tipoAzione) {
+            document.getElementById('nomeUtenteParty').textContent = utente;
+            document.getElementById('fotoProfiloParty').src = fotoProfilo;
+            document.getElementById('immagineParty').src = immagineParty;
+            document.getElementById('descrizioneParty').textContent = descrizione;
 
-        const categorieContainer = document.querySelector('.categorie');
-        categorieContainer.innerHTML = '';
-        categorie.forEach(cat => {
-            const span = document.createElement('span');
-            span.textContent = `#${cat}`;
-            categorieContainer.appendChild(span);
-        });
+            const categorieContainer = document.querySelector('.categorie');
+            categorieContainer.innerHTML = '';
+            categorie.forEach(cat => {
+                const span = document.createElement('span');
+                span.textContent = `#${cat}`;
+                categorieContainer.appendChild(span);
+            });
 
-        document.getElementById('partecipantiAttuali').textContent = attuali;
-        document.getElementById('partecipantiMassimi').textContent = massimi;
+            document.getElementById('partecipantiAttuali').textContent = attuali;
+            document.getElementById('partecipantiMassimi').textContent = massimi;
 
-        const bottone = document.getElementById('azionePartyButton');
-        if (tipoAzione === 'iscriviti') {
-            bottone.textContent = 'Iscriviti';
-            bottone.onclick = () => alert('Ti sei iscritto al party!');
-        } else if (tipoAzione === 'disiscriviti') {
-            bottone.textContent = 'Disiscriviti';
-            bottone.onclick = () => alert('Ti sei disiscritto dal party!');
-        } else if (tipoAzione === 'elimina') {
-            bottone.textContent = 'Elimina';
-            bottone.onclick = () => alert('Hai eliminato il party!');
+            const bottone = document.getElementById('azionePartyButton');
+            if (tipoAzione === 'iscriviti') {
+                bottone.textContent = 'Iscriviti';
+                bottone.onclick = () => alert('Ti sei iscritto al party!');
+            } else if (tipoAzione === 'disiscriviti') {
+                bottone.textContent = 'Disiscriviti';
+                bottone.onclick = () => alert('Ti sei disiscritto dal party!');
+            } else if (tipoAzione === 'elimina') {
+                bottone.textContent = 'Elimina';
+                bottone.onclick = () => alert('Hai eliminato il party!');
+            }
+
+            document.getElementById('popupPartyDiv').style.display = 'block';
         }
 
-        document.getElementById('popupPartyDiv').style.display = 'block';
-    }
+        document.getElementById('chiusuraParty').addEventListener('click', () => {
+            document.getElementById('popupPartyDiv').style.display = 'none';
+        });
 
-    document.getElementById('chiusuraParty').addEventListener('click', () => {
-        document.getElementById('popupPartyDiv').style.display = 'none';
-    });
+        // Gestione FAQ
+        document.getElementById('faqSubmit').addEventListener('click', () => {
+            const faqInput = document.getElementById('faqInput');
+            const faqList = document.querySelector('.faq-list');
 
-    apriPopupParty(
-        'Mario Rossi',                    
-        'https://via.placeholder.com/50',  
-        'https://via.placeholder.com/400', 
-        'Questo è un party molto divertente, non perdertelo!', 
-        ['Divertimento', 'Musica', 'Amici'], 
-        25,                               
-        50,                              
-        'iscriviti'                        
-    );
-</script>
+            if (faqInput.value.trim() !== '') {
+                const faqItem = document.createElement('div');
+                faqItem.classList.add('faq-item');
+                faqItem.innerHTML = `
+            <p><strong>Domanda:</strong> ${faqInput.value}</p>
+            <p class="faq-risposta"><strong>Risposta:</strong> In attesa di risposta...</p>
+        `;
+                faqList.appendChild(faqItem);
+                faqInput.value = ''; // Resetta il campo input
+            } else {
+                alert('Inserisci una domanda valida.');
+            }
+        });
+
+        apriPopupParty(
+            'Mario Rossi',
+            'https://via.placeholder.com/50',
+            'https://via.placeholder.com/400',
+            'Questo è un party molto divertente, non perdertelo!',
+            ['Divertimento', 'Musica', 'Amici'],
+            25,
+            50,
+            'iscriviti'
+        );
+    </script>
 
 </body>
+
 </html>

@@ -1,7 +1,9 @@
 
 import { ref } from 'vue';
-import { estraiDati, Posted } from './EstraiDati.ts';  // Importa estraiDati
+import { estraiDati, Posted } from './estraiDati.ts';  // Importa estraiDati
 import { AggiornaMappa } from './map.ts';
+import { estraieventoid, estraiInformazioniEventi, estraiInformazioniPost, estraiPartecipazioniParty, estraipartyid } from './popup.ts';
+import { loggedUser } from '../../states/loggedUser.ts';
 
 
 // Logica della mappa e popup
@@ -29,9 +31,6 @@ export async function aggiornaTutto() {
   //aggiorna mappa
   AggiornaMappa(cards);
 }
-
-
-
 
 export function openPopup(type:any) {
   if (type === "CreaPost") showPopupCreaPost.value = true;
@@ -62,70 +61,101 @@ export var postTime = ref('');
 export var postImage = ref('');
 export var postDescription = ref('');
 
-//campi party
+//campi party ed evento
 export var profileNameep = ref('');
 export var userIdViewep = ref('');
 export var profileImageep = ref('');
 export var timeep = ref('');
 export var partyImageep = ref('');
 export var descriptionep = ref('');
-export var currentParticipantsep = ref('');
+export var currentParticipantsep = ref();
 export var maxParticipantsep = ref('');
 export var categoryep = ref('');
+export var organizza = ref();
+export var partecipa = ref();
+export var isParty = ref();
+export var idep = ref('');
+
+//campi solo evento
+export var faq = ref([]);
 
 
 //elminare
-export function apriPopUpVisualizza(dati:any) {
+export async function apriPopUpVisualizza(dati:any, type_posted:any) {
   //scatta evento su mappa 
-  if (dati.dataType == 'post') {
+  if (type_posted == 'post') {
+    const infoPost = await estraiInformazioniPost(dati.dataIndex);
     postUserName = ref(dati.profileName);
-    console.log(dati.id);
     userIdView = ref(dati.id);
     postProfilePicture = ref(dati.profileImage);
     postTime = ref('12 dicembe');
     postImage = ref(dati.postImage);
     postDescription = ref(dati.description);
+
+    console.log("Numero di like: ", infoPost.like.length);
+
+    console.log("Commenti: ", infoPost.commento_like.length);
+
+    if(infoPost.commento_like.length > 0){
+      infoPost.commento_like.array.forEach((element: any) => {
+        console.log(element.utUsername)
+        console.log(element.testocommento, '\t', element.nlike);
+      });
+    }
     openPopup('VisualizzaPost');
   }
-  else if (dati.dataType == 'party')
+  else if (type_posted == 'party')
   {
-    profileNameep = ref(dati.profileName);
-    userIdViewep = ref(dati.id);
-    profileImageep = ref(dati.profileImage);
-    timeep = ref('12 dicembe');
-    partyImageep = ref(dati.postImage);
-    descriptionep = ref(dati.description);
-    currentParticipantsep = ref('12');
-    maxParticipantsep = ref('30');
-    categoryep = ref('giulia');
-    openPopup('VisualizzaPartyEvento');
-  }
-  else if(dati.dataType == 'evento')
+    const infoParty = await estraiPartecipazioniParty(dati.dataIndex);
+    organizza = ref(dati.id === loggedUser.id)
+    console.log(infoParty.partecipa)
+    partecipa = ref(infoParty.partecipa);
+    isParty = ref(true);
+    idep = ref(dati.dataIndex);
+
+    const party = await estraipartyid(dati.dataIndex);
+
+    if(party){
+      profileNameep = ref(party.profileName);
+      userIdViewep = ref(party.id);
+      profileImageep = ref(party.profileImage);
+      partyImageep = ref(party.postImage);
+      descriptionep = ref(party.description);
+      currentParticipantsep = ref(infoParty.numero_partecipazioni);
+      maxParticipantsep = ref(party.maxpartecipanti);
+      categoryep = ref('API CATEGORIA');
+      timeep = ref(party.time);
+
+      openPopup('VisualizzaPartyEvento');}
+    }
+  else if(type_posted == 'evento')
   {
-    profileNameep = ref(dati.profileName);
-    userIdViewep = ref(dati.id);
-    profileImageep = ref(dati.profileImage);
-    timeep = ref('12 dicembe');
-    partyImageep = ref(dati.postImage);
-    descriptionep = ref(dati.description);
-    currentParticipantsep = ref('12');
-    maxParticipantsep = ref('30');
-    categoryep = ref('giulia');
-    openPopup('VisualizzaPartyEvento');
+    const infoEvento = await estraiInformazioniEventi(dati.dataIndex);
+    organizza = ref(dati.id === loggedUser.id);
+    console.log(infoEvento.partecipa)
+    partecipa = ref(infoEvento.partecipa);
+    isParty = ref(false);
+    idep = ref(dati.dataIndex);
+
+
+    if(infoEvento.faq){
+      faq = ref(infoEvento.faq);
+    }
+
+    const evento = await estraieventoid(dati.dataIndex);
+    if (evento) {
+      profileNameep = ref(evento.profileName);
+      userIdViewep = ref(evento.id);
+      profileImageep = ref(evento.profileImage);
+      timeep = ref(evento.time);
+      partyImageep = ref(evento.postImage);
+      descriptionep = ref(evento.description);
+      currentParticipantsep = ref(infoEvento.numero_partecipazioni);
+      maxParticipantsep = ref(evento.maxpartecipanti);
+      categoryep = ref('API CATEGORIA');
+
+      openPopup('VisualizzaPartyEvento');
+    }
+    
   }
 }
-
-
-
-// export function apriPopUpVisualizzaV2(tipo:string, id:number) {
-//     //scatta evento su mappa 
-//     if (tipo == 'post') {
-//       postUserName = ref(dati.profileName);
-//       postProfilePicture = ref(dati.profileImage);
-//       postTime = ref('12 dicembe');
-//       postImage = ref(dati.postImage);
-//       postDescription = ref(dati.description);
-//       openPopup('VisualizzaPost');
-//     }
-  
-//   }

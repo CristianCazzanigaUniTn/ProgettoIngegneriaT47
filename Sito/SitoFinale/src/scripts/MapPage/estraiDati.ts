@@ -5,7 +5,7 @@ export interface Posted {
     profileImage: string;
     postImage: string;
     description: string;
-    dataIndex: number;
+    dataIndex: string;
     latitudine: number;
     longitudine: number;
     dataType: 'post' | 'textual' | 'party' | 'evento'; // Aggiungiamo 'party' ed 'evento'
@@ -64,7 +64,7 @@ async function estraiPartyDaFile(lat: number, lng: number, rad: number, parties:
                 profileImage: utente.user.foto_profilo,
                 postImage: party.foto || 'https://via.placeholder.com/150',
                 description: party.descrizione,
-                dataIndex: party.id,
+                dataIndex: party._id,
                 latitudine: party.posizione.latitudine,
                 longitudine: party.posizione.longitudine,
                 dataType: 'party', // Cambiato da 'post' a 'party'
@@ -105,7 +105,7 @@ async function estraiPostDaFile(lat: number, lng: number, rad: number, posts: Po
                     profileImage: utente.user.foto_profilo,
                     postImage: post.contenuto || '', // Se esiste una foto del post, aggiungila
                     description: post.descrizione,
-                    dataIndex: post.id,
+                    dataIndex: post._id,
                     latitudine: post.posizione.latitudine,
                     longitudine: post.posizione.longitudine,
                     dataType: 'post'
@@ -117,7 +117,7 @@ async function estraiPostDaFile(lat: number, lng: number, rad: number, posts: Po
                     profileImage: utente.user.foto_profilo,
                     postImage: '',
                     description: post.descrizione,
-                    dataIndex: post.id,
+                    dataIndex: post._id,
                     latitudine: post.posizione.latitudine,
                     longitudine: post.posizione.longitudine,
                     dataType: 'textual'
@@ -157,7 +157,7 @@ async function estraiEventiDaFile(lat: number, lng: number, rad: number, eventi:
                 profileImage: utente.user.foto_profilo,
                 postImage: evento.foto || 'https://via.placeholder.com/150',
                 description: evento.descrizione,
-                dataIndex: evento.id,
+                dataIndex: evento._id,
                 latitudine: evento.posizione.latitudine,
                 longitudine: evento.posizione.longitudine,
                 dataType: 'evento' // Cambiato da 'post' a 'evento'

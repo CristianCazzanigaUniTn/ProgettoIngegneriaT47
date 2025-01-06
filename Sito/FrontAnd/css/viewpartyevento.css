@@ -93,10 +93,19 @@
     margin-bottom: 20px;
 }
 
+.faq-section {
+    margin-top: 20px;
+    border-top: 1px solid #ccc;
+    padding-top: 10px;
+    margin-bottom: 60px;
+    /* Aggiunto margine per evitare sovrapposizione */
+}
+
 #popupPartyDiv .button-iscrizione {
-    position: absolute;
-    bottom: 20px;
-    right: 20px;
+    position: relative;
+    /* Cambiato da absolute a fixed */
+
+    margin-right: 50%;
     background-color: #007bff;
     color: #fff;
     font-size: 16px;
@@ -107,20 +116,74 @@
     cursor: pointer;
     transition: background-color 0.3s;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    z-index: 10;
 }
 
 #popupPartyDiv .button-iscrizione:hover {
     background-color: #0056b3;
 }
 
-#popupPartyDiv #chiusuraParty {
-    position: absolute;
-    top: 10px;
-    right: 10px;
+.faq-list {
+    max-height: 150px;
+    overflow-y: auto;
+    margin-bottom: 10px;
+    padding-right: 10px;
+    margin: 10px;
+}
+
+
+
+
+.faq-input-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    /* Spazio tra textarea e bottone */
+    margin: 10px;
+}
+
+.faq-input {
+    flex-grow: 1;
+    /* La textarea occupa tutto lo spazio disponibile */
+    margin: 0;
+    /* Rimuove il margine inferiore */
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin: 10px;
+}
+
+.faq-submit {
+    background-color: #007BFF;
+    color: white;
     border: none;
-    background: none;
-    font-size: 24px;
+    padding: 10px;
+    border-radius: 4px;
     cursor: pointer;
-    color: #333;
-    z-index: 1001;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    /* Dimensione fissa per il pulsante */
+    height: 40px;
+
+}
+
+.faq-submit .arrow-icon {
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.faq-submit:hover {
+    background-color: #0056b3;
+}
+
+.faq-item {
+    margin-bottom: 10px;
+}
+
+.faq-risposta {
+    font-style: italic;
+    color: #555;
 }

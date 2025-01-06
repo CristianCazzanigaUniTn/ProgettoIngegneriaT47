@@ -89,14 +89,15 @@
                                 <span>#Amici</span>
                             </div>
                             <p class="partecipanti">
-                                <span id="partecipantiAttuali">20</span> / <span id="partecipantiMassimi">50</span> partecipanti
+                                <span id="partecipantiAttuali">20</span> / <span id="partecipantiMassimi">50</span>
+                                partecipanti
                             </p>
                         </div>
                         <button id="azionePartyButton" class="button-iscrizione">Iscriviti</button>
                     </div>
                 </div>
                 <div id="popupDiv">
-                    <button id="chiusura">×</button>
+                    <button class="close-button" id="chiusura">×</button>
                     <div class="instagram-card">
                         <div class="instagram-card-header">
                             <img id="popupFotoProfilo" class="instagram-card-user-image" />
@@ -111,8 +112,43 @@
                         <div class="instagram-card-content">
                             <p id="popupText" class="likes">Questa è una breve descrizione del marker.</p>
                         </div>
+
+                        <!-- Sezione dei like (posizionata sopra) -->
+                        <div class="likes-section">
+                            <button id="likeButton" class="like-button">❤️ Mi piace</button>
+                            <span id="likeCount">0</span> likes
+                        </div>
+
+                        <!-- Sezione dei commenti -->
+                        <div class="comments-section">
+                            <div id="commentList">
+                                <!-- Commento 1 -->
+                                <div class="comment">
+                                    <img class="comment-user-image" src="path_to_profile_image.jpg" alt="User" />
+                                    <div class="comment-content">
+                                        <div class="comment-user-name">ciucgamer</div>
+                                        <div class="comment-text">Bellissima foto!</div>
+                                    </div>
+                                </div>
+                                <!-- Commento 2 -->
+                                <div class="comment">
+                                    <img class="comment-user-image" src="path_to_profile_image.jpg" alt="User" />
+                                    <div class="comment-content">
+                                        <div class="comment-user-name">markus92</div>
+                                        <div class="comment-text">Wow, che panorama!</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="comment-input">
+                                <input type="text" id="commentInput" placeholder="Aggiungi un commento...">
+                                <button id="addCommentButton" disabled>Invia</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
+
+
+
                 <div class="event-form-container" id="creaParty">
                     <div class="event-form-header">
                         <h2>Crea il Tuo Party</h2>
