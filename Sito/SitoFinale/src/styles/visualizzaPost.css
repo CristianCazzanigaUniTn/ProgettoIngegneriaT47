@@ -1,0 +1,83 @@
+
+#popupDiv {
+    position: fixed;
+    top: 50%;
+    left: 55%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 600px;
+    background: #ffffff;
+    border: 1px solid #f2f2f2;
+    border-radius: 10px;
+    padding: 0;
+    box-shadow: 0 10px 20px rgba(0, 2, 0, 12);
+    /* Ombra più pronunciata */
+    z-index: 1000;
+    overflow: hidden;
+}
+
+
+.instagram-card-header {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 1px solid #f2f2f2;
+    background-color: #ffffff;
+}
+
+.instagram-card-user-image {
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+}
+
+.instagram-card-user-name {
+    margin-left: 20px;
+    font-weight: bold;
+    color: #262626;
+    font-size: 18px;
+    margin-top: 10px;
+}
+
+.instagram-card-time {
+    margin-left: auto;
+    color: #999;
+    font-size: 14px;
+    padding-top: 5px;
+}
+
+.instagram-card-image {
+    max-width: 100%;
+    overflow: hidden;
+}
+
+.instagram-card-image img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-bottom: 1px solid #f2f2f2;
+}
+
+.instagram-card-content {
+    padding: 20px;
+    background-color: #fafafa;
+}
+
+.likes {
+    font-weight: bold;
+    color: #333;
+}
+
+#popupDiv button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    border: none;
+    background: none;
+    margin-right: 50px;
+    font-size: 24px;
+    cursor: pointer;
+    color: #333;
+    z-index: 1001;
+}

@@ -42,6 +42,10 @@ router.post('/api/v1/authentications', async (req, res) => {
                     success: true,
                     message: 'Authentication success',
                     token: token,
+                    username: user.username,
+                    id: user._id,
+                    foto_profilo: user.foto_profilo,
+                    ruolo: user.ruolo
                 });
             } else {
                 res.status(401).json({ success: false, message: 'Authentication failed' });

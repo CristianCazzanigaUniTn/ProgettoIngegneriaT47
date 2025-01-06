@@ -9,13 +9,24 @@ const userRoutes = require('./routes/userRoutes');
 const likeRoutes = require('./routes/likeRoutes');
 const partecipazioniRoutes = require('./routes/partecipazioniRoutes');
 const commentiRoutes = require('./routes/commentiRoutes');
+const eventRoutes = require('./routes/eventRoutes');
+const partyRoutes = require('./routes/partyRoutes');
+const faqRoutes = require('./routes/faqRoutes');
+const postRoutes = require('./routes/postRoutes');
+const cloudFotoRoutes = require('./routes/cloudFotoRoutes');
+const emailRoutes = require('./routes/EmailRoutes');
 const app = express();
+const cors = require('cors');
+
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 const PORT = process.env.PORT || 3000;
 const DB = process.env.DB;
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+
+
 
 
 const swaggerOptions = {
@@ -41,7 +52,7 @@ const swaggerOptions = {
             },
         }
     },
-    apis: ['./routes/authRoutes.js', './routes/userRoutes.js', './routes/commentiRoutes.js', './routes/likeRoutes.js', './routes/partecipazioniRoutes.js'], 
+    apis: ['./routes/authRoutes.js', './routes/userRoutes.js', './routes/commentiRoutes.js', './routes/likeRoutes.js', './routes/partecipazioniRoutes.js', './routes/eventRoutes.js', './routes/partyRoutes.js', './routes/faqRoutes.js', './routes/postRoutes.js', './routes/cloudFotoRoutes.js', './routes/EmailRoutes.js'] 
 };
 
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
@@ -49,12 +60,20 @@ const swaggerSpec = swaggerJsdoc(swaggerOptions);
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
+app.use(cors());
 
 app.use(authRoutes);
 app.use(userRoutes);
 app.use(commentiRoutes);
 app.use(likeRoutes);
 app.use(partecipazioniRoutes);
+app.use(eventRoutes);
+app.use(partyRoutes);
+app.use(faqRoutes);
+app.use(postRoutes);
+app.use(cloudFotoRoutes);
+app.use(emailRoutes);
+
 mongoose.connect(DB)
     .then(() => {
         console.log('Connected to MongoDB');

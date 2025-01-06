@@ -19,6 +19,8 @@ const Faq = require('../model/Faq');
  *   post:
  *     summary: Crea una nuova FAQ evento
  *     tags: [FAQ eventi]
+ *     security:
+ *       - bearerAuth: []  # Protegge la rotta con il JWT
  *     requestBody:
  *       required: true
  *       content:
@@ -50,6 +52,8 @@ router.post('/api/faqeventi', tokenChecker, async (req, res) => {
         if(!req.user)
             return res.status(403).json({ error: 'Utente non autenticato' });
 
+        if(req.user.ruolo.toString() != "utente_base")
+            return res.status(403).json({ error: 'Non autorizzato a creare una faq eventi' });
 
         if (id_evento && !mongoose.Types.ObjectId.isValid(id_evento)) {
             return res.status(400).json({ error: 'ID evento non valido' });
@@ -87,7 +91,7 @@ router.post('/api/faqeventi', tokenChecker, async (req, res) => {
  *     summary: Elimina una faq specifica
  *     tags: [FAQ eventi]
  *     security:
- *       - bearerAuth: []
+ *       - bearerAuth: []  # Protegge la rotta con il JWT
  *     parameters:
  *       - name: id
  *         in: path
@@ -167,6 +171,8 @@ router.get('/api/faqeventi/evento/:evento_id', async (req, res) => {
  *   patch:
  *     summary: Rispondi ad un FAQ evento
  *     tags: [FAQ eventi]
+ *     security:
+ *       - bearerAuth: []  # Protegge la rotta con il JWT
  *     requestBody:
  *       required: true
  *       content:
@@ -213,7 +219,7 @@ router.patch('/api/faqeventi', tokenChecker, async (req, res) => {
             return res.status(404).json({ error: 'Evento non trovato' });
 
         // Controllo di autorizzazione
-        if (evento.organizzatore.toString() !== req.user._id.toString())
+        if (evento.Organizzatore.toString() != req.user._id.toString())
             return res.status(403).json({ error: 'Non autorizzato a rispondere a questa FAQ' });
 
         // Aggiorna la FAQ

@@ -1,0 +1,174 @@
+<template>
+    <div v-if="isVisible" class="contenitore-form-evento" id="creaEvento">
+        <div class="intestazione-form-evento">
+            <h2>Crea un Nuovo Evento</h2>
+            <p>Organizza e condividi il tuo evento con facilità</p>
+            <span @click="closePopup" class="close-button">&times;</span>
+        </div>
+        <form @submit.prevent="eventFormHandler" id="formCreaEvento">
+            <div class="gruppo-campo">
+                <label for="nomeEvento">Nome Evento</label>
+                <input type="text" id="nomeEvento" name="nomeEvento" v-model="nomeEvento" placeholder="Es: Festa di Primavera" required />
+            </div>
+            <div class="gruppo-campo">
+                <label for="dataEvento">Data e Ora</label>
+                <input type="datetime-local" id="dataEvento" name="dataEvento" v-model="eventDate" required />
+            </div>
+            <div class="gruppo-campo">
+                <label for="luogoEvento">Luogo</label>
+                <input type="text" id="luogoEvento" name="luogoEvento" v-model="eventLocation" placeholder="Es: Piazza Duomo" required />
+            </div>
+            <div class="gruppo-campo">
+                <label for="tipologiaEvento">Tipologia</label>
+                <select id="tipologiaEvento" name="tipologiaEvento" v-model="eventType" required>
+                    <option value="" disabled selected>Scegli una tipologia</option>
+                    <option value="networking">Networking</option>
+                    <option value="workshop">Workshop</option>
+                    <option value="seminario">Seminario</option>
+                    <option value="concerto">Concerto</option>
+                    <option value="festa">Festa</option>
+                </select>
+            </div>
+            <div class="gruppo-campo">
+                <label for="numeroPartecipanti">Numero Massimo di Partecipanti</label>
+                <input type="number" id="numeroPartecipanti" name="numeroPartecipanti" v-model="eventParticipants" placeholder="Es: 100" min="1" required />
+            </div>
+            <div class="gruppo-campo larghezza-completa">
+                <label for="descrizioneEvento">Descrizione</label>
+                <textarea id="descrizioneEvento" name="descrizioneEvento" v-model="eventDescription" placeholder="Descrivi il tuo evento..." required></textarea>
+            </div>
+            <div class="gruppo-campo larghezza-completa">
+                <label class="etichetta-immagine">Immagine Evento</label>
+                <div class="caricamento-immagine">
+                    <label for="immagineEvento"><i class="fas fa-upload"></i> Carica Immagine</label>
+                    <input type="file" id="immagineEvento" name="immagineEvento" accept="image/*" @change="handleImageUpload" required />
+                </div>
+                <div class="anteprima-immagine" v-if="imagePreview">
+                    <img :src="imagePreview" alt="Anteprima Immagine" />
+                    <button type="button" class="rimuovi-immagine" @click="removeImage"><i class="fas fa-times"></i></button>
+                </div>
+            </div>
+            <button type="submit" class="pulsante-invio">Crea Evento</button>
+        </form>
+    </div>
+</template>
+
+<script setup>
+import { ref, computed } from 'vue';
+import { loggedUser } from '@/states/loggedUser.ts';
+
+const isVisible = ref(true);
+const nomeEvento = ref('');
+const eventDate = ref('');
+const eventLocation = ref('');
+const eventType = ref('');
+const eventParticipants = ref('');
+const eventDescription = ref('');
+const imagePreview = ref(null);
+const emit = defineEmits(['close-popup']);
+
+const tokenFromStorage = computed(() => loggedUser.token);
+
+function closePopup() {
+    emit('close-popup');
+}
+
+function handleImageUpload(event) {
+    const file = event.target.files && event.target.files[0];
+    if (!file) {
+        console.error('Nessun file selezionato o errore nel caricamento del file.');
+        return;
+    }
+
+    if (!file.type.startsWith('image/')) {
+        console.error('Il file selezionato non è un\'immagine.');
+        return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        imagePreview.value = e.target.result;
+        console.log('Anteprima immagine caricata con successo.');
+    };
+    reader.onerror = () => {
+        console.error('Errore nel caricamento dell\'immagine.');
+    };
+    reader.readAsDataURL(file);
+}
+
+function removeImage() {
+    imagePreview.value = null;
+    const input = document.getElementById('immagineEvento');
+    input.value = '';
+}
+
+async function eventFormHandler() {
+    if (!nomeEvento.value || !eventDate.value || !eventLocation.value || !eventType.value || !eventParticipants.value || !eventDescription.value) {
+        console.error('Tutti i campi sono obbligatori.');
+        return;
+    }
+
+    const file = document.getElementById('immagineEvento').files[0];
+    if (!file) {
+        console.error('Per creare un evento è necessario caricare un\'immagine.');
+        return;
+    }
+
+    if (!tokenFromStorage.value) {
+        throw new Error('Utente non autenticato!');
+    }
+
+    try {
+        const signedUrlResponse = await fetch('http://localhost:3000/generate-signed-url-eventi', {
+            method: 'POST',
+            headers: {
+                Authorization: `Bearer ${tokenFromStorage.value}`,
+            },
+        });
+        const signedUrlData = await signedUrlResponse.json();
+
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('upload_preset', signedUrlData.upload_preset);
+        formData.append('timestamp', signedUrlData.timestamp);
+        formData.append('signature', signedUrlData.signature);
+        formData.append('api_key', signedUrlData.api_key);
+
+        const uploadResponse = await fetch('https://api.cloudinary.com/v1_1/dc2ga9rlo/image/upload', {
+            method: 'POST',
+            body: formData,
+        });
+        const uploadData = await uploadResponse.json();
+        const imageUrl = uploadData.secure_url || 'null';
+
+        const eventData = {
+            nome: nomeEvento.value,
+            data_inizio: eventDate.value,
+            luogo: eventLocation.value,
+            posizione: { latitudine: 0, longitudine: 0 },
+            id_categoria: '673603662b45400acaf456c7', // Assicurati di usare la categoria giusta
+            numero_massimo_partecipanti: parseInt(eventParticipants.value, 10),
+            descrizione: eventDescription.value,
+            foto: imageUrl,
+        };
+
+        const eventResponse = await fetch('http://localhost:3000/api/eventi', {
+            method: 'POST',
+            headers: {
+                Authorization: `Bearer ${tokenFromStorage.value}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(eventData),
+        });
+
+        const eventResponseData = await eventResponse.json();
+        console.log('Evento creato con successo:', eventResponseData);
+    } catch (error) {
+        console.error('Errore nel caricamento:', error);
+    }
+
+    emit('close-popup');
+}
+</script>
+
+<style scoped src="@/styles/creaEventoPopup.css"></style>

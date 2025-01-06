@@ -30,5 +30,4 @@ var FaqSchema = new Schema({
 });
 
 const Faq = mongoose.model('Faq', FaqSchema, 'Faq');
-
 module.exports = Faq;
