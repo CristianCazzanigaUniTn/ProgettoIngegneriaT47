@@ -1,165 +1,184 @@
-import { ref, Ref } from 'vue';
-
-// Interfacce per i dati
-interface Posizione {
-  latitudine: number;
-  longitudine: number;
+// Definizione del tipo per la card
+export interface Posted {
+    id: string;
+    profileName: string;
+    profileImage: string;
+    postImage: string;
+    description: string;
+    dataIndex: number;
+    latitudine: number;
+    longitudine: number;
+    dataType: 'post' | 'textual' | 'party' | 'evento'; // Aggiungiamo 'party' ed 'evento'
 }
 
-interface Post {
-  _id: string;
-  contenuto: string | null;
-  descrizione: string;
-  posizione: Posizione;
-  utente_id: string;
-}
 
-interface Event {
-  _id: string;
-  nome: string;
-  descrizione: string;
-  posizione: Posizione;
-  Organizzatore: string;
-}
+// Funzione per estrarre i dati dalle API
+export async function estraiDati(lat: number, lng: number, rad: number): Promise<Posted[]> {
+    const posts: Posted[] = [];
+    const eventi: Posted[] = [];
+    const textuals: Posted[] = [];
+    const parties: Posted[] = [];
 
-interface Party {
-  _id: string;
-  nome: string;
-  descrizione: string;
-  posizione: Posizione;
-  Organizzatore: string;
-}
+    try {
+        // Recupera i post, eventi, party
+        await Promise.all([
+            estraiPostDaFile(lat, lng, rad, posts, textuals),
+            estraiEventiDaFile(lat, lng, rad, eventi),
+            estraiPartyDaFile(lat, lng, rad, parties),
+        ]);
 
-interface Textual {
-  post: Post;
-  utente: {
-    _id: string;
-    username: string;
-  };
-}
-
-// Funzione principale per estrarre i dati
-export async function estraiDati(lat: number, lng: number, rad: number) {
-  const posts: Ref<Post[]> = ref([]);
-  const eventi: Ref<Event[]> = ref([]);
-  const textuals: Ref<Textual[]> = ref([]);
-  const parties: Ref<Party[]> = ref([]);
-
-  try {
-    // Utilizzo di Promise.all per eseguire le richieste simultaneamente
-    await Promise.all([
-      estraiPostDaFile(lat, lng, rad, posts, textuals),
-      estraiEventiDaFile(lat, lng, rad, eventi),
-      estraiPartyDaFile(lat, lng, rad, parties),
-    ]);
-
-    // Restituisce i dati estratti
-    return {
-      posts: posts.value,
-      textuals: textuals.value,
-      eventi: eventi.value,
-      parties: parties.value,
-    };
-  } catch (error) {
-    console.error("Errore durante l'estrazione dei dati:", error);
-    return {
-      posts: [],
-      textuals: [],
-      eventi: [],
-      parties: [],
-    };
-  }
-}
-
-// Funzione per estrarre i post dal file
-async function estraiPostDaFile(
-  lat: number,
-  lng: number,
-  rad: number,
-  posts: Ref<Post[]>,
-  textuals: Ref<Textual[]>
-): Promise<void> {
-  try {
-    const response = await fetch(`http://localhost:3000/api/Post/all`);
-    if (!response.ok) {
-      throw new Error(`Errore nella richiesta: ${response.status} ${response.statusText}`);
+        // Combina tutti i dati estratti in un'unica lista
+        return [...posts, ...eventi, ...parties, ...textuals];
+    } catch (error) {
+        console.error('Errore durante l\'estrazione dei dati:', error);
+        return [];
     }
+}
 
-    const data = await response.json();
+// Funzione per estrarre i party
+// Funzione per estrarre i party
+async function estraiPartyDaFile(lat: number, lng: number, rad: number, parties: Posted[]) {
+    try {
+        const payload = { lat, lng, rad };
+        const response = await fetch('http://localhost:3000/api/party/ricerca', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+        });
 
-    // Filtro i post in base alla distanza dalla posizione
-    data.forEach((post: Post) => {
-      const distanza = calcolaDistanza(lat, lng, post.posizione.latitudine, post.posizione.longitudine);
-      if (distanza <= rad) {
-        posts.value.push(post);
-
-        // Aggiunge anche i post per la sezione "textuals"
-        if (post.contenuto === null) {
-          textuals.value.push({ post, utente: { _id: post.utente_id, username: "Utente" } });
+        if (response.status === 404) {
+            console.warn('Nessun party trovato.');
+            return;
         }
-      }
-    });
-  } catch (error) {
-    console.error("Errore durante l'estrazione dei post:", error);
-  }
-}
 
-// Funzione per estrarre gli eventi dal file
-async function estraiEventiDaFile(lat: number, lng: number, rad: number, eventi: Ref<Event[]>): Promise<void> {
-  try {
-    const response = await fetch(`http://localhost:3000/api/Eventi/all`);
-    if (!response.ok) {
-      throw new Error(`Errore nella richiesta: ${response.status} ${response.statusText}`);
+        if (!response.ok) {
+            throw new Error(`Errore nella richiesta: ${response.status} ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        for (const party of data) {
+            const utente = await estraiUtente(party.Organizzatore); 
+            parties.push({
+                id: utente.user.id,
+                profileName: utente.user.username,
+                profileImage: utente.user.foto_profilo,
+                postImage: party.foto || 'https://via.placeholder.com/150',
+                description: party.descrizione,
+                dataIndex: party.id,
+                latitudine: party.posizione.latitudine,
+                longitudine: party.posizione.longitudine,
+                dataType: 'party', // Cambiato da 'post' a 'party'
+            });
+        }
+    } catch (error) {
+        console.error('Errore durante l\'estrazione dei party:', error);
     }
-
-    const data = await response.json();
-
-    // Filtro gli eventi in base alla distanza dalla posizione
-    data.forEach((evento: Event) => {
-      const distanza = calcolaDistanza(lat, lng, evento.posizione.latitudine, evento.posizione.longitudine);
-      if (distanza <= rad) {
-        eventi.value.push(evento);
-      }
-    });
-  } catch (error) {
-    console.error("Errore durante l'estrazione degli eventi:", error);
-  }
 }
 
-// Funzione per estrarre i party dal file
-async function estraiPartyDaFile(lat: number, lng: number, rad: number, parties: Ref<Party[]>): Promise<void> {
-  try {
-    const response = await fetch(`http://localhost:3000/api/Party/all`);
-    if (!response.ok) {
-      throw new Error(`Errore nella richiesta: ${response.status} ${response.statusText}`);
+
+// Funzione per estrarre i post
+async function estraiPostDaFile(lat: number, lng: number, rad: number, posts: Posted[], textuals: Posted[]) {
+    try {
+        const payload = { lat, lng, rad };
+        const response = await fetch('http://localhost:3000/api/Post/ricerca', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+        });
+
+        if (response.status === 404) {
+            console.warn('Nessun post trovato.');
+            return;
+        }
+
+        if (!response.ok) {
+            throw new Error(`Errore nella richiesta: ${response.status} ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        for (const post of data) {
+            const utente = await estraiUtente(post.utente_id); // Aggiungi informazioni sull'utente
+            if (post.contenuto !== 'null') {
+                posts.push({
+                    id: utente.user.id,
+                    profileName: utente.user.username,
+                    profileImage: utente.user.foto_profilo,
+                    postImage: post.contenuto || '', // Se esiste una foto del post, aggiungila
+                    description: post.descrizione,
+                    dataIndex: post.id,
+                    latitudine: post.posizione.latitudine,
+                    longitudine: post.posizione.longitudine,
+                    dataType: 'post'
+                });
+            } else {
+                textuals.push({
+                    id: utente.user.id,
+                    profileName: utente.user.username,
+                    profileImage: utente.user.foto_profilo,
+                    postImage: '',
+                    description: post.descrizione,
+                    dataIndex: post.id,
+                    latitudine: post.posizione.latitudine,
+                    longitudine: post.posizione.longitudine,
+                    dataType: 'textual'
+                });
+            }
+        }
+    } catch (error) {
+        console.error('Errore durante l\'estrazione dei post:', error);
     }
-
-    const data = await response.json();
-
-    // Filtro i party in base alla distanza dalla posizione
-    data.forEach((party: Party) => {
-      const distanza = calcolaDistanza(lat, lng, party.posizione.latitudine, party.posizione.longitudine);
-      if (distanza <= rad) {
-        parties.value.push(party);
-      }
-    });
-  } catch (error) {
-    console.error("Errore durante l'estrazione dei party:", error);
-  }
 }
 
-// Funzione di supporto per calcolare la distanza tra due punti (in km)
-function calcolaDistanza(lat1: number, lng1: number, lat2: number, lng2: number): number {
-  const R = 6371; // Raggio della Terra in km
-  const φ1 = lat1 * (Math.PI / 180); // Converte in radianti
-  const φ2 = lat2 * (Math.PI / 180); // Converte in radianti
-  const Δφ = (lat2 - lat1) * (Math.PI / 180); // Differenza di latitudine in radianti
-  const Δλ = (lng2 - lng1) * (Math.PI / 180); // Differenza di longitudine in radianti
+// Funzione per estrarre gli eventi
+async function estraiEventiDaFile(lat: number, lng: number, rad: number, eventi: Posted[]) {
+    try {
+        const payload = { lat, lng, rad };
+        const response = await fetch('http://localhost:3000/api/eventi/ricerca', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+        });
 
-  const a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
-            Math.cos(φ1) * Math.cos(φ2) *
-            Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        if (response.status === 404) {
+            console.warn('Nessun evento trovato.');
+            return;
+        }
 
-  return R * c; // Distanza in km
+        if (!response.ok) {
+            throw new Error(`Errore nella richiesta: ${response.status} ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        for (const evento of data) {
+            const utente = await estraiUtente(evento.Organizzatore); 
+            eventi.push({
+                id: utente.user.id,
+                profileName: utente.user.username,
+                profileImage: utente.user.foto_profilo,
+                postImage: evento.foto || 'https://via.placeholder.com/150',
+                description: evento.descrizione,
+                dataIndex: evento.id,
+                latitudine: evento.posizione.latitudine,
+                longitudine: evento.posizione.longitudine,
+                dataType: 'evento' // Cambiato da 'post' a 'evento'
+            });
+        }
+    } catch (error) {
+        console.error('Errore durante l\'estrazione degli eventi:', error);
+    }
 }
+
+// Funzione per estrarre informazioni sull'utente (supponendo che esista un'API per gli utenti)
+async function estraiUtente(userId: number) {
+    try {
+        const response = await fetch(`http://localhost:3000/api/utenti/${userId}`);
+        if (!response.ok) {
+            throw new Error(`Errore nel recupero dell'utente: ${response.status} ${response.statusText}`);
+        }
+        return await response.json();
+    } catch (error) {
+        console.error('Errore durante l\'estrazione dell\'utente:', error);
+        return { nome: 'Nome Utente', foto_profilo: 'https://via.placeholder.com/150' }; // Valori di fallback
+    }
+}
+
