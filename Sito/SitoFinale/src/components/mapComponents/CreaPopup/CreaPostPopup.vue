@@ -44,7 +44,7 @@ import { computed, ref } from 'vue';
 import { loggedUser } from '@/states/loggedUser.ts';
 import router from '../../../router';
 import { getPosition } from '@/scripts/Tools/posizione';
-import { aggiornaTutto } from '@/scripts/MapPage/PageScript';
+import { Aggiorna } from '@/scripts/MapPage/PageScript';
 
 const isAuthenticated = computed(() => loggedUser.token !== undefined);
 const userId = computed(() => loggedUser.id);
@@ -107,7 +107,7 @@ async function postFormHandler() {
 
         const postDataResponse = await postResponse.json();
         console.log('Post creato con successo', postDataResponse);
-        aggiornaTutto();
+        Aggiorna();
       } catch (error) {
         console.error('Errore nel caricamento:', error);
       }
@@ -166,7 +166,7 @@ async function postFormHandler() {
 
       const postDataResponse = await postResponse.json();
       console.log('Post creato con successo', postDataResponse);
-      aggiornaTutto();
+      Aggiorna();
     } catch (error) {
       console.error('Errore nel caricamento:', error);
     }

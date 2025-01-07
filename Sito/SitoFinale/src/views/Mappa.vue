@@ -12,13 +12,13 @@ import SideCard from '@/components/mapComponents/mapElements/SideCard.vue';
 import PartyEventoPopup from '@/components/mapComponents/ViewPopup/VisualizzaEventoParty.vue';
 
 import { showPopupPartyEvento, showPopupCreaEvento, showPopupCreaParty, showPopupCreaPost, showPopupPost, aggiornaTutto, sideCards, openPopup, closePopup, description, location, dateTime, apriPopUpVisualizza, postUserName, postProfilePicture, postTime, postImage, postDescription, userIdView } from '@/scripts/MapPage/PageScript.ts';
-import { CloseAllPopup, idep, isParty, faq, organizza, partecipa, profileNameep, profileImageep, partyImageep, descriptionep, timeep, userIdViewep, currentParticipantsep, maxParticipantsep, categoryep } from '@/scripts/MapPage/PageScript.ts';
+import { filtri, selectedOption, selectOption, Aggiorna, ordinaSidebar, CloseAllPopup, idep, isParty, faq, organizza, partecipa, profileNameep, profileImageep, partyImageep, descriptionep, timeep, userIdViewep, currentParticipantsep, maxParticipantsep, categoryep } from '@/scripts/MapPage/PageScript.ts';
 
 
 import { eliminaEvento, eliminaParty, partecipaEvento, partecipaParty, disinscriviEvento, disinscriviParty } from '../scripts/MapPage/popup';
 
 const filtroSinistra = ref(false);
-const filtroDestra= ref(false);
+const filtroDestra = ref(false);
 
 // Stato di autenticazione
 const isAuthenticated = computed(() => loggedUser.token !== undefined);
@@ -37,12 +37,12 @@ function handleLogout() {
   router.push("/");
 }
 
+
+
 function initMap() {
   initializeMap();
-  // inizializeLoader();
   console.log("Mappa inizializzata");
-  // Carica i dati per le cards al momento della inizializzazione della mappa
-  aggiornaTutto();
+  Aggiorna();
 }
 
 
@@ -87,50 +87,52 @@ onMounted(() => {
 
 
 
-        <div class="filtri" >
-          <div class="filter-container" @mouseenter="filtroDestra = true"
-          @mouseleave="filtroDestra = false">
+        <div class="filtri">
+          <div class="filter-container" @mouseenter="filtroSinistra = true" @mouseleave="filtroSinistra = false">
             <img src="@/assets/filtri.png" alt="Filter Icon" style="cursor:pointer;" />
-            <div class="filter-window"  v-if="filtroDestra">
+            <div class="filter-window" v-if="filtroSinistra">
               <h4>Visualizza</h4>
               <div class="filter-options">
                 <div>
-                  <label><input type="checkbox" name="Post">post</label>
-                  <label><input type="checkbox" name="Party">party</label>
-                  <label><input type="checkbox" name="Eventi">eventi</label>
-                  <label><input type="checkbox" name="Text">text</label>
-                </div>
-              </div>
-              <hr style="border: none; border-top: 1px solid #ccc; margin: 10px 0;">
-              <div class="filter-options">
-                <div>
-                  <label><input type="checkbox" name="placeholder1">Placeholder 1</label>
-                  <label><input type="checkbox" name="placeholder2">Placeholder 2</label>
-                  <label><input type="checkbox" name="placeholder3">Placeholder 3</label>
+                  <label><input type="checkbox" v-model="filtri.post" @change="Aggiorna" /> Post</label>
+                  <label><input type="checkbox" v-model="filtri.party" @change="Aggiorna" /> Party</label>
+                  <label><input type="checkbox" v-model="filtri.evento" @change="Aggiorna" /> Eventi</label>
+                  <label><input type="checkbox" v-model="filtri.textual" @change="Aggiorna" /> Text</label>
                 </div>
               </div>
             </div>
           </div>
 
 
-          <div class="filter-container" @mouseenter="filtroSinistra = true"
-          @mouseleave="filtroSinistra = false">
+          <div class="filter-container" @mouseenter="filtroDestra = true" @mouseleave="filtroDestra = false">
             <img src="@/assets/ordina.png" alt="Filter Icon" style="cursor:pointer;" />
-            <div v-if="filtroSinistra" class="filter-window">
-              <h4>Visualizza</h4>
+            <div v-if="filtroDestra" class="filter-window">
+              <h4>Ordina</h4>
               <div class="filter-options">
                 <div>
-                  <label><input type="checkbox" name="placeholder1">Placeholder 1</label>
-                  <label><input type="checkbox" name="placeholder2">Placeholder 2</label>
-                  <label><input type="checkbox" name="placeholder3">Placeholder 3</label>
-                  <label><input type="checkbox" name="placeholder4">Placeholder 4</label>
+                  <label>
+                    <input type="checkbox" :checked="selectedOption === 'post'" @change="selectOption('post')" />
+                    Post
+                  </label>
+                  <label>
+                    <input type="checkbox" :checked="selectedOption === 'textual'" @change="selectOption('textual')" />
+                    Textual
+                  </label>
+                  <label>
+                    <input type="checkbox" :checked="selectedOption === 'party'" @change="selectOption('party')" />
+                    Party
+                  </label>
+                  <label>
+                    <input type="checkbox" :checked="selectedOption === 'evento'" @change="selectOption('evento')" />
+                    Evento
+                  </label>
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        
+
         <aside class="sidebar">
           <div v-for="(card, index) in sideCards" :key="index">
             <SideCard :profileName="card.profileName" :profileImage="card.profileImage" :postImage="card.postImage"

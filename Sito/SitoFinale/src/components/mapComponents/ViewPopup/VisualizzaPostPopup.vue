@@ -64,7 +64,7 @@
 <script setup>
 
 // Props accettati dal componente
-defineProps({
+const props = defineProps({
     profileName: {
         type: String,
         required: true,
@@ -94,6 +94,7 @@ defineProps({
         default: true, // Se il popup è visibile
     },
 });
+
 
 // Gestione degli eventi
 const emit = defineEmits(["close-popup"]);

@@ -30,20 +30,74 @@ export const location = '12.21341, 48.123143';
 export const dateTime = '2024-12-08 14:30';
 
 // Stato per le sideCards
-export const sideCards = ref<Posted[]>([]);
+export var sideCards = ref<Posted[]>([]);
 
-export async function aggiornaTutto() {
+export interface FiltriRicerca {
+  post: boolean;
+  textual: boolean;
+  evento: boolean;
+  party: boolean;
+}
+
+export async function aggiornaTutto(filtri: FiltriRicerca) {
   const posizione = await getPosition();
   const lat = posizione.latitudine; // Latitudine, puoi cambiarla con i dati correnti della mappa
-  const lng = posizione.longitudine;  // Longitudine, anche qui usa i dati correnti
+  const lng = posizione.longitudine; // Longitudine, anche qui usa i dati correnti
   const rad = 15;
-  const cards = await estraiDati(lat, lng, rad);
 
-  //aggiorna sideBar
-  sideCards.value = cards;
-  //aggiorna mappa
-  AggiornaMappa(cards);
+  // Recupera i dati
+  const cards = await estraiDati(lat, lng, rad);
+ 
+  // Filtra i dati in base ai filtri attivi
+  const filteredCards = cards.filter((card) => {
+    console.log(card.dataType);
+    switch (card.dataType) {
+      case 'post':
+        return filtri.post;
+      case 'textual':
+        return filtri.textual;
+      case 'evento':
+        return filtri.evento;
+      case 'party':
+        return filtri.party;
+      default:
+        return false; // Ignora tipi non riconosciuti
+    }
+  });
+
+
+  // Mescola casualmente i risultati
+  const shuffledCards = filteredCards.sort(() => Math.random() - 0.5);
+
+  // Aggiorna la sideBar
+  sideCards.value = shuffledCards;
+
+  // Aggiorna la mappa
+  AggiornaMappa(shuffledCards);
 }
+
+export async function ordinaSidebar(tipo: string = '') {
+  var cards = sideCards.value;
+  if (!tipo) {
+    for (let i = cards.length - 1; i > 0; i--) {
+      const shuffledCards = cards.sort(() => Math.random() - 0.5);
+      cards=shuffledCards;
+    }
+  } else {
+    cards.sort((a, b) => {
+      if (a.dataType === tipo && b.dataType !== tipo) {
+        return -1; 
+      }
+      if (a.dataType !== tipo && b.dataType === tipo) {
+        return 1; 
+      }
+      return 0; 
+    });
+  }
+  sideCards.value = cards;
+}
+
+
 
 export function openPopup(type:any) {
   CloseAllPopup();
@@ -167,5 +221,33 @@ export async function apriPopUpVisualizza(dati:any) {
       openPopup('VisualizzaPartyEvento');
     }
     
+  }
+}
+
+
+export const filtri = ref({
+  post: true,
+  textual: true,
+  evento: true,
+  party: true,
+});
+
+export const selectedOption = ref(''); 
+
+export function selectOption(option: string) {
+  if (selectedOption.value === option) {
+    selectedOption.value = ''; 
+    ordinaSidebar(); 
+  } else {
+    selectedOption.value = option; 
+    ordinaSidebar(option); 
+  }
+}
+
+
+export async function Aggiorna() {
+  aggiornaTutto(filtri.value);
+  if (selectedOption.value) {
+    ordinaSidebar(selectedOption.value);
   }
 }
