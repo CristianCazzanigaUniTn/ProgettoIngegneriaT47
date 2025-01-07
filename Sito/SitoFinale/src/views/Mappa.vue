@@ -12,11 +12,13 @@ import SideCard from '@/components/mapComponents/mapElements/SideCard.vue';
 import PartyEventoPopup from '@/components/mapComponents/ViewPopup/VisualizzaEventoParty.vue';
 
 import { showPopupPartyEvento, showPopupCreaEvento, showPopupCreaParty, showPopupCreaPost, showPopupPost, aggiornaTutto, sideCards, openPopup, closePopup, description, location, dateTime, apriPopUpVisualizza, postUserName, postProfilePicture, postTime, postImage, postDescription, userIdView } from '@/scripts/MapPage/PageScript.ts';
-import {CloseAllPopup, idep, isParty, faq, organizza, partecipa, profileNameep, profileImageep, partyImageep, descriptionep, timeep, userIdViewep, currentParticipantsep, maxParticipantsep, categoryep } from '@/scripts/MapPage/PageScript.ts';
+import { CloseAllPopup, idep, isParty, faq, organizza, partecipa, profileNameep, profileImageep, partyImageep, descriptionep, timeep, userIdViewep, currentParticipantsep, maxParticipantsep, categoryep } from '@/scripts/MapPage/PageScript.ts';
 
 
 import { eliminaEvento, eliminaParty, partecipaEvento, partecipaParty, disinscriviEvento, disinscriviParty } from '../scripts/MapPage/popup';
 
+const filtroSinistra = ref(false);
+const filtroDestra= ref(false);
 
 // Stato di autenticazione
 const isAuthenticated = computed(() => loggedUser.token !== undefined);
@@ -82,22 +84,57 @@ onMounted(() => {
     <!-- Box di contenuto con mappa e sidebar -->
     <div class="container-box">
       <div class="left">
-        <div class="filtri">
-          <!-- Immagine del filtro con azione per aprire il popup -->
-          <img src="@/assets/filtri.png" alt="Filtri" @click="apriPopUpVisualizza(1, 'post')" />
-          <img src="@/assets/ordina.png" alt="Ordina" />
+
+
+
+        <div class="filtri" >
+          <div class="filter-container" @mouseenter="filtroDestra = true"
+          @mouseleave="filtroDestra = false">
+            <img src="@/assets/filtri.png" alt="Filter Icon" style="cursor:pointer;" />
+            <div class="filter-window"  v-if="filtroDestra">
+              <h4>Visualizza</h4>
+              <div class="filter-options">
+                <div>
+                  <label><input type="checkbox" name="Post">post</label>
+                  <label><input type="checkbox" name="Party">party</label>
+                  <label><input type="checkbox" name="Eventi">eventi</label>
+                  <label><input type="checkbox" name="Text">text</label>
+                </div>
+              </div>
+              <hr style="border: none; border-top: 1px solid #ccc; margin: 10px 0;">
+              <div class="filter-options">
+                <div>
+                  <label><input type="checkbox" name="placeholder1">Placeholder 1</label>
+                  <label><input type="checkbox" name="placeholder2">Placeholder 2</label>
+                  <label><input type="checkbox" name="placeholder3">Placeholder 3</label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+          <div class="filter-container" @mouseenter="filtroSinistra = true"
+          @mouseleave="filtroSinistra = false">
+            <img src="@/assets/ordina.png" alt="Filter Icon" style="cursor:pointer;" />
+            <div v-if="filtroSinistra" class="filter-window">
+              <h4>Visualizza</h4>
+              <div class="filter-options">
+                <div>
+                  <label><input type="checkbox" name="placeholder1">Placeholder 1</label>
+                  <label><input type="checkbox" name="placeholder2">Placeholder 2</label>
+                  <label><input type="checkbox" name="placeholder3">Placeholder 3</label>
+                  <label><input type="checkbox" name="placeholder4">Placeholder 4</label>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
+
+        
         <aside class="sidebar">
           <div v-for="(card, index) in sideCards" :key="index">
-            <SideCard 
-              :profileName="card.profileName"
-              :profileImage="card.profileImage"
-              :postImage="card.postImage"
-              :description="card.description"
-              :dataIndex="card.dataIndex"
-              :dataType="card.dataType"
-              :id="card.id"
-            />
+            <SideCard :profileName="card.profileName" :profileImage="card.profileImage" :postImage="card.postImage"
+              :description="card.description" :dataIndex="card.dataIndex" :dataType="card.dataType" :id="card.id" />
           </div>
         </aside>
       </div>
