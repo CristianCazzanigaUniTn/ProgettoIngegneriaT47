@@ -65,6 +65,7 @@
 import { ref, computed } from 'vue';
 import { loggedUser } from '@/states/loggedUser.ts';
 import { getPosition } from '@/scripts/Tools/posizione';
+import { aggiornaTutto } from '@/scripts/MapPage/PageScript';
 
 const isVisible = ref(true);
 const nomeEvento = ref('');
@@ -176,6 +177,7 @@ async function eventFormHandler() {
 
         const eventResponseData = await eventResponse.json();
         console.log('Evento creato con successo:', eventResponseData);
+        aggiornaTutto();
     } catch (error) {
         console.error('Errore nel caricamento:', error);
     }

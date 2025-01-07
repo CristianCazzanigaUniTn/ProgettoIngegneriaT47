@@ -20,7 +20,7 @@
             <img :src="profilePicture" alt="Foto Profilo" class="profile-img" />
             <div class="user-name">{{ userName }}</div>
           </div>
-          
+
           <div class="fixed-location">
             <strong>Posizione:</strong> <span>{{ location }}</span>
           </div>
@@ -41,18 +41,19 @@
 
 <script setup>
 import { computed, ref } from 'vue';
-import { loggedUser } from '@/states/loggedUser.ts';  
+import { loggedUser } from '@/states/loggedUser.ts';
 import router from '../../../router';
 import { getPosition } from '@/scripts/Tools/posizione';
+import { aggiornaTutto } from '@/scripts/MapPage/PageScript';
 
 const isAuthenticated = computed(() => loggedUser.token !== undefined);
 const userId = computed(() => loggedUser.id);
 const userName = computed(() => loggedUser.username);
 const profilePicture = computed(() => loggedUser.foto_profilo);
-const emit = defineEmits(['close-popup']); 
+const emit = defineEmits(['close-popup']);
 const isVisible = ref(true);
-const description = ref('');  
-const imagePreview = ref(null);  
+const description = ref('');
+const imagePreview = ref(null);
 const location = ref('Posizione generica');
 const dateTime = ref(new Date().toLocaleString());
 
@@ -63,7 +64,7 @@ function closePopup() {
 
 function handleImageUpload(event) {
   const file = event.target.files[0];
-  
+
   if (file) {
     const reader = new FileReader();
     reader.onload = (e) => {
@@ -81,72 +82,98 @@ async function postFormHandler() {
 
   if (descriptionValue === '') {
     console.error("Per creare un post è necessario inserire una descrizione.");
-    return;
+
+ 
+    if (!file) {
+      console.error("se non c'è immagine");
+      try {
+        let posizionePost = await getPosition();
+        const postData = {
+          descrizione: descriptionValue,
+          contenuto: null,
+          luogo: location.value,
+          posizione: posizionePost,
+          data_creazione: dateTime.value,
+        };
+
+        const postResponse = await fetch('http://localhost:3000/api/Post', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${tokenFromStorage}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(postData),
+        });
+
+        const postDataResponse = await postResponse.json();
+        console.log('Post creato con successo', postDataResponse);
+        aggiornaTutto();
+      } catch (error) {
+        console.error('Errore nel caricamento:', error);
+      }
+    }
+  }
+  else {
+    const file = document.getElementById('postImage').files[0];
+    const tokenFromStorage = loggedUser.token;
+
+    if (!tokenFromStorage) {
+      throw new Error("Utente non autenticato!");
+    }
+
+    try {
+      console.log("cuiaoi");
+      const response = await fetch('http://localhost:3000/generate-signed-url-post', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${tokenFromStorage}`,
+        },
+      });
+      const data = await response.json();
+
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", data.upload_preset);
+      formData.append("timestamp", data.timestamp);
+      formData.append("signature", data.signature);
+      formData.append("api_key", data.api_key);
+
+      const uploadResponse = await fetch('https://api.cloudinary.com/v1_1/dc2ga9rlo/image/upload', {
+        method: 'POST',
+        body: formData,
+      });
+      const uploadData = await uploadResponse.json();
+
+      imageUrl = uploadData.secure_url || "null";
+      let posizionePost = await getPosition(); // Ottieni la posizione dal dispositivo o usa Trento
+
+      const postData = {
+        descrizione: descriptionValue,
+        contenuto: imageUrl,
+        luogo: location.value,
+        posizione: posizionePost,
+        data_creazione: dateTime.value,
+      };
+
+      const postResponse = await fetch('http://localhost:3000/api/Post', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${tokenFromStorage}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(postData),
+      });
+
+      const postDataResponse = await postResponse.json();
+      console.log('Post creato con successo', postDataResponse);
+      aggiornaTutto();
+    } catch (error) {
+      console.error('Errore nel caricamento:', error);
+    }
   }
 
-  const file = document.getElementById('postImage').files[0];
-  if (!file) {
-    console.error("Per creare un post è necessario caricare un'immagine.");
-    return;
-  }
 
-  const tokenFromStorage = loggedUser.token;
-
-  if (!tokenFromStorage) {
-    throw new Error("Utente non autenticato!");
-  }
-
-  try {
-    console.log("cuiaoi");
-    const response = await fetch('http://localhost:3000/generate-signed-url-post', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${tokenFromStorage}`,
-      },
-    });
-    const data = await response.json();
-
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("upload_preset", data.upload_preset);
-    formData.append("timestamp", data.timestamp);
-    formData.append("signature", data.signature);
-    formData.append("api_key", data.api_key);
-
-    const uploadResponse = await fetch('https://api.cloudinary.com/v1_1/dc2ga9rlo/image/upload', {
-      method: 'POST',
-      body: formData,
-    });
-    const uploadData = await uploadResponse.json();
-
-    imageUrl = uploadData.secure_url || "null";
-    let posizionePost = await getPosition(); // Ottieni la posizione dal dispositivo o usa Trento
-
-    const postData = {
-      descrizione: descriptionValue,
-      contenuto: imageUrl,
-      luogo: location.value,
-      posizione: posizionePost,
-      data_creazione: dateTime.value,
-    };
-
-    const postResponse = await fetch('http://localhost:3000/api/Post', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${tokenFromStorage}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(postData),
-    });
-
-    const postDataResponse = await postResponse.json();
-    console.log('Post creato con successo', postDataResponse);
-
-  } catch (error) {
-    console.error('Errore nel caricamento:', error);
-  }
-
-  emit('close-popup');  
+  emit('close-popup');
 }
 </script>
 

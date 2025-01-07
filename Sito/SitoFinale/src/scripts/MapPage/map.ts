@@ -1,7 +1,7 @@
 var map: any;
 
 
-import { getPosition, Posizione } from '../Tools/posizione';
+import { getPosition, Posizione } from '../tools/posizione';
 
 let posizione: Posizione | null = await getPosition();;
 
@@ -55,13 +55,14 @@ export const initializeMap = () => {
         }
         style.addEventListener('change', changeListener);
     }
-
+    
 
     interleave();
 
 };
 
 //mettere i marker 
+
 
 export interface Posted {
     profileName: string;
@@ -74,7 +75,18 @@ export interface Posted {
     dataType: 'post' | 'textual' | 'party' | 'evento'; // Aggiungiamo 'party' ed 'evento'
 }
 
+let markers: any[] = [];
+
 export async function AggiornaMappa(posteds: Posted[]) {
+    try{
+        removeAllMarkers();
+        console.log("andato");
+    }
+    catch
+    {
+
+    }
+  
     posteds.forEach((posted: Posted) => {
         if (posted.dataType == "post") {
             aggiungiPost(posted);
@@ -91,6 +103,15 @@ export async function AggiornaMappa(posteds: Posted[]) {
     });
 }
 
+
+function removeAllMarkers() {
+    markers.forEach(marker => {
+        console.log("rimozione di marker");
+        map.removeObject(marker);
+    });
+    // Pulisci la lista di marker
+    markers = [];
+}
 
 
 
@@ -111,7 +132,8 @@ async function aggiungiPost(post: any) {
     var marker = new H.map.Marker(punto, { icon: icona });
     map.addObject(marker);
     
-    
+    markers.push(marker);
+
     marker.addEventListener('tap', function (evt: any) {
         //animazione
         apriPopUpVisualizza(post);
@@ -128,7 +150,7 @@ async function aggiungiMessaggio(text: any) {
     var icona = new H.map.Icon(textImage, {size: {w: 60, h: 60} });
     var marker = new H.map.Marker(punto, { icon: icona });
     map.addObject(marker);
-    
+    markers.push(marker);
     marker.addEventListener('pointerenter', function (evt: any) {
         mostraPopupTextual(evt, text);
     });
@@ -140,7 +162,7 @@ async function aggiungiParty(party: any) {
     var icona = new H.map.Icon(partyImage, {size: {w: 60, h: 60} });
     var marker = new H.map.Marker(punto, { icon: icona });
     map.addObject(marker);
-
+    markers.push(marker);
     marker.addEventListener('tap', function (evt: any) {
         apriPopUpVisualizza(party);
     });
@@ -152,7 +174,7 @@ async function aggiungiEvento(evento: any) {
     var icona = new H.map.Icon(shopImage, {size: {w: 60, h: 60} });
     var marker = new H.map.Marker(punto, { icon: icona });
     map.addObject(marker);
-
+    markers.push(marker);
     marker.addEventListener('tap', function (evt: any) {
         apriPopUpVisualizza(evento);
     });

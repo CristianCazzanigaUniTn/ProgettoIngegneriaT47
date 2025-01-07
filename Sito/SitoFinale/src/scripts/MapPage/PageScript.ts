@@ -4,7 +4,7 @@ import { estraiDati, Posted } from './estraiDati.ts'
 import { AggiornaMappa } from './map.ts';
 import { estraieventoid, estraiInformazioniEventi, estraiInformazioniPost, estraiPartecipazioniParty, estraipartyid } from './popup';
 import { loggedUser } from '../../states/loggedUser.ts';
-
+import { getPosition } from '../tools/posizione';
 
 
 // Logica della mappa e popup
@@ -33,14 +33,14 @@ export const dateTime = '2024-12-08 14:30';
 export const sideCards = ref<Posted[]>([]);
 
 export async function aggiornaTutto() {
-  const lat = 45.0; // Latitudine, puoi cambiarla con i dati correnti della mappa
-  const lng = 7.0;  // Longitudine, anche qui usa i dati correnti
-  const rad = 100000000000000;
+  const posizione = await getPosition();
+  const lat = posizione.latitudine; // Latitudine, puoi cambiarla con i dati correnti della mappa
+  const lng = posizione.longitudine;  // Longitudine, anche qui usa i dati correnti
+  const rad = 15;
   const cards = await estraiDati(lat, lng, rad);
 
   //aggiorna sideBar
   sideCards.value = cards;
-  console.log(cards);
   //aggiorna mappa
   AggiornaMappa(cards);
 }

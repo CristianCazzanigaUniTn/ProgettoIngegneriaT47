@@ -65,6 +65,7 @@
 import { ref, computed } from 'vue';
 import { loggedUser } from '@/states/loggedUser.ts';
 import { getPosition } from '@/scripts/Tools/posizione';
+import { aggiornaTutto } from '@/scripts/MapPage/PageScript';
 
 const isVisible = ref(true);
 const partyName = ref('');
@@ -180,6 +181,7 @@ async function partyFormHandler() {
 
         const partyResponseData = await partyResponse.json();
         console.log('Party creato con successo:', partyResponseData);
+        aggiornaTutto();
     } catch (error) {
         console.error('Errore nel caricamento:', error);
     }

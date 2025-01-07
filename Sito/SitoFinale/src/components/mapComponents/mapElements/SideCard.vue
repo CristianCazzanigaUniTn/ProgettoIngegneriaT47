@@ -13,9 +13,7 @@
         </div>
         <div class="card-body" v-else-if="dataType === 'textual'">
             <div class="textual-content">
-                <img class="textual-profile-img" :src="profileImage" alt="Foto Profilo">
                 <div class="textual-text">
-                    <strong>{{ profileName }}</strong>
                     <p>{{ description }}</p>
                 </div>
             </div>
@@ -37,7 +35,6 @@ const props = defineProps({
     id: String
 });
 
-console.log(props.id);
 </script>
 
 <style scoped src="@/styles/mappa.css"></style>

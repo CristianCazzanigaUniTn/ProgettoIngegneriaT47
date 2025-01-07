@@ -171,3 +171,76 @@
 .suggestion:hover {
     background-color: #f0f0f0;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.settings-icon {
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+}
+
+.settings-menu {
+
+  position: absolute;
+  top: 30px; /* Adjust to align with settings icon */
+  right: 0; /* Align to the right */
+  background: #ffffff; /* White background */
+  border-radius: 50px; /* Rounded corners */
+  border: 3px solid #192a56; /* Thicker, dark blue border */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Deeper shadow */
+  padding: 15px; /* Larger padding for better spacing */
+  z-index: 999;
+  font-family: sans-serif;
+  height: 430px;
+  width: 400px;
+  min-width: 400px; /* Increased width of the menu */
+}
+
+.settings-menu ul {
+  list-style: none; /* Remove bullet points */
+  margin: 0;
+  padding: 0;
+}
+
+.settings-menu li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px; /* More padding for a spacious look */
+  font-size: 16px; /* Slightly larger font */
+  font-weight: bold; /* Make the text bold */
+  color: #333; /* Text color */
+  cursor: pointer;
+  border-bottom: 1px solid #e0e0e0; /* Light divider between items */
+}
+
+.settings-menu li:last-child {
+  border-bottom: none; /* Remove border from the last item */
+}
+
+.settings-menu li:hover {
+  background: #f0f0f0; /* Highlight background on hover */
+}
+
+.settings-menu span {
+  font-size: 16px; /* Adjusted font size for the arrow */
+  color: #192a56; /* Dark blue color for the arrow */
+}
