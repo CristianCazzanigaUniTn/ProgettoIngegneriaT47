@@ -40,7 +40,7 @@ export async function aggiornaTutto() {
 
   //aggiorna sideBar
   sideCards.value = cards;
-
+  console.log(cards);
   //aggiorna mappa
   AggiornaMappa(cards);
 }

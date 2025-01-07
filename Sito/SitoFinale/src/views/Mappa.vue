@@ -8,6 +8,7 @@ import CreaPostPopup from '@/components/mapComponents/CreaPopup/CreaPostPopup.vu
 import CreaPartyPopup from '@/components/mapComponents/CreaPopup/CreaPartyPopup.vue';
 import CreaEventoPopup from '@/components/mapComponents/CreaPopup/CreaEventoPopup.vue';
 import PostPopup from '@/components/mapComponents/ViewPopup/VisualizzaPostPopup.vue';
+import SideCard from '@/components/mapComponents/mapElements/SideCard.vue';
 import PartyEventoPopup from '@/components/mapComponents/ViewPopup/VisualizzaEventoParty.vue';
 
 import { showPopupPartyEvento, showPopupCreaEvento, showPopupCreaParty, showPopupCreaPost, showPopupPost, aggiornaTutto, sideCards, openPopup, closePopup, description, location, dateTime, apriPopUpVisualizza, postUserName, postProfilePicture, postTime, postImage, postDescription, userIdView } from '@/scripts/MapPage/PageScript.ts';
@@ -87,16 +88,16 @@ onMounted(() => {
           <img src="@/assets/ordina.png" alt="Ordina" />
         </div>
         <aside class="sidebar">
-          <div v-for="(card, index) in sideCards" :key="index" class="card" :data-index="card.dataIndex"
-            :data-type="card.dataType">
-            <div class="card-header">
-              <img class="card-img-top" :src="card.profileImage" alt="Foto Profilo">
-              <strong>{{ card.profileName }}</strong>
-            </div>
-            <div class="card-body">
-              <img v-if="card.postImage" class="post-image" :src="card.postImage" alt="Foto Post" />
-              <p class="card-description">{{ card.description }}</p>
-            </div>
+          <div v-for="(card, index) in sideCards" :key="index">
+            <SideCard 
+              :profileName="card.profileName"
+              :profileImage="card.profileImage"
+              :postImage="card.postImage"
+              :description="card.description"
+              :dataIndex="card.dataIndex"
+              :dataType="card.dataType"
+              :id="card.id"
+            />
           </div>
         </aside>
       </div>

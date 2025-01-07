@@ -1,8 +1,11 @@
 <template>
-    <div class="card" :data-index="dataIndex" :data-type="dataType">
+    <div class="card" :data-index="dataIndex" :data-type="dataType" @click="apriPopUpVisualizza(props)">
         <div class="card-header">
+        
             <img class="card-img-top" :src="profileImage" alt="Foto Profilo">
+            <router-link :to="`/profilo/${id}`">
             <strong>{{ profileName }}</strong>
+            </router-link>
         </div>
         <div class="card-body" v-if="dataType === 'post' || dataType === 'evento' || dataType === 'party'">
             <img class="post-image" :src="postImage" alt="Foto Post">
@@ -22,6 +25,7 @@
 
 <script setup>
 import { defineProps } from 'vue';
+import { apriPopUpVisualizza } from '@/scripts/MapPage/PageScript';
 
 const props = defineProps({
     profileName: String,
@@ -30,10 +34,10 @@ const props = defineProps({
     description: String,
     dataIndex: String,
     dataType: String,
+    id: String
 });
 
-
-
+console.log(props.id);
 </script>
 
 <style scoped src="@/styles/mappa.css"></style>
