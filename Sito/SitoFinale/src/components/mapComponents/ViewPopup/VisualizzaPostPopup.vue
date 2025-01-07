@@ -1,6 +1,7 @@
 <template>
-    <div id="popupDiv" v-if="isVisible">
-        <button id="chiusura" @click="closePopup">×</button>
+    <div v-if="isVisible" class="popup-overlay">
+    <div id="popupDiv">
+        <button id="chiusura" @click="closePopup" class="close-button">×</button>
         <div class="instagram-card">
             <div class="instagram-card-header">
                 <router-link :to="`/profilo/${userIdView}`">
@@ -19,15 +20,51 @@
             <div class="instagram-card-content">
                 <p class="likes">{{ description }}</p>
             </div>
+
+
+            <!-- Sezione dei like (posizionata sopra) -->
+            <div class="likes-section">
+                <button id="likeButton" class="like-button">❤️ Mi piace</button>
+                <span id="likeCount">0</span>
+            </div>
+
+            <!-- Sezione dei commenti -->
+            <div class="comments-section">
+                <div id="commentList">
+                    <!-- Commento 1 -->
+                    <div class="comment">
+                        <img class="comment-user-image" src="" alt="User" />
+                        <div class="comment-content">
+                            <div class="comment-user-name">ciucgamer</div>
+                            <div class="comment-text">Bellissima foto!</div>
+                        </div>
+                    </div>
+                    <!-- Commento 2 -->
+                    <div class="comment">
+                        <img class="comment-user-image" src="" alt="User" />
+                        <div class="comment-content">
+                            <div class="comment-user-name">markus92</div>
+                            <div class="comment-text">Wow, che panorama!</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="comment-input">
+                    <input type="text" id="commentInput" placeholder="Aggiungi un commento...">
+                    <button id="addCommentButton" disabled>Invia</button>
+                </div>
+            </div>
+
+
+
         </div>
     </div>
+    </div>  
 </template>
 
 <script setup>
-import { defineProps } from "vue";
 
 // Props accettati dal componente
-defineProps({
+const props = defineProps({
     profileName: {
         type: String,
         required: true,
@@ -57,6 +94,7 @@ defineProps({
         default: true, // Se il popup è visibile
     },
 });
+
 
 // Gestione degli eventi
 const emit = defineEmits(["close-popup"]);

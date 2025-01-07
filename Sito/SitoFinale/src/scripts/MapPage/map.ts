@@ -1,5 +1,10 @@
 var map: any;
 
+
+import { getPosition, Posizione } from '../tools/posizione';
+
+let posizione: Posizione | null = await getPosition();;
+
 export const initializeMap = () => {
     // Ottieni la chiave API dalla variabile d'ambiente
     const apikey = import.meta.env.VITE_HERE_API_KEY;
@@ -19,10 +24,10 @@ export const initializeMap = () => {
         tileSize: 256
     });
 
-
+    console.log(posizione);
     map = new H.Map(document.getElementById('map'),
         defaultLayers.vector.normal.map, {
-        center: { lat: 46.066667, lng: 11.133333 },
+        center: { lat: posizione.latitudine, lng: posizione.longitudine },
         zoom: 16
     });
 
@@ -50,7 +55,7 @@ export const initializeMap = () => {
         }
         style.addEventListener('change', changeListener);
     }
-
+    
 
     interleave();
 
@@ -58,18 +63,30 @@ export const initializeMap = () => {
 
 //mettere i marker 
 
+
 export interface Posted {
     profileName: string;
     profileImage: string;
     postImage: string;
     description: string;
-    dataIndex: number;
+    dataIndex: string;
     latitudine: number;
     longitudine: number;
     dataType: 'post' | 'textual' | 'party' | 'evento'; // Aggiungiamo 'party' ed 'evento'
 }
 
+let markers: any[] = [];
+
 export async function AggiornaMappa(posteds: Posted[]) {
+    try{
+        removeAllMarkers();
+        console.log("andato");
+    }
+    catch
+    {
+
+    }
+  
     posteds.forEach((posted: Posted) => {
         if (posted.dataType == "post") {
             aggiungiPost(posted);
@@ -87,6 +104,15 @@ export async function AggiornaMappa(posteds: Posted[]) {
 }
 
 
+function removeAllMarkers() {
+    markers.forEach(marker => {
+        console.log("rimozione di marker");
+        map.removeObject(marker);
+    });
+    // Pulisci la lista di marker
+    markers = [];
+}
+
 
 
 
@@ -102,15 +128,14 @@ import { apriPopUpVisualizza } from './PageScript';
 
 async function aggiungiPost(post: any) {
     var punto = new H.geo.Point(post.latitudine, post.longitudine);
-    console.log('Percorso icona:', postImage);
     var icona = new H.map.Icon(postImage, {size: {w: 60, h: 60} });
     var marker = new H.map.Marker(punto, { icon: icona });
     map.addObject(marker);
     
-    
+    markers.push(marker);
+
     marker.addEventListener('tap', function (evt: any) {
         //animazione
-        console.log("cua");
         apriPopUpVisualizza(post);
     });
     marker.addEventListener('pointerenter', function (evt: any) {
@@ -125,7 +150,7 @@ async function aggiungiMessaggio(text: any) {
     var icona = new H.map.Icon(textImage, {size: {w: 60, h: 60} });
     var marker = new H.map.Marker(punto, { icon: icona });
     map.addObject(marker);
-    
+    markers.push(marker);
     marker.addEventListener('pointerenter', function (evt: any) {
         mostraPopupTextual(evt, text);
     });
@@ -137,10 +162,14 @@ async function aggiungiParty(party: any) {
     var icona = new H.map.Icon(partyImage, {size: {w: 60, h: 60} });
     var marker = new H.map.Marker(punto, { icon: icona });
     map.addObject(marker);
-
+    markers.push(marker);
     marker.addEventListener('tap', function (evt: any) {
         apriPopUpVisualizza(party);
     });
+    marker.addEventListener('pointerenter', function (evt: any) {
+        mostraPopup(evt, party);
+    });
+    marker.addEventListener('pointerleave', function(evt: any){ chiudiPopup(evt)});
 
 }
 
@@ -149,10 +178,14 @@ async function aggiungiEvento(evento: any) {
     var icona = new H.map.Icon(shopImage, {size: {w: 60, h: 60} });
     var marker = new H.map.Marker(punto, { icon: icona });
     map.addObject(marker);
-
+    markers.push(marker);
     marker.addEventListener('tap', function (evt: any) {
         apriPopUpVisualizza(evento);
     });
+    marker.addEventListener('pointerenter', function (evt: any) {
+        mostraPopup(evt, evento);
+    });
+    marker.addEventListener('pointerleave', function(evt: any){ chiudiPopup(evt)});
 }
 
 
@@ -213,5 +246,41 @@ async function mostraPopupTextual(evt: any, text: any) {
     map.addObject(popupMarker);
     marker.popupMarker = popupMarker;
 }
+
+
+// Aggiungi questa funzione per teletrasportarti con animazione
+export function teletrasportati(lat: number, lng: number) {
+    if (map) {
+        const duration = 1000; 
+        const stepCount = 60; 
+        
+        let startTime: number | null = null;
+
+        function interpolatePosition(start: number, end: number, step: number) {
+            return start + (end - start) * step / stepCount;
+        }
+
+        // Funzione di animazione
+        function animate(time: number) {
+            if (!startTime) startTime = time;
+            const progress = (time - startTime) / duration; 
+            if (progress < 1) {
+                const center = map.getCenter();
+                const interpolatedLat = interpolatePosition(center.lat, lat, progress * stepCount);
+                const interpolatedLng = interpolatePosition(center.lng, lng, progress * stepCount);
+                map.setCenter({ lat: interpolatedLat, lng: interpolatedLng });
+                requestAnimationFrame(animate);
+            } else {
+                map.setCenter({ lat, lng });
+            }
+        }
+
+        // Avvia l'animazione
+        requestAnimationFrame(animate);
+    } else {
+        console.error("La mappa non è stata inizializzata.");
+    }
+}
+
 
 

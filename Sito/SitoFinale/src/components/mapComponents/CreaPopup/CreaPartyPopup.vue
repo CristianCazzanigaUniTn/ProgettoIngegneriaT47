@@ -1,58 +1,61 @@
 <template>
-    <div v-if="isVisible" class="party-form-container" id="creaParty">
-        <div class="party-form-header">
-            <h2>Crea il Tuo Party</h2>
-            <p>Divertiti e condividi il tuo evento con amici!</p>
-            <span @click="closePopup" class="close-button">&times;</span>
-        </div>
-        <form @submit.prevent="partyFormHandler" id="createPartyForm">
-            <div class="form-group">
-                <label for="partyName">Nome Party</label>
-                <input type="text" id="partyName" v-model="partyName" placeholder="Es: Compleanno di Anna" required />
+    <div v-if="isVisible" class="popup-overlay">
+        <div class="party-form-container" id="creaParty">
+            <div class="party-form-header">
+                <h2>Crea il Tuo Party</h2>
+                <p>Divertiti e condividi il tuo evento con amici!</p>
+                <span @click="closePopup" class="close-button">&times;</span>
             </div>
-            <div class="form-group">
-                <label for="partyDate">Data e Ora</label>
-                <input type="datetime-local" id="partyDate" v-model="partyDate" required />
-            </div>
-            <div class="form-group">
-                <label for="partyLocation">Luogo</label>
-                <input type="text" id="partyLocation" v-model="partyLocation" placeholder="Es: Casa di Marco"
-                    required />
-            </div>
-            <div class="form-group">
-                <label for="partyType">Tipologia</label>
-                <select id="partyType" v-model="partyType" required>
-                    <option value="" disabled selected>Scegli una tipologia</option>
-                    <option value="compleanno">Compleanno</option>
-                    <option value="festa">Festa Privata</option>
-                    <option value="barbecue">Barbecue</option>
-                    <option value="picnic">Picnic</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="partyParticipants">Numero Massimo di Partecipanti</label>
-                <input type="number" id="partyParticipants" v-model="partyParticipants" placeholder="Es: 50" min="1"
-                    required />
-            </div>
-            <div class="form-group full-width">
-                <label for="partyDescription">Descrizione</label>
-                <textarea id="partyDescription" v-model="partyDescription" placeholder="Descrivi il tuo party..."
-                    required></textarea>
-            </div>
-            <div class="form-group full-width">
-                <label class="image-label">Immagine Party</label>
-                <div class="image-upload">
-                    <label for="partyImage"><i class="fas fa-upload"></i> Carica Immagine</label>
-                    <input type="file" id="partyImage" accept="image/*" @change="handleImageUpload" required />
+            <form @submit.prevent="partyFormHandler" id="createPartyForm">
+                <div class="form-group">
+                    <label for="partyName">Nome Party</label>
+                    <input type="text" id="partyName" v-model="partyName" placeholder="Es: Compleanno di Anna"
+                        required />
                 </div>
-                <div class="image-preview" v-if="imagePreview">
-                    <img :src="imagePreview" alt="Anteprima Immagine" />
-                    <button type="button" class="remove-image" @click="removeImage"><i
-                            class="fas fa-times"></i></button>
+                <div class="form-group">
+                    <label for="partyDate">Data e Ora</label>
+                    <input type="datetime-local" id="partyDate" v-model="partyDate" required />
                 </div>
-            </div>
-            <button type="submit" class="submit-button">Crea Party</button>
-        </form>
+                <div class="form-group">
+                    <label for="partyLocation">Luogo</label>
+                    <input type="text" id="partyLocation" v-model="partyLocation" placeholder="Es: Casa di Marco"
+                        required />
+                </div>
+                <div class="form-group">
+                    <label for="partyType">Tipologia</label>
+                    <select id="partyType" v-model="partyType" required>
+                        <option value="" disabled selected>Scegli una tipologia</option>
+                        <option value="compleanno">Compleanno</option>
+                        <option value="festa">Festa Privata</option>
+                        <option value="barbecue">Barbecue</option>
+                        <option value="picnic">Picnic</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="partyParticipants">Numero Massimo di Partecipanti</label>
+                    <input type="number" id="partyParticipants" v-model="partyParticipants" placeholder="Es: 50" min="1"
+                        required />
+                </div>
+                <div class="form-group full-width">
+                    <label for="partyDescription">Descrizione</label>
+                    <textarea id="partyDescription" v-model="partyDescription" placeholder="Descrivi il tuo party..."
+                        required></textarea>
+                </div>
+                <div class="form-group full-width">
+                    <label class="image-label">Immagine Party</label>
+                    <div class="image-upload">
+                        <label for="partyImage"><i class="fas fa-upload"></i> Carica Immagine</label>
+                        <input type="file" id="partyImage" accept="image/*" @change="handleImageUpload" required />
+                    </div>
+                    <div class="image-preview" v-if="imagePreview">
+                        <img :src="imagePreview" alt="Anteprima Immagine" />
+                        <button type="button" class="remove-image" @click="removeImage"><i
+                                class="fas fa-times"></i></button>
+                    </div>
+                </div>
+                <button type="submit" class="submit-button">Crea Party</button>
+            </form>
+    </div>
     </div>
 </template>
 
@@ -61,6 +64,8 @@
 
 import { ref, computed } from 'vue';
 import { loggedUser } from '@/states/loggedUser.ts';
+import { getPosition } from '@/scripts/Tools/posizione';
+import { Aggiorna } from '@/scripts/MapPage/PageScript';
 
 const isVisible = ref(true);
 const partyName = ref('');
@@ -153,12 +158,12 @@ async function partyFormHandler() {
         });
         const uploadData = await uploadResponse.json();
         const imageUrl = uploadData.secure_url || 'null';
-
+        let posizioneEvento = await getPosition(); // Ottieni la posizione dal dispositivo o usa Trento
         const partyData = {
             nome: partyName.value,
             data_inizio: partyDate.value,
             luogo: partyLocation.value,
-            posizione: { latitudine: 0, longitudine: 0 },
+            posizione: posizioneEvento,
             id_categoria: '673603662b45400acaf456d0',
             numero_massimo_partecipanti: parseInt(partyParticipants.value, 10),
             descrizione: partyDescription.value,
@@ -176,6 +181,7 @@ async function partyFormHandler() {
 
         const partyResponseData = await partyResponse.json();
         console.log('Party creato con successo:', partyResponseData);
+        Aggiorna();
     } catch (error) {
         console.error('Errore nel caricamento:', error);
     }

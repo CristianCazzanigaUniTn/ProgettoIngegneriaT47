@@ -1,3 +1,15 @@
+.popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
 
 #popupDiv {
     position: fixed;
@@ -11,12 +23,11 @@
     border-radius: 10px;
     padding: 0;
     box-shadow: 0 10px 20px rgba(0, 2, 0, 12);
-    /* Ombra più pronunciata */
     z-index: 1000;
     overflow: hidden;
 }
 
-
+/* Intestazione della card (foto, nome utente, orario) */
 .instagram-card-header {
     display: flex;
     align-items: center;
@@ -47,6 +58,7 @@
     padding-top: 5px;
 }
 
+/* Immagine principale della card */
 .instagram-card-image {
     max-width: 100%;
     overflow: hidden;
@@ -59,6 +71,7 @@
     border-bottom: 1px solid #f2f2f2;
 }
 
+/* Contenuto della card (descrizione) */
 .instagram-card-content {
     padding: 20px;
     background-color: #fafafa;
@@ -69,15 +82,115 @@
     color: #333;
 }
 
-#popupDiv button {
+/* Pulsante di chiusura */
+#popupDiv .close-button {
     position: absolute;
     top: 10px;
     right: 10px;
     border: none;
     background: none;
-    margin-right: 50px;
     font-size: 24px;
     cursor: pointer;
     color: #333;
     z-index: 1001;
+}
+
+/* Sezione dei like (posizionata sopra) */
+.likes-section {
+    padding: 10px 20px;
+    background-color: #fafafa;
+    border-top: 1px solid #f2f2f2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.like-button {
+    background: none;
+    border: none;
+    font-size: 18px;
+    position: relative;
+    cursor: pointer;
+    color: #000000;
+}
+
+.like-button:hover {
+    color: #000000;
+}
+
+#likeCount {
+    margin-left: 10px;
+    font-weight: bold;
+    color: #333;
+}
+
+/* Sezione dei commenti */
+.comments-section {
+    padding: 20px;
+    background-color: #fafafa;
+    align-items: start;
+    border-top: 1px solid #f2f2f2;
+}
+
+#commentList {
+    margin-bottom: 20px;
+}
+
+.comment {
+    display: flex;
+    align-items: start;
+    margin-bottom: 10px;
+}
+
+.comment .comment-user-image {
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    object-fit: cover;
+    margin-right: 10px;
+}
+
+.comment .comment-content {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+}
+
+.comment .comment-content .comment-user-name {
+    font-weight: bold;
+    color: #333;
+    font-size: 14px;
+}
+
+.comment .comment-content .comment-text {
+    font-size: 14px;
+    
+    color: #666;
+}
+
+.comment-input {
+    display: flex;
+    align-items: center;
+}
+
+#commentInput {
+    width: 80%;
+    padding: 8px;
+    margin-right: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+#addCommentButton {
+    padding: 8px 15px;
+    background-color: #000000;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    position: relative;
+}
+
+#addCommentButton:hover {
+    background-color: #672d55;
 }
