@@ -23,6 +23,26 @@ async function estraiLikeAiCommenti(id: any) {
     }
 }
 
+async function estraiCategoria(id: any) {
+    try {
+        const c = await fetch(`http://localhost:3000/api/categoria/${id}`);
+
+        if (c.status === 404) {
+            return 0;
+        }
+
+        if (!c.ok) {
+            throw new Error(`Errore nella richiesta: ${c.status} ${c.statusText}`);
+        }
+
+        return await c.json();
+        
+    } catch (error){
+        console.error("Errore durante l'estrazione della categoria:", error);
+        return null;
+    }
+}
+
 export async function estraipartyid(id: any) {
     try {
         const p = await fetch(`http://localhost:3000/api/party/${id}`);
@@ -38,6 +58,8 @@ export async function estraipartyid(id: any) {
 
         const party = await p.json();
 
+        const categoria = await estraiCategoria(party.Categoria);
+
         const utente = await estraiUtente(party.Organizzatore);
 
         const res = {
@@ -51,7 +73,8 @@ export async function estraipartyid(id: any) {
             longitudine: party.posizione.longitudine,
             dataType: 'party', // Cambiato da 'post' a 'party'
             maxpartecipanti: party.numero_massimo_partecipanti,
-            time: party.data_inizio
+            time: party.data_inizio,
+            Categoria: categoria.nome
 
         };
 
@@ -80,6 +103,8 @@ export async function estraieventoid(id: any) {
 
         const utente = await estraiUtente(evento.Organizzatore);
 
+        const categoria = await estraiCategoria(evento.Categoria);
+
         const res = {
             id: utente.id,
             profileName: utente.username,
@@ -91,8 +116,8 @@ export async function estraieventoid(id: any) {
             longitudine: evento.posizione.longitudine,
             dataType: 'evento', 
             maxpartecipanti: evento.numero_massimo_partecipanti,
-            time: evento.data_inizio
-
+            time: evento.data_inizio,
+            Categoria: categoria.nome
         };
 
         return res;
@@ -228,49 +253,54 @@ export async function estraiPartecipazioniParty(id: any){
 }
 
 //Ritorna il numero di partecipazioni ad un Evento e le sue faq
-export async function estraiInformazioniEventi(id:any) {
+export async function estraiInformazioniEventi(id: any) {
+    var partecipa = false;
+    var npart = 0;
+    var faq = [];
+    
     try {
         const p = await fetch(`http://localhost:3000/api/Partecipazioni/Eventi/${id}`);
         const f = await fetch(`http://localhost:3000/api/faqeventi/evento/${id}`);
-
-        var partecipa = false;
-        var npart = 0;
-        var faq = [];
 
         if (f.status === 404) {
             console.warn("Nessuna faq trovata.");
         }
 
-        if (!f.ok) {
-            throw new Error(`Errore nella richiesta: ${p.status} ${p.statusText}`);
+        if (f.ok){
+            faq = await f.json();
         }
+
 
         if (p.status === 404) {
             console.warn("Nessun partecipante trovato.");
         }
 
-        if (!p.ok) {
-            throw new Error(`Errore nella richiesta: ${p.status} ${p.statusText}`);
+        if (p.ok){
+            const partecipazioni = await p.json();
+            npart = partecipazioni.length;
+
+            if(loggedUser.token !== undefined){
+                partecipazioni.forEach((part:any) => {
+                    if (String(part._id) === String(loggedUser.id)){
+                        partecipa = true;
+                    }
+                });
+            }
         }
 
-        const partecipazioni = await p.json();
-        faq = await f.json();
+        if (!f.ok) {
+            throw new Error(`Errore nella richiesta: ${f.status} ${f.statusText}`); 
+        }
 
-        npart = partecipazioni.length;
-
-        if(loggedUser.token !== undefined){
-            partecipazioni.forEach((part:any) => {
-                if (String(part._id) === String(loggedUser.id)){
-                    partecipa = true;
-                }
-            });
+        if (!p.ok) {
+            throw new Error(`Errore nella richiesta: ${p.status} ${p.statusText}`); 
         }
 
         return {numero_partecipazioni: npart, partecipa: partecipa, faq: faq};
 
     } catch (error) {
         console.error("Errore durante l'estrazione delle partecipazioni:", error);
-        return {numero_partecipazioni: 0, partecipa: false, faq: []};
+        return {numero_partecipazioni: npart, partecipa: partecipa, faq: faq};
     }
 
 }

@@ -136,10 +136,8 @@ function inscriviAEventoParty() {
 function disinscriviDaEventoParty() {
     if (isParty.value) {
         disinscriviParty(idep.value);
-        console.log("Disiscrizione al party avvenuta");
     } else {
         disinscriviEvento(idep.value);
-        console.log("Disiscrizione all'evento avvenuta");
     }
     closePopup();
 }
@@ -147,10 +145,8 @@ function disinscriviDaEventoParty() {
 function eliminaEventoParty() {
     if (isParty.value) {
         eliminaParty(idep.value);
-        console.log("Eliminazione al party avvenuta");
     } else {
         eliminaEvento(idep.value);
-        console.log("Eliminazione all'evento avvenuta");
     }
     closePopup();
 }

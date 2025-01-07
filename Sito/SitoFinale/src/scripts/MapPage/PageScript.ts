@@ -108,7 +108,6 @@ export async function apriPopUpVisualizza(dati:any, type_posted:any) {
   {
     const infoParty = await estraiPartecipazioniParty(dati.dataIndex);
     organizza = ref(dati.id === loggedUser.id)
-    console.log(infoParty.partecipa)
     partecipa = ref(infoParty.partecipa);
     isParty = ref(true);
     idep = ref(dati.dataIndex);
@@ -123,7 +122,7 @@ export async function apriPopUpVisualizza(dati:any, type_posted:any) {
       descriptionep = ref(party.description);
       currentParticipantsep = ref(infoParty.numero_partecipazioni);
       maxParticipantsep = ref(party.maxpartecipanti);
-      categoryep = ref('API CATEGORIA');
+      categoryep = ref(party.Categoria);
       timeep = ref(party.time);
 
       openPopup('VisualizzaPartyEvento');}
@@ -132,7 +131,6 @@ export async function apriPopUpVisualizza(dati:any, type_posted:any) {
   {
     const infoEvento = await estraiInformazioniEventi(dati.dataIndex);
     organizza = ref(dati.id === loggedUser.id);
-    console.log(infoEvento.partecipa)
     partecipa = ref(infoEvento.partecipa);
     isParty = ref(false);
     idep = ref(dati.dataIndex);
@@ -152,7 +150,7 @@ export async function apriPopUpVisualizza(dati:any, type_posted:any) {
       descriptionep = ref(evento.description);
       currentParticipantsep = ref(infoEvento.numero_partecipazioni);
       maxParticipantsep = ref(evento.maxpartecipanti);
-      categoryep = ref('API CATEGORIA');
+      categoryep = ref(evento.Categoria);
 
       openPopup('VisualizzaPartyEvento');
     }
