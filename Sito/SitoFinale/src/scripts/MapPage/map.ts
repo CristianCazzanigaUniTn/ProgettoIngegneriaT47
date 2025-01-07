@@ -69,7 +69,7 @@ export interface Posted {
     dataType: 'post' | 'textual' | 'party' | 'evento'; // Aggiungiamo 'party' ed 'evento'
 }
 
-export async function AggiornaMappa(posteds: Posted[]) {
+export async function AggiornaMappa(posteds:any) {
     posteds.forEach((posted: Posted) => {
         if (posted.dataType == "post") {
             aggiungiPost(posted);
@@ -102,7 +102,6 @@ import { apriPopUpVisualizza } from './PageScript';
 
 async function aggiungiPost(post: any) {
     var punto = new H.geo.Point(post.latitudine, post.longitudine);
-    console.log('Percorso icona:', postImage);
     var icona = new H.map.Icon(postImage, {size: {w: 60, h: 60} });
     var marker = new H.map.Marker(punto, { icon: icona });
     map.addObject(marker);
@@ -110,8 +109,7 @@ async function aggiungiPost(post: any) {
     
     marker.addEventListener('tap', function (evt: any) {
         //animazione
-        console.log("cua");
-        apriPopUpVisualizza(post);
+        apriPopUpVisualizza(post, post.dataType);
     });
     marker.addEventListener('pointerenter', function (evt: any) {
         mostraPopup(evt, post);
@@ -139,7 +137,7 @@ async function aggiungiParty(party: any) {
     map.addObject(marker);
 
     marker.addEventListener('tap', function (evt: any) {
-        apriPopUpVisualizza(party);
+        apriPopUpVisualizza(party, party.dataType);
     });
 
 }
@@ -151,7 +149,7 @@ async function aggiungiEvento(evento: any) {
     map.addObject(marker);
 
     marker.addEventListener('tap', function (evt: any) {
-        apriPopUpVisualizza(evento);
+        apriPopUpVisualizza(evento, evento.dataType);
     });
 }
 

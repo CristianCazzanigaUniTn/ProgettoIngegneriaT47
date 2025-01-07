@@ -1,12 +1,12 @@
 /* Login Box */
 .login-box {
-    background-color: rgba(64, 111, 187, 0.311); 
+    background-color: rgba(64, 111, 187, 0.311);
     padding: 40px 30px;
     border-radius: 55px;
     text-align: center;
     width: 400px;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
-    
+
 }
 
 .small-text {
@@ -32,7 +32,7 @@
 .sub-text {
     font-family: "Montserrat", sans-serif;
     font-size: 18px;
-    font-weight:bold;
+    font-weight: bold;
     color: #ffffff;
     margin-bottom: 30px;
 }
@@ -73,21 +73,21 @@
 }
 
 .access {
-    background-color: #36d598; 
+    background-color: #36d598;
     color: white;
 }
 
 .access:hover {
-    background-color: #0097a7; 
+    background-color: #0097a7;
 }
 
 .register {
-    background-color: #36d598; 
+    background-color: #36d598;
     color: white;
 }
 
 .register:hover {
-    background-color: #0097a7; 
+    background-color: #0097a7;
 }
 
 /* Google Icon */
@@ -102,5 +102,6 @@
 }
 
 .google-icon:hover {
-    transform: scale(1.1); /* Ingrandisce leggermente al passaggio del mouse */
+    transform: scale(1.1);
+    /* Ingrandisce leggermente al passaggio del mouse */
 }

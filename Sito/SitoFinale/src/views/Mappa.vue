@@ -9,9 +9,10 @@ import CreaPartyPopup from '@/components/mapComponents/CreaPopup/CreaPartyPopup.
 import CreaEventoPopup from '@/components/mapComponents/CreaPopup/CreaEventoPopup.vue';
 import PostPopup from '@/components/mapComponents/ViewPopup/VisualizzaPostPopup.vue';
 import PartyEventoPopup from '@/components/mapComponents/ViewPopup/VisualizzaEventoParty.vue';
+import { eliminaEvento, eliminaParty, partecipaEvento, partecipaParty, disinscriviEvento, disinscriviParty } from '../scripts/MapPage/popup';
 
 import { showPopupPartyEvento, showPopupCreaEvento, showPopupCreaParty, showPopupCreaPost, showPopupPost, aggiornaTutto, sideCards, openPopup, closePopup, description, location, dateTime, apriPopUpVisualizza, postUserName, postProfilePicture, postTime, postImage, postDescription, userIdView} from '@/scripts/MapPage/PageScript.ts';
-import { profileNameep, profileImageep, partyImageep, descriptionep, timeep, userIdViewep, currentParticipantsep, maxParticipantsep, categoryep } from '@/scripts/MapPage/PageScript.ts';
+import { idep, isParty, faq, organizza, partecipa, profileNameep, profileImageep, partyImageep, descriptionep, timeep, userIdViewep, currentParticipantsep, maxParticipantsep, categoryep } from '@/scripts/MapPage/PageScript.ts';
 
 
 // Stato di autenticazione
@@ -111,8 +112,8 @@ onMounted(() => {
  <!-- Popup per la visualizzazione del Party/Evento -->
     <PartyEventoPopup v-if="showPopupPartyEvento" :isVisible="showPopupPartyEvento" :profileNameEP="profileNameep"
     :profileImageEP="profileImageep" :partyImageEP="partyImageep" :descriptionEP="descriptionep" :timeEP="timeep" :userIdViewEP="userIdViewep"
-    :currentParticipantsEP="currentParticipantsep" :maxParticipantsEP="maxParticipantsep" :categoryEP="categoryep"
-    @close-popup="closePopup('VisualizzaPartyEvento')" />
+    :currentParticipantsEP="currentParticipantsep" :maxParticipantsEP="maxParticipantsep" :categoryEP="categoryep" :organizzaEP="organizza" :partecipaEP="partecipa" :faq="faq"
+    :idEP="idep" @close-popup="closePopup('VisualizzaPartyEvento')" />
 
   <!-- Popup per la creazione di Post -->
   <CreaPostPopup v-if="showPopupCreaPost" :isVisible="showPopupCreaPost" :userName="userName"
