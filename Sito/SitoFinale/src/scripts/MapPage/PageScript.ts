@@ -1,8 +1,8 @@
 
 import { ref } from 'vue';
 import { estraiDati, Posted } from './estraiDati.ts'
-import { AggiornaMappa } from './map.ts';
-import { estraieventoid, estraiInformazioniEventi, estraiInformazioniPost, estraiPartecipazioniParty, estraipartyid } from './popup';
+import { AggiornaMappa, chiudiPopUpAnim, apriPopUpAnim } from './map.ts';
+import { estraieventoid, estraipartyid } from './popup';
 import { loggedUser } from '../../states/loggedUser.ts';
 import { getPosition } from '../tools/posizione';
 
@@ -99,8 +99,9 @@ export async function ordinaSidebar(tipo: string = '') {
 
 
 
-export function openPopup(type:any) {
+export function openPopup(type:any, posizione:any) {
   CloseAllPopup();
+  apriPopUpAnim(posizione);
   if (type === "CreaPost") showPopupCreaPost.value = true;
   if (type === "CreaParty") showPopupCreaParty.value = true;
   if (type === "CreaEvento") showPopupCreaEvento.value = true;
@@ -109,7 +110,8 @@ export function openPopup(type:any) {
 }
 
 // Funzione per chiudere i popup
-export function closePopup(type:any) {
+export function closePopup(type: any) {
+  chiudiPopUpAnim();
   if (type === "CreaPost") showPopupCreaPost.value = false;
   if (type === "CreaParty") showPopupCreaParty.value = false;
   if (type === "CreaEvento") showPopupCreaEvento.value = false;
@@ -127,6 +129,7 @@ export var postProfilePicture = ref('');
 export var postTime = ref('');
 export var postImage = ref('');
 export var postDescription = ref('');
+export var idp = ref('');
 
 //campi party ed evento
 export var profileNameep = ref('');
@@ -139,19 +142,17 @@ export var currentParticipantsep = ref();
 export var maxParticipantsep = ref('');
 export var categoryep = ref('');
 export var organizza = ref();
-export var partecipa = ref();
 export var isParty = ref();
 export var idep = ref('');
 
-
-//campi solo evento
-export var faq = ref([]);
 
 //elminare
 export async function apriPopUpVisualizza(dati:any) {
   //scatta evento su mappa 
   if (dati.dataType == 'post') {
-    const infoPost = await estraiInformazioniPost(dati.dataIndex);
+    
+    idp = ref(dati.dataIndex);
+    organizza = ref(dati.id === loggedUser.id);
     postUserName = ref(dati.profileName);
     userIdView = ref(dati.id);
     postProfilePicture = ref(dati.profileImage);
@@ -159,67 +160,45 @@ export async function apriPopUpVisualizza(dati:any) {
     postImage = ref(dati.postImage);
     postDescription = ref(dati.description);
 
-    console.log("Numero di like: ", infoPost.like.length);
-
-    console.log("Commenti: ", infoPost.commento_like.length);
-
-    if(infoPost.commento_like.length > 0){
-      infoPost.commento_like.array.forEach((element: any) => {
-        console.log(element.utUsername)
-        console.log(element.testocommento, '\t', element.nlike);
-      });
-    }
-    openPopup('VisualizzaPost');
+    openPopup('VisualizzaPost', {lat: dati.latitudine, lng: dati.longitudine});
   }
   else if (dati.dataType == 'party')
   {
-    const infoParty = await estraiPartecipazioniParty(dati.dataIndex);
-    organizza = ref(dati.id === loggedUser.id)
-    console.log(infoParty.partecipa)
-    partecipa = ref(infoParty.partecipa);
+    organizza = ref(dati.id === loggedUser.id);
     isParty = ref(true);
     idep = ref(dati.dataIndex);
     const party = await estraipartyid(dati.dataIndex);
-    if(party){
-      profileNameep = ref(party.profileName);
-      userIdViewep = ref(party.id);
-      profileImageep = ref(party.profileImage);
-      partyImageep = ref(party.postImage);
-      descriptionep = ref(party.description);
-      currentParticipantsep = ref(infoParty.numero_partecipazioni);
-      maxParticipantsep = ref(party.maxpartecipanti);
-      categoryep = ref(party.Categoria);
-      timeep = ref(party.time);
-      openPopup('VisualizzaPartyEvento');}
+      if(party){
+        profileNameep = ref(party.profileName);
+        userIdViewep = ref(party.id);
+        profileImageep = ref(party.profileImage);
+        partyImageep = ref(party.postImage);
+        descriptionep = ref(party.description);
+        maxParticipantsep = ref(party.maxpartecipanti);
+        categoryep = ref(party.Categoria);
+        timeep = ref(party.time);
+        openPopup('VisualizzaPartyEvento', { lat: dati.latitudine, lng: dati.longitudine });
+      }
     }
   else if(dati.dataType == 'evento')
   {
-    const infoEvento = await estraiInformazioniEventi(dati.dataIndex);
     organizza = ref(dati.id === loggedUser.id);
-    console.log(infoEvento.partecipa)
-    partecipa = ref(infoEvento.partecipa);
     isParty = ref(false);
     idep = ref(dati.dataIndex);
 
-
-    if(infoEvento.faq){
-      faq = ref(infoEvento.faq);
-    }
-
     const evento = await estraieventoid(dati.dataIndex);
-    if (evento) {
-      profileNameep = ref(evento.profileName);
-      userIdViewep = ref(evento.id);
-      profileImageep = ref(evento.profileImage);
-      timeep = ref(evento.time);
-      partyImageep = ref(evento.postImage);
-      descriptionep = ref(evento.description);
-      currentParticipantsep = ref(infoEvento.numero_partecipazioni);
-      maxParticipantsep = ref(evento.maxpartecipanti);
-      categoryep = ref(evento.Categoria);
+      if (evento) {
+        profileNameep = ref(evento.profileName);
+        userIdViewep = ref(evento.id);
+        profileImageep = ref(evento.profileImage);
+        timeep = ref(evento.time);
+        partyImageep = ref(evento.postImage);
+        descriptionep = ref(evento.description);
+        maxParticipantsep = ref(evento.maxpartecipanti);
+        categoryep = ref(evento.Categoria);
 
-      openPopup('VisualizzaPartyEvento');
-    }
+        openPopup('VisualizzaPartyEvento', {lat: dati.latitudine, lng: dati.longitudine});
+      }
     
   }
 }
