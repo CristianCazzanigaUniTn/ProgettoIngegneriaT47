@@ -43,6 +43,7 @@
 import { computed, ref } from 'vue';
 import { loggedUser } from '@/states/loggedUser.ts';  
 import router from '../../../router';
+import { getPosition } from '@/scripts/Tools/posizione';
 
 const isAuthenticated = computed(() => loggedUser.token !== undefined);
 const userId = computed(() => loggedUser.id);
@@ -119,15 +120,13 @@ async function postFormHandler() {
     const uploadData = await uploadResponse.json();
 
     imageUrl = uploadData.secure_url || "null";
+    let posizionePost = await getPosition(); // Ottieni la posizione dal dispositivo o usa Trento
 
     const postData = {
       descrizione: descriptionValue,
       contenuto: imageUrl,
       luogo: location.value,
-      posizione: {
-        latitudine: 46.0667,
-        longitudine: 11.1167,
-      },
+      posizione: posizionePost,
       data_creazione: dateTime.value,
     };
 

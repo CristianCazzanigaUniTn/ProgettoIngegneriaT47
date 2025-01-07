@@ -56,6 +56,7 @@
 <script setup>
 import { ref, computed } from 'vue';
 import { loggedUser } from '@/states/loggedUser.ts';
+import { getPosition } from '@/scripts/Tools/posizione';
 
 const isVisible = ref(true);
 const nomeEvento = ref('');
@@ -102,6 +103,8 @@ function removeImage() {
     input.value = '';
 }
 
+
+
 async function eventFormHandler() {
     if (!nomeEvento.value || !eventDate.value || !eventLocation.value || !eventType.value || !eventParticipants.value || !eventDescription.value) {
         console.error('Tutti i campi sono obbligatori.');
@@ -140,12 +143,14 @@ async function eventFormHandler() {
         });
         const uploadData = await uploadResponse.json();
         const imageUrl = uploadData.secure_url || 'null';
+        let posizioneEvento = await getPosition(); // Ottieni la posizione dal dispositivo o usa Trento
 
+        
         const eventData = {
             nome: nomeEvento.value,
             data_inizio: eventDate.value,
             luogo: eventLocation.value,
-            posizione: { latitudine: 0, longitudine: 0 },
+            posizione: posizioneEvento,
             id_categoria: '673603662b45400acaf456c7', // Assicurati di usare la categoria giusta
             numero_massimo_partecipanti: parseInt(eventParticipants.value, 10),
             descrizione: eventDescription.value,

@@ -1,5 +1,10 @@
 var map: any;
 
+
+import { getPosition, Posizione } from '../Tools/posizione';
+
+let posizione: Posizione | null = await getPosition();;
+
 export const initializeMap = () => {
     // Ottieni la chiave API dalla variabile d'ambiente
     const apikey = import.meta.env.VITE_HERE_API_KEY;
@@ -19,10 +24,10 @@ export const initializeMap = () => {
         tileSize: 256
     });
 
-
+    console.log(posizione);
     map = new H.Map(document.getElementById('map'),
         defaultLayers.vector.normal.map, {
-        center: { lat: 46.066667, lng: 11.133333 },
+        center: { lat: posizione.latitudine, lng: posizione.longitudine },
         zoom: 16
     });
 

@@ -61,6 +61,7 @@
 
 import { ref, computed } from 'vue';
 import { loggedUser } from '@/states/loggedUser.ts';
+import { getPosition } from '@/scripts/Tools/posizione';
 
 const isVisible = ref(true);
 const partyName = ref('');
@@ -153,12 +154,12 @@ async function partyFormHandler() {
         });
         const uploadData = await uploadResponse.json();
         const imageUrl = uploadData.secure_url || 'null';
-
+        let posizioneEvento = await getPosition(); // Ottieni la posizione dal dispositivo o usa Trento
         const partyData = {
             nome: partyName.value,
             data_inizio: partyDate.value,
             luogo: partyLocation.value,
-            posizione: { latitudine: 0, longitudine: 0 },
+            posizione: posizioneEvento,
             id_categoria: '673603662b45400acaf456d0',
             numero_massimo_partecipanti: parseInt(partyParticipants.value, 10),
             descrizione: partyDescription.value,
