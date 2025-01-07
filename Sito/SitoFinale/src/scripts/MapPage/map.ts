@@ -213,3 +213,39 @@ async function mostraPopupTextual(evt: any, text: any) {
 }
 
 
+// Aggiungi questa funzione per teletrasportarti con animazione
+export function teletrasportati(lat: number, lng: number) {
+    if (map) {
+        const duration = 1000; 
+        const stepCount = 60; 
+        
+        let startTime: number | null = null;
+
+        function interpolatePosition(start: number, end: number, step: number) {
+            return start + (end - start) * step / stepCount;
+        }
+
+        // Funzione di animazione
+        function animate(time: number) {
+            if (!startTime) startTime = time;
+            const progress = (time - startTime) / duration; 
+            if (progress < 1) {
+                const center = map.getCenter();
+                const interpolatedLat = interpolatePosition(center.lat, lat, progress * stepCount);
+                const interpolatedLng = interpolatePosition(center.lng, lng, progress * stepCount);
+                map.setCenter({ lat: interpolatedLat, lng: interpolatedLng });
+                requestAnimationFrame(animate);
+            } else {
+                map.setCenter({ lat, lng });
+            }
+        }
+
+        // Avvia l'animazione
+        requestAnimationFrame(animate);
+    } else {
+        console.error("La mappa non è stata inizializzata.");
+    }
+}
+
+
+
