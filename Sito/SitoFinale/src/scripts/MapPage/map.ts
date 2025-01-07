@@ -63,7 +63,7 @@ export interface Posted {
     profileImage: string;
     postImage: string;
     description: string;
-    dataIndex: number;
+    dataIndex: string;
     latitudine: number;
     longitudine: number;
     dataType: 'post' | 'textual' | 'party' | 'evento'; // Aggiungiamo 'party' ed 'evento'
