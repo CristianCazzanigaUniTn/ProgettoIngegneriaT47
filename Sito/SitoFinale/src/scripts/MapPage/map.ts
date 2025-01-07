@@ -166,6 +166,10 @@ async function aggiungiParty(party: any) {
     marker.addEventListener('tap', function (evt: any) {
         apriPopUpVisualizza(party);
     });
+    marker.addEventListener('pointerenter', function (evt: any) {
+        mostraPopup(evt, party);
+    });
+    marker.addEventListener('pointerleave', function(evt: any){ chiudiPopup(evt)});
 
 }
 
@@ -178,6 +182,10 @@ async function aggiungiEvento(evento: any) {
     marker.addEventListener('tap', function (evt: any) {
         apriPopUpVisualizza(evento);
     });
+    marker.addEventListener('pointerenter', function (evt: any) {
+        mostraPopup(evt, evento);
+    });
+    marker.addEventListener('pointerleave', function(evt: any){ chiudiPopup(evt)});
 }
 
 
