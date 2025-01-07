@@ -1,12 +1,20 @@
 /* Login Box */
 .login-box {
+<<<<<<< HEAD
     background-color: rgba(64, 111, 187, 0.311);
+=======
+    background-color: rgba(64, 111, 187, 0.311); 
+>>>>>>> Cristian
     padding: 40px 30px;
     border-radius: 55px;
     text-align: center;
     width: 400px;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> Cristian
 }
 
 .small-text {
@@ -32,7 +40,11 @@
 .sub-text {
     font-family: "Montserrat", sans-serif;
     font-size: 18px;
+<<<<<<< HEAD
     font-weight: bold;
+=======
+    font-weight:bold;
+>>>>>>> Cristian
     color: #ffffff;
     margin-bottom: 30px;
 }
@@ -73,21 +85,37 @@
 }
 
 .access {
+<<<<<<< HEAD
     background-color: #36d598;
+=======
+    background-color: #36d598; 
+>>>>>>> Cristian
     color: white;
 }
 
 .access:hover {
+<<<<<<< HEAD
     background-color: #0097a7;
 }
 
 .register {
     background-color: #36d598;
+=======
+    background-color: #0097a7; 
+}
+
+.register {
+    background-color: #36d598; 
+>>>>>>> Cristian
     color: white;
 }
 
 .register:hover {
+<<<<<<< HEAD
     background-color: #0097a7;
+=======
+    background-color: #0097a7; 
+>>>>>>> Cristian
 }
 
 /* Google Icon */
@@ -102,6 +130,10 @@
 }
 
 .google-icon:hover {
+<<<<<<< HEAD
     transform: scale(1.1);
     /* Ingrandisce leggermente al passaggio del mouse */
+=======
+    transform: scale(1.1); /* Ingrandisce leggermente al passaggio del mouse */
+>>>>>>> Cristian
 }

@@ -28,7 +28,7 @@ const props = defineProps({
     profileImage: String,
     postImage: String,
     description: String,
-    dataIndex: Number,
+    dataIndex: String,
     dataType: String,
 });
 </script>

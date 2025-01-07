@@ -63,13 +63,13 @@ export interface Posted {
     profileImage: string;
     postImage: string;
     description: string;
-    dataIndex: number;
+    dataIndex: string;
     latitudine: number;
     longitudine: number;
     dataType: 'post' | 'textual' | 'party' | 'evento'; // Aggiungiamo 'party' ed 'evento'
 }
 
-export async function AggiornaMappa(posteds:any) {
+export async function AggiornaMappa(posteds: Posted[]) {
     posteds.forEach((posted: Posted) => {
         if (posted.dataType == "post") {
             aggiungiPost(posted);
@@ -109,7 +109,7 @@ async function aggiungiPost(post: any) {
     
     marker.addEventListener('tap', function (evt: any) {
         //animazione
-        apriPopUpVisualizza(post, post.dataType);
+        apriPopUpVisualizza(post);
     });
     marker.addEventListener('pointerenter', function (evt: any) {
         mostraPopup(evt, post);
@@ -137,7 +137,7 @@ async function aggiungiParty(party: any) {
     map.addObject(marker);
 
     marker.addEventListener('tap', function (evt: any) {
-        apriPopUpVisualizza(party, party.dataType);
+        apriPopUpVisualizza(party);
     });
 
 }
@@ -149,7 +149,7 @@ async function aggiungiEvento(evento: any) {
     map.addObject(marker);
 
     marker.addEventListener('tap', function (evt: any) {
-        apriPopUpVisualizza(evento, evento.dataType);
+        apriPopUpVisualizza(evento);
     });
 }
 

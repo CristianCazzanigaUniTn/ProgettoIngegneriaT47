@@ -1,5 +1,4 @@
 import { loggedUser } from "../../states/loggedUser";
-
 //Numero di like ad un commento
 async function estraiLikeAiCommenti(id: any) {
     try {
@@ -14,7 +13,6 @@ async function estraiLikeAiCommenti(id: any) {
         }
         
         const likes = await l.json();
-
         return likes.lenght;
         
     } catch (error){
@@ -59,7 +57,7 @@ export async function estraipartyid(id: any) {
         const party = await p.json();
 
         const categoria = await estraiCategoria(party.Categoria);
-
+        console.log(categoria.nome);
         const utente = await estraiUtente(party.Organizzatore);
 
         const res = {
@@ -126,12 +124,10 @@ export async function estraieventoid(id: any) {
         console.error('Errore durante l\'estrazione dell\'evento:', error);
     }
 }
-
 //Estrai utente da id
 async function estraiUtente(id : any) {
     try {
         const response = await fetch(`http://localhost:3000/api/Utenti/${id}`);
-
         if (response.status === 404) {
             console.warn("Nessun utente trovato.");
             return null;
@@ -150,7 +146,6 @@ async function estraiUtente(id : any) {
         return null;
     }
 }
-
 //Estrai like (con id e nome utente) e commenti (con id e nome utente, testo e numero di like) di un post
 export async function estraiInformazioniPost(id: any) {
     const like:any = [];
@@ -178,7 +173,6 @@ export async function estraiInformazioniPost(id: any) {
         if (!c.ok) {
             throw new Error(`Errore nella richiesta: ${c.status} ${c.statusText}`);
         }
-
         const likes = await l.json();
         var ut: any, utUsername, utId;
         
@@ -221,7 +215,6 @@ export async function estraiPartecipazioniParty(id: any){
         
         var partecipa = false;
         var npart = 0;
-
         if (response.status === 404) {
             console.warn("Nessun partecipante trovato.");
             return {numero_partecipazioni: npart, partecipa: partecipa};
@@ -327,7 +320,6 @@ export async function partecipaParty(id_party: any) {
         console.error("Errore durante l'iscrizione:", error);
     }
 }
-
 export async function partecipaEvento(id_evento: any) {
     try {
         const response = await fetch(`http://localhost:3000/api/Partecipazioni/Eventi/${id_evento}`, {
@@ -350,7 +342,6 @@ export async function partecipaEvento(id_evento: any) {
         console.error("Errore durante l'iscrizione:", error);
     }
 }
-
 export async function disinscriviParty(id_party: any) {
     try {
         const response = await fetch(`http://localhost:3000/api/Partecipazioni/Party/${id_party}`, {
@@ -370,7 +361,6 @@ export async function disinscriviParty(id_party: any) {
         console.error("Errore durante l'eliminazione della partecipazione:", error);
     }
 }
-
 export async function disinscriviEvento(id_evento: any) {
     try {
         const response = await fetch(`http://localhost:3000/api/Partecipazioni/Eventi/${id_evento}`, {
@@ -391,7 +381,6 @@ export async function disinscriviEvento(id_evento: any) {
     }
     
 }
-
 export async function eliminaParty(id_party: any) {
     try {
         const response = await fetch(`http://localhost:3000/api/party/${id_party}`, {
@@ -411,7 +400,6 @@ export async function eliminaParty(id_party: any) {
         console.error("Errore durante l'eliminazione del party:", error);
     }
 }
-
 export async function eliminaEvento(id_evento: any) {
     try {
         const response = await fetch(`http://localhost:3000/api/eventi/${id_evento}`, {

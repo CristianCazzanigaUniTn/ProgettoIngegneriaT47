@@ -1,10 +1,9 @@
 
 import { ref } from 'vue';
-import { estraiDati, Posted } from './estraiDati.ts';  // Importa estraiDati
+import { estraiDati, Posted } from './estraiDati.ts'
 import { AggiornaMappa } from './map.ts';
-import { estraieventoid, estraiInformazioniEventi, estraiInformazioniPost, estraiPartecipazioniParty, estraipartyid } from './popup.ts';
+import { estraieventoid, estraiInformazioniEventi, estraiInformazioniPost, estraiPartecipazioniParty, estraipartyid } from './popup';
 import { loggedUser } from '../../states/loggedUser.ts';
-
 
 // Logica della mappa e popup
 export const showPopupCreaPost = ref(false);
@@ -76,14 +75,14 @@ export var partecipa = ref();
 export var isParty = ref();
 export var idep = ref('');
 
+
 //campi solo evento
 export var faq = ref([]);
 
-
 //elminare
-export async function apriPopUpVisualizza(dati:any, type_posted:any) {
+export async function apriPopUpVisualizza(dati:any) {
   //scatta evento su mappa 
-  if (type_posted == 'post') {
+  if (dati.dataType == 'post') {
     const infoPost = await estraiInformazioniPost(dati.dataIndex);
     postUserName = ref(dati.profileName);
     userIdView = ref(dati.id);
@@ -104,16 +103,15 @@ export async function apriPopUpVisualizza(dati:any, type_posted:any) {
     }
     openPopup('VisualizzaPost');
   }
-  else if (type_posted == 'party')
+  else if (dati.dataType == 'party')
   {
     const infoParty = await estraiPartecipazioniParty(dati.dataIndex);
     organizza = ref(dati.id === loggedUser.id)
+    console.log(infoParty.partecipa)
     partecipa = ref(infoParty.partecipa);
     isParty = ref(true);
     idep = ref(dati.dataIndex);
-
     const party = await estraipartyid(dati.dataIndex);
-
     if(party){
       profileNameep = ref(party.profileName);
       userIdViewep = ref(party.id);
@@ -124,13 +122,13 @@ export async function apriPopUpVisualizza(dati:any, type_posted:any) {
       maxParticipantsep = ref(party.maxpartecipanti);
       categoryep = ref(party.Categoria);
       timeep = ref(party.time);
-
       openPopup('VisualizzaPartyEvento');}
     }
-  else if(type_posted == 'evento')
+  else if(dati.dataType == 'evento')
   {
     const infoEvento = await estraiInformazioniEventi(dati.dataIndex);
     organizza = ref(dati.id === loggedUser.id);
+    console.log(infoEvento.partecipa)
     partecipa = ref(infoEvento.partecipa);
     isParty = ref(false);
     idep = ref(dati.dataIndex);

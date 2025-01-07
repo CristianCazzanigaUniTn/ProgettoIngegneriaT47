@@ -20,40 +20,40 @@
                 <p class="partecipanti">
                     <span>{{ currentParticipantsEP }}</span> / <span>{{ maxParticipantsEP }}</span> partecipanti
                 </p>
-            </div>
-            <button id="azionePartyButton" class="button-iscrizione" @click="inscriviAEventoParty" v-if="!partecipaEP && !organizzaEP && loggedUser.token !== undefined && loggedUser.ruolo === 'utente_base'">
+                <button id="azionePartyButton" class="button-iscrizione" @click="inscriviAEventoParty"
+                v-if="!partecipaEP && !organizzaEP && loggedUser.token !== undefined && loggedUser.ruolo === 'utente_base'">
                 Iscriviti
             </button>
-
-            <button id="azionePartyButton" class="button-iscrizione" @click="disinscriviDaEventoParty" v-if="partecipaEP && loggedUser.token !== undefined && loggedUser.ruolo === 'utente_base'">
+            <button id="azionePartyButton" class="button-iscrizione" @click="disinscriviDaEventoParty"
+                v-if="partecipaEP && loggedUser.token !== undefined && loggedUser.ruolo === 'utente_base'">
                 Disiscriviti
             </button>
-
-            <button id="azionePartyButton" class="button-iscrizione" @click="eliminaEventoParty" v-if="organizzaEP && loggedUser.token !== undefined">
+            <button id="azionePartyButton" class="button-iscrizione" @click="eliminaEventoParty"
+                v-if="organizzaEP && loggedUser.token !== undefined">
                 Elimina
             </button>
-
+            </div>
+          
         </div>
 
-        <!-- Sezione FAQ -->
         <div class="faq-input-container" v-if="!organizzaEP && !isParty">
             <textarea id="faqInput" class="faq-input" placeholder="Scrivi una domanda..."></textarea>
             <button id="faqSubmit" class="faq-submit">
                 <span class="arrow-icon">&gt;</span>
             </button>
         </div>
-
-        <div v-for="f in faq" :key="f.domanda" class="faq-list">
-            <div class="card-header">
-                <strong>{{ f.domanda }}</strong>
+        <div v-if="!isParty">
+        <div  v-for="f in faq" :key="f.domanda" class="faq-list">
+            <div class="faq-item">   <!-- qua id faq -->
+                <p><strong>Domanda:</strong> {{ f.domanda }}</p>
+                <p class="faq-risposta"><strong>Risposta:</strong> In attesa di risposta...</p>
             </div>
         </div>
-
+        </div>
 
     </div>
 </template>
 <script setup>
-import { defineProps } from "vue";
 import { idep, isParty } from "../../../scripts/MapPage/PageScript";
 import { disinscriviEvento, disinscriviParty, eliminaParty, eliminaEvento, partecipaEvento, partecipaParty } from "../../../scripts/MapPage/popup";
 import { loggedUser } from "../../../states/loggedUser";
