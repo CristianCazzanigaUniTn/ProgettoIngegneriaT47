@@ -35,15 +35,18 @@ const router = express.Router();
 router.post('/api/like/:post_id', tokenChecker, async (req, res) => {
     const { post_id } = req.params;
     const user_id = req.user._id;
+
     try {
         const post = await Post.findById(post_id);
         if (!post) {
             return res.status(404).json({ error: 'Post non trovato' });
         }
+
         const existingLike = await Like.findOne({ post_id, utente_id: user_id });
         if (existingLike) {
             return res.status(400).json({ error: 'Hai già messo un like su questo post' });
         }
+
         const nuovoLike = new Like({
             data_creazione: new Date(),
             post_id,
@@ -51,7 +54,17 @@ router.post('/api/like/:post_id', tokenChecker, async (req, res) => {
         });
 
         await nuovoLike.save();
-        res.status(201).json({ message: 'Like aggiunto con successo', like: nuovoLike });
+
+        // Includi l'ID del like creato nella risposta
+        res.status(201).json({
+            message: 'Like aggiunto con successo',
+            like: {
+                id: nuovoLike._id,       // ID del like appena creato
+                post_id: nuovoLike.post_id,
+                utente_id: nuovoLike.utente_id,
+                data_creazione: nuovoLike.data_creazione
+            }
+        });
     } catch (err) {
         console.error('Errore nell\'aggiunta del like:', err);
         res.status(500).json({ error: 'Errore nell\'aggiunta del like' });
