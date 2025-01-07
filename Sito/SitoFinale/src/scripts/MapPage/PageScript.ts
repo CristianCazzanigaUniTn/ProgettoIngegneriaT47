@@ -5,12 +5,26 @@ import { AggiornaMappa } from './map.ts';
 import { estraieventoid, estraiInformazioniEventi, estraiInformazioniPost, estraiPartecipazioniParty, estraipartyid } from './popup';
 import { loggedUser } from '../../states/loggedUser.ts';
 
+
+
 // Logica della mappa e popup
 export const showPopupCreaPost = ref(false);
 export const showPopupCreaEvento = ref(false);
 export const showPopupCreaParty = ref(false);
 export const showPopupPost = ref(false);
 export const showPopupPartyEvento = ref(false);
+
+
+
+export function CloseAllPopup() {
+  showPopupCreaPost.value = false;
+  showPopupCreaParty.value = false;
+  showPopupCreaEvento.value = false;
+  showPopupPost.value = false; // Chiudi il popup del post 
+  showPopupPartyEvento.value = false;
+}
+
+
 export const description = 'This is a post description.';
 export const location = '12.21341, 48.123143';
 export const dateTime = '2024-12-08 14:30';
@@ -32,6 +46,7 @@ export async function aggiornaTutto() {
 }
 
 export function openPopup(type:any) {
+  CloseAllPopup();
   if (type === "CreaPost") showPopupCreaPost.value = true;
   if (type === "CreaParty") showPopupCreaParty.value = true;
   if (type === "CreaEvento") showPopupCreaEvento.value = true;
@@ -46,8 +61,7 @@ export function closePopup(type:any) {
   if (type === "CreaEvento") showPopupCreaEvento.value = false;
   if (type === "VisualizzaPost") 
     {
-        showPopupPost.value = false; // Chiudi il popup del post
-        //back animation
+        showPopupPost.value = false; 
     }
     if (type === "VisualizzaPartyEvento") showPopupPartyEvento.value = false; 
 }

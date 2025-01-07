@@ -11,7 +11,7 @@ import PostPopup from '@/components/mapComponents/ViewPopup/VisualizzaPostPopup.
 import PartyEventoPopup from '@/components/mapComponents/ViewPopup/VisualizzaEventoParty.vue';
 
 import { showPopupPartyEvento, showPopupCreaEvento, showPopupCreaParty, showPopupCreaPost, showPopupPost, aggiornaTutto, sideCards, openPopup, closePopup, description, location, dateTime, apriPopUpVisualizza, postUserName, postProfilePicture, postTime, postImage, postDescription, userIdView } from '@/scripts/MapPage/PageScript.ts';
-import { idep, isParty, faq, organizza, partecipa, profileNameep, profileImageep, partyImageep, descriptionep, timeep, userIdViewep, currentParticipantsep, maxParticipantsep, categoryep } from '@/scripts/MapPage/PageScript.ts';
+import {CloseAllPopup, idep, isParty, faq, organizza, partecipa, profileNameep, profileImageep, partyImageep, descriptionep, timeep, userIdViewep, currentParticipantsep, maxParticipantsep, categoryep } from '@/scripts/MapPage/PageScript.ts';
 
 
 import { eliminaEvento, eliminaParty, partecipaEvento, partecipaParty, disinscriviEvento, disinscriviParty } from '../scripts/MapPage/popup';
@@ -27,7 +27,7 @@ const userName = computed(() => (isAuthenticated.value ? username.value : ''));
 const profilePicture = computed(() => (isAuthenticated.value ? userProfilePicture.value : ''));
 const Ruolo = computed(() => (isAuthenticated.value ? ruolo.value : ''));
 
-
+CloseAllPopup();
 // Logica di logout
 function handleLogout() {
   clearLoggedUser();
