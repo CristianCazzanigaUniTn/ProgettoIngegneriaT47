@@ -102,7 +102,6 @@ import { apriPopUpVisualizza } from './PageScript';
 
 async function aggiungiPost(post: any) {
     var punto = new H.geo.Point(post.latitudine, post.longitudine);
-    console.log('Percorso icona:', postImage);
     var icona = new H.map.Icon(postImage, {size: {w: 60, h: 60} });
     var marker = new H.map.Marker(punto, { icon: icona });
     map.addObject(marker);
@@ -110,7 +109,6 @@ async function aggiungiPost(post: any) {
     
     marker.addEventListener('tap', function (evt: any) {
         //animazione
-        console.log("cua");
         apriPopUpVisualizza(post);
     });
     marker.addEventListener('pointerenter', function (evt: any) {

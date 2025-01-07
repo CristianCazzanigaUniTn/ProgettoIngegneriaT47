@@ -31,9 +31,6 @@ export async function aggiornaTutto() {
   AggiornaMappa(cards);
 }
 
-
-
-
 export function openPopup(type:any) {
   if (type === "CreaPost") showPopupCreaPost.value = true;
   if (type === "CreaParty") showPopupCreaParty.value = true;
@@ -93,8 +90,11 @@ export async function apriPopUpVisualizza(dati:any) {
     postTime = ref('12 dicembe');
     postImage = ref(dati.postImage);
     postDescription = ref(dati.description);
+
     console.log("Numero di like: ", infoPost.like.length);
+
     console.log("Commenti: ", infoPost.commento_like.length);
+
     if(infoPost.commento_like.length > 0){
       infoPost.commento_like.array.forEach((element: any) => {
         console.log(element.utUsername)
@@ -120,7 +120,7 @@ export async function apriPopUpVisualizza(dati:any) {
       descriptionep = ref(party.description);
       currentParticipantsep = ref(infoParty.numero_partecipazioni);
       maxParticipantsep = ref(party.maxpartecipanti);
-      categoryep = ref('API CATEGORIA');
+      categoryep = ref(party.Categoria);
       timeep = ref(party.time);
       openPopup('VisualizzaPartyEvento');}
     }
@@ -148,24 +148,10 @@ export async function apriPopUpVisualizza(dati:any) {
       descriptionep = ref(evento.description);
       currentParticipantsep = ref(infoEvento.numero_partecipazioni);
       maxParticipantsep = ref(evento.maxpartecipanti);
-      categoryep = ref('API CATEGORIA');
+      categoryep = ref(evento.Categoria);
+
       openPopup('VisualizzaPartyEvento');
     }
     
   }
 }
-
-
-
-// export function apriPopUpVisualizzaV2(tipo:string, id:number) {
-//     //scatta evento su mappa 
-//     if (tipo == 'post') {
-//       postUserName = ref(dati.profileName);
-//       postProfilePicture = ref(dati.profileImage);
-//       postTime = ref('12 dicembe');
-//       postImage = ref(dati.postImage);
-//       postDescription = ref(dati.description);
-//       openPopup('VisualizzaPost');
-//     }
-  
-//   }

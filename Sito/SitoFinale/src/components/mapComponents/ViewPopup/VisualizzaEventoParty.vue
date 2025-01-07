@@ -122,11 +122,8 @@ function closePopup() {
     emit("close-popup");
 }
 
-// Funzione per iscriversi al party
-function subscribeToParty() {
-    console.log("Iscrizione al party avvenuta");
-}
 
+// Funzione per iscriversi al party
 function inscriviAEventoParty() {
     if (isParty.value) {
         partecipaParty(idep.value);
@@ -135,27 +132,24 @@ function inscriviAEventoParty() {
     }
     closePopup();
 }
+
 function disinscriviDaEventoParty() {
     if (isParty.value) {
         disinscriviParty(idep.value);
-        console.log("Disiscrizione al party avvenuta");
     } else {
         disinscriviEvento(idep.value);
-        console.log("Disiscrizione all'evento avvenuta");
-    }
-    closePopup();
-}
-function eliminaEventoParty() {
-    if (isParty.value) {
-        eliminaParty(idep.value);
-        console.log("Eliminazione al party avvenuta");
-    } else {
-        eliminaEvento(idep.value);
-        console.log("Eliminazione all'evento avvenuta");
     }
     closePopup();
 }
 
+function eliminaEventoParty() {
+    if (isParty.value) {
+        eliminaParty(idep.value);
+    } else {
+        eliminaEvento(idep.value);
+    }
+    closePopup();
+}
 </script>
 
 <style scoped src="@/styles/viewPartyEvento.css"></style>
