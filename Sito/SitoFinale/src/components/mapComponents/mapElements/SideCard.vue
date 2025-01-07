@@ -31,6 +31,9 @@ const props = defineProps({
     dataIndex: String,
     dataType: String,
 });
+
+
+
 </script>
 
 <style scoped src="@/styles/mappa.css"></style>

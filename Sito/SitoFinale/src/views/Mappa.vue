@@ -3,7 +3,7 @@ import { computed, ref, onMounted } from 'vue';
 import { loggedUser, clearLoggedUser } from '@/states/loggedUser.ts';
 import router from '../router';
 import { initializeMap, AggiornaMappa } from '../scripts/MapPage/map';
-import { inizializeLoader } from '../scripts/MapPage/loader';
+// import { inizializeLoader } from '../scripts/MapPage/loader';
 import CreaPostPopup from '@/components/mapComponents/CreaPopup/CreaPostPopup.vue';
 import CreaPartyPopup from '@/components/mapComponents/CreaPopup/CreaPartyPopup.vue';
 import CreaEventoPopup from '@/components/mapComponents/CreaPopup/CreaEventoPopup.vue';
@@ -36,7 +36,7 @@ function handleLogout() {
 
 function initMap() {
   initializeMap();
-  inizializeLoader();
+  // inizializeLoader();
   console.log("Mappa inizializzata");
   // Carica i dati per le cards al momento della inizializzazione della mappa
   aggiornaTutto();
@@ -53,14 +53,14 @@ onMounted(() => {
 
 <template>
   <!-- Loader -->
-  <div id="loader" v-if="!isAuthenticated">
+  <!-- <div id="loader" v-if="!isAuthenticated">
     <div class="left-curtain"></div>
     <div class="right-curtain"></div>
     <div class="center-content">
       <h1>Loading..</h1>
       <img src="@/assets/attendi.png" alt="Logoload" class="logoload" />
     </div>
-  </div>
+  </div> -->
 
   <!-- Contenuto -->
   <div class="content">
