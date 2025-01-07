@@ -200,7 +200,7 @@
 .settings-menu {
 
   position: absolute;
-  top: 30px; /* Adjust to align with settings icon */
+  top: 20px; /* Adjust to align with settings icon */
   right: 0; /* Align to the right */
   background: #ffffff; /* White background */
   border-radius: 50px; /* Rounded corners */
