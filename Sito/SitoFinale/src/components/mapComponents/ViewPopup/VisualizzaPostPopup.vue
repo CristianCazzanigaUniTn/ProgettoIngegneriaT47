@@ -1,5 +1,6 @@
 <template>
-    <div id="popupDiv" v-if="isVisible">
+    <div v-if="isVisible" class="popup-overlay">
+    <div id="popupDiv">
         <button id="chiusura" @click="closePopup" class="close-button">×</button>
         <div class="instagram-card">
             <div class="instagram-card-header">
@@ -57,6 +58,7 @@
 
         </div>
     </div>
+    </div>  
 </template>
 
 <script setup>
@@ -72,7 +74,7 @@ const like = ref();
 const commenti = ref([]);
 
 // Props accettati dal componente
-defineProps({
+const props = defineProps({
     profileName: {
         type: String,
         required: true,
@@ -106,6 +108,7 @@ defineProps({
         required: true
     }
 });
+
 
 // Gestione degli eventi
 const emit = defineEmits(["close-popup"]);

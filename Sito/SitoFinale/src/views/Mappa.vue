@@ -3,19 +3,22 @@ import { computed, ref, onMounted } from 'vue';
 import { loggedUser, clearLoggedUser } from '@/states/loggedUser.ts';
 import router from '../router';
 import { initializeMap, AggiornaMappa } from '../scripts/MapPage/map';
-import { inizializeLoader } from '../scripts/MapPage/loader';
+// import { inizializeLoader } from '../scripts/MapPage/loader';
 import CreaPostPopup from '@/components/mapComponents/CreaPopup/CreaPostPopup.vue';
 import CreaPartyPopup from '@/components/mapComponents/CreaPopup/CreaPartyPopup.vue';
 import CreaEventoPopup from '@/components/mapComponents/CreaPopup/CreaEventoPopup.vue';
 import PostPopup from '@/components/mapComponents/ViewPopup/VisualizzaPostPopup.vue';
+import SideCard from '@/components/mapComponents/mapElements/SideCard.vue';
 import PartyEventoPopup from '@/components/mapComponents/ViewPopup/VisualizzaEventoParty.vue';
 
 import { showPopupPartyEvento, showPopupCreaEvento, showPopupCreaParty, showPopupCreaPost, showPopupPost, aggiornaTutto, sideCards, openPopup, closePopup, description, location, dateTime, apriPopUpVisualizza, postUserName, postProfilePicture, postTime, postImage, postDescription, userIdView } from '@/scripts/MapPage/PageScript.ts';
-import { idep, isParty, organizza, profileNameep, profileImageep, partyImageep, descriptionep, timeep, userIdViewep, maxParticipantsep, categoryep } from '@/scripts/MapPage/PageScript.ts';
+import { filtri, selectedOption, selectOption, Aggiorna, ordinaSidebar, CloseAllPopup, idep, isParty, organizza, profileNameep, profileImageep, partyImageep, descriptionep, timeep, userIdViewep, maxParticipantsep, categoryep } from '@/scripts/MapPage/PageScript.ts';
 
 
 import { eliminaEvento, eliminaParty, partecipaEvento, partecipaParty, disinscriviEvento, disinscriviParty } from '../scripts/MapPage/popup';
 
+const filtroSinistra = ref(false);
+const filtroDestra = ref(false);
 
 // Stato di autenticazione
 const isAuthenticated = computed(() => loggedUser.token !== undefined);
@@ -27,19 +30,19 @@ const userName = computed(() => (isAuthenticated.value ? username.value : ''));
 const profilePicture = computed(() => (isAuthenticated.value ? userProfilePicture.value : ''));
 const Ruolo = computed(() => (isAuthenticated.value ? ruolo.value : ''));
 
-
+CloseAllPopup();
 // Logica di logout
 function handleLogout() {
   clearLoggedUser();
   router.push("/");
 }
 
+
+
 function initMap() {
   initializeMap();
-  inizializeLoader();
   console.log("Mappa inizializzata");
-  // Carica i dati per le cards al momento della inizializzazione della mappa
-  aggiornaTutto();
+  Aggiorna();
 }
 
 
@@ -53,14 +56,14 @@ onMounted(() => {
 
 <template>
   <!-- Loader -->
-  <div id="loader" v-if="!isAuthenticated">
+  <!-- <div id="loader" v-if="!isAuthenticated">
     <div class="left-curtain"></div>
     <div class="right-curtain"></div>
     <div class="center-content">
       <h1>Loading..</h1>
       <img src="@/assets/attendi.png" alt="Logoload" class="logoload" />
     </div>
-  </div>
+  </div> -->
 
   <!-- Contenuto -->
   <div class="content">
@@ -81,22 +84,59 @@ onMounted(() => {
     <!-- Box di contenuto con mappa e sidebar -->
     <div class="container-box">
       <div class="left">
+
+
+
         <div class="filtri">
-          <!-- Immagine del filtro con azione per aprire il popup -->
-          <img src="@/assets/filtri.png" alt="Filtri" @click="apriPopUpVisualizza(1, 'post')" />
-          <img src="@/assets/ordina.png" alt="Ordina" />
+          <div class="filter-container" @mouseenter="filtroSinistra = true" @mouseleave="filtroSinistra = false">
+            <img src="@/assets/filtri.png" alt="Filter Icon" style="cursor:pointer;" />
+            <div class="filter-window" v-if="filtroSinistra">
+              <h4>Visualizza</h4>
+              <div class="filter-options">
+                <div>
+                  <label><input type="checkbox" v-model="filtri.post" @change="Aggiorna" /> Post</label>
+                  <label><input type="checkbox" v-model="filtri.party" @change="Aggiorna" /> Party</label>
+                  <label><input type="checkbox" v-model="filtri.evento" @change="Aggiorna" /> Eventi</label>
+                  <label><input type="checkbox" v-model="filtri.textual" @change="Aggiorna" /> Text</label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+          <div class="filter-container" @mouseenter="filtroDestra = true" @mouseleave="filtroDestra = false">
+            <img src="@/assets/ordina.png" alt="Filter Icon" style="cursor:pointer;" />
+            <div v-if="filtroDestra" class="filter-window">
+              <h4>Ordina</h4>
+              <div class="filter-options">
+                <div>
+                  <label>
+                    <input type="checkbox" :checked="selectedOption === 'post'" @change="selectOption('post')" />
+                    Post
+                  </label>
+                  <label>
+                    <input type="checkbox" :checked="selectedOption === 'textual'" @change="selectOption('textual')" />
+                    Textual
+                  </label>
+                  <label>
+                    <input type="checkbox" :checked="selectedOption === 'party'" @change="selectOption('party')" />
+                    Party
+                  </label>
+                  <label>
+                    <input type="checkbox" :checked="selectedOption === 'evento'" @change="selectOption('evento')" />
+                    Evento
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
+
+
         <aside class="sidebar">
-          <div v-for="(card, index) in sideCards" :key="index" class="card" :data-index="card.dataIndex"
-            :data-type="card.dataType">
-            <div class="card-header">
-              <img class="card-img-top" :src="card.profileImage" alt="Foto Profilo">
-              <strong>{{ card.profileName }}</strong>
-            </div>
-            <div class="card-body">
-              <img v-if="card.postImage" class="post-image" :src="card.postImage" alt="Foto Post" />
-              <p class="card-description">{{ card.description }}</p>
-            </div>
+          <div v-for="(card, index) in sideCards" :key="index">
+            <SideCard :profileName="card.profileName" :profileImage="card.profileImage" :postImage="card.postImage"
+              :description="card.description" :dataIndex="card.dataIndex" :dataType="card.dataType" :id="card.id" />
           </div>
         </aside>
       </div>

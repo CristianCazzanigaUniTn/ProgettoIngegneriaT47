@@ -1,5 +1,6 @@
 <template>
-    <div id="popupPartyDiv" v-if="isVisible">
+    <div v-if="isVisible" class="popup-overlay">
+    <div id="popupPartyDiv">
         <button id="chiusuraParty" @click="closePopup">×</button>
         <div class="instagram-card">
             <div class="instagram-card-header">
@@ -65,6 +66,7 @@
         </div>
 
 
+    </div>
     </div>
 </template>
 <script setup>

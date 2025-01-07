@@ -1,3 +1,4 @@
+
 // Definizione del tipo per la card
 export interface Posted {
     id: string;
