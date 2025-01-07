@@ -13,7 +13,7 @@ async function estraiLikeAiCommenti(id: any) {
         }
         
         const likes = await l.json();
-        return likes.lenght;
+        return likes.length;
         
     } catch (error){
         console.error("Errore durante l'estrazione dei like:", error);
@@ -148,65 +148,66 @@ async function estraiUtente(id : any) {
 }
 //Estrai like (con id e nome utente) e commenti (con id e nome utente, testo e numero di like) di un post
 export async function estraiInformazioniPost(id: any) {
-    const like:any = [];
-    const commento_like:any = [];
-    const res = { like, commento_like};
+    var like: any = [];
+    var commento_like: any = [];
+    var idLike: any = undefined;
     
     try {
         const l = await fetch(`http://localhost:3000/api/like/post/${id}`);
         const c = await fetch(`http://localhost:3000/api/commenti/post/${id}`);
 
         if (l.status === 404) {
-            console.warn("Nessuna like trovato.");
+            console.warn("Nessuna like trovata.");
         }
 
+        if (l.ok) {
+            const likes = await l.json();
 
-        if (!l.ok) {
-            throw new Error(`Errore nella richiesta: ${l.status} ${l.statusText}`);
+            for (const lk of likes) {
+                const ut = await estraiUtente(lk.utente_id);
+                if (lk.utente_id === loggedUser.id) {
+                    idLike = lk._id;
+                }
+                like.push({ id_utente: ut.id, username: ut.username });
+            }
         }
 
         if (c.status === 404) {
             console.warn("Nessun commento trovato.");
         }
 
-    
+        if (c.ok) {
+            const commenti = await c.json();
+
+            for (const cm of commenti) {
+                const ut = await estraiUtente(cm.utente_id);
+                const nlike = await estraiLikeAiCommenti(cm.utente_id);
+                commento_like.push({
+                    id_utente: ut.id,
+                    img_utente: ut.foto_profilo,
+                    username: ut.username,
+                    testo: cm.commento,
+                    n_like: nlike,
+                });
+            }
+        }
+
+        if (!l.ok) {
+            throw new Error(`Errore nella richiesta: ${l.status} ${l.statusText}`);
+        }
+
         if (!c.ok) {
             throw new Error(`Errore nella richiesta: ${c.status} ${c.statusText}`);
         }
-        const likes = await l.json();
-        var ut: any, utUsername, utId;
-        
-        if(likes.lenght > 0){
-            likes.forEach((like : any) => {
-                ut = estraiUtente(like.utente_id);
-                utUsername = ut.username;
-                utId = ut._id;
-                like.push({utId, utUsername});
-            });
-        }
 
-        const commenti = await c.json();
-        var nlike, testocommento;
-
-        if(commenti.lenght > 0){
-            commenti.forEach((commento:any) => {
-                ut = estraiUtente(commento.utente_id);
-                utUsername = ut.username;
-                utId = ut._id;
-                nlike = estraiLikeAiCommenti(commento.utente_id);
-                testocommento = commento.commento;
-                commento_like.push({ utId, utUsername, testocommento, nlike });
-            });
-        }
-
-        return res;
+        return { like: like, commenti: commento_like, idLike: idLike };
 
     } catch (error) {
         console.error("Errore durante l'estrazione dei post:", error);
-        return res;
+        return { like: like, commenti: commento_like, idLike: idLike };
     }
-
 }
+
 
 //Ritorna il numero di partecipazioni ad un Party
 export async function estraiPartecipazioniParty(id: any){
@@ -417,5 +418,187 @@ export async function eliminaEvento(id_evento: any) {
 
     } catch (error) {
         console.error("Errore durante l'eliminazione dell'evento:", error);
+    }
+}
+
+export async function eliminaPost(id_post: any) {
+    try {
+        const response = await fetch(`http://localhost:3000/api/Post/${id_post}`, {
+            method: 'DELETE', 
+            headers: {
+                'Authorization': `Bearer ${loggedUser.token}`
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`Errore nella richiesta: ${response.status} ${response.statusText}`);
+        }
+
+        console.log("Post eliminato con successo!");
+
+    } catch (error) {
+        console.error("Errore durante l'eliminazione del Post:", error);
+    }
+}
+
+export async function aggiungiCommento(post_id: any, contenuto: string) {
+    try {
+        const response = await fetch(`http://localhost:3000/api/commenti`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json', // Specifica il formato JSON
+                'Authorization': `Bearer ${loggedUser.token}` // Token per l'autenticazione
+            },
+            body: JSON.stringify({ post_id, contenuto }) // Cambia i nomi dei campi
+        });
+
+        if (!response.ok) {
+            // Stampa i dettagli per il debug
+            const errorBody = await response.text();
+            console.error(`Errore nella richiesta: ${response.status} ${response.statusText}`);
+            console.error(`Dettagli del server: ${errorBody}`);
+            throw new Error(`Errore nella richiesta: ${response.status}`);
+        }
+
+        const commenti = await response.json();
+        console.log(commenti);
+    } catch (error) {
+        console.error("Errore durante l'aggiunta del commento:", error);
+    }
+}
+
+export async function aggiungiLikePost(post_id: any) {
+    try {
+        const response = await fetch(`http://localhost:3000/api/like/${post_id}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json', // Specifica il formato JSON
+                'Authorization': `Bearer ${loggedUser.token}` // Token per l'autenticazione
+            },
+        });
+
+        if (!response.ok) {
+            // Stampa i dettagli per il debug
+            throw new Error(`Errore nella richiesta: ${response.status}`);
+        }
+
+    } catch (error) {
+        console.error("Errore durante l'aggiunta del like:", error);
+        return undefined
+    }
+}
+
+export async function eliminaLikePost(like_id: any) {
+    try {
+        const response = await fetch(`http://localhost:3000/api/like/${like_id}`, {
+            method: 'DELETE', 
+            headers: {
+                'Authorization': `Bearer ${loggedUser.token}`
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`Errore nella richiesta: ${response.status} ${response.statusText}`);
+        }
+
+    } catch (error) {
+        console.error("Errore durante l'eliminazione del like:", error);
+    }
+    
+}
+
+export async function aggiungiLikeCommenti(commenti_id: any) {
+    try {
+        const response = await fetch(`http://localhost:3000/api/commenti/${commenti_id}/like`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json', // Specifica il formato JSON
+                'Authorization': `Bearer ${loggedUser.token}` // Token per l'autenticazione
+            },
+        });
+
+        if (!response.ok) {
+            // Stampa i dettagli per il debug
+            throw new Error(`Errore nella richiesta: ${response.status}`);
+        }
+
+        const r = await response.json();
+
+        console.log(r);
+    } catch (error) {
+        console.error("Errore durante l'aggiunta del commento:", error);
+    }
+}
+
+export async function eliminaLikeCommenti(commenti_id: any) {
+    try {
+        const response = await fetch(`http://localhost:3000/api/commenti/${commenti_id}/like`, {
+            method: 'DELETE', 
+            headers: {
+                'Authorization': `Bearer ${loggedUser.token}`
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`Errore nella richiesta: ${response.status} ${response.statusText}`);
+        }
+
+        console.log("Partecipazione eliminata con successo!");
+
+    } catch (error) {
+        console.error("Errore durante l'eliminazione della partecipazione:", error);
+    }
+    
+}
+
+export async function aggiungiFaq(id_evento: any, domanda: string) {
+    try {
+        const response = await fetch(`http://localhost:3000/api/faqeventi`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json', // Specifica il formato JSON
+                'Authorization': `Bearer ${loggedUser.token}` // Token per l'autenticazione
+            },
+            body: JSON.stringify({ id_evento, domanda }) // Cambia i nomi dei campi
+        });
+
+        if (!response.ok) {
+            // Stampa i dettagli per il debug
+            const errorBody = await response.text();
+            console.error(`Errore nella richiesta: ${response.status} ${response.statusText}`);
+            console.error(`Dettagli del server: ${errorBody}`);
+            throw new Error(`Errore nella richiesta: ${response.status}`);
+        }
+
+    } catch (error) {
+        console.error("Errore durante l'aggiunta della faq:", error);
+    }
+}
+
+export async function rispondiFaq(id: any, risposta: string) {
+    try {
+        const response = await fetch(`http://localhost:3000/api/faqeventi`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json', // Specifica il formato JSON
+                'Authorization': `Bearer ${loggedUser.token}` // Token per l'autenticazione
+            },
+            body: JSON.stringify({ id: id, risposta: risposta }) // Cambia i nomi dei campi
+        });
+
+        if (!response.ok) {
+            // Stampa i dettagli per il debug
+            const errorBody = await response.text();
+            console.error(`Errore nella richiesta: ${response.status} ${response.statusText}`);
+            console.error(`Dettagli del server: ${errorBody}`);
+            throw new Error(`Errore nella richiesta: ${response.status}`);
+        }
+
+        const r = await response.json();
+
+        console.log(r);
+
+    } catch (error) {
+        console.error("Errore durante l'aggiunta della faq:", error);
     }
 }

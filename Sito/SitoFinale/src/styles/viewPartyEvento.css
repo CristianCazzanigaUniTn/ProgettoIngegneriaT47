@@ -192,3 +192,7 @@
     color: #333;
     z-index: 1001;
 }
+
+.selected-faq {
+    background-color: #0056b3;/* Colore a tua scelta */
+}

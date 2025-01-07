@@ -23,43 +23,53 @@
 
             <!-- Sezione dei like (posizionata sopra) -->
             <div class="likes-section">
-                <button id="likeButton" class="like-button">❤️ Mi piace</button>
-                <span id="likeCount">0</span>
+                <button id="likeButton" class="like-button" @click="likePost" >❤️ Mi piace</button>
+                <span id="likeCount">{{ like }}</span>
             </div>
 
             <!-- Sezione dei commenti -->
             <div class="comments-section">
                 <div id="commentList">
-                    <!-- Commento 1 -->
-                    <div class="comment">
-                        <img class="comment-user-image" src="" alt="User" />
+                    <div v-for="c in commenti" class="comment">
+                        <router-link :to="`/profilo/${c.id_utente}`">
+                            <img class="comment-user-image" :src="c.img_utente" alt="User" />
+                        </router-link>
                         <div class="comment-content">
-                            <div class="comment-user-name">ciucgamer</div>
-                            <div class="comment-text">Bellissima foto!</div>
+                            <router-link :to="`/profilo/${c.id_utente}`">
+                                <div class="comment-user-name">{{ c.username }}</div>
+                            </router-link>
+                            <div class="comment-text">{{c.testo}}</div>
+                            <div>{{ c.n_like }}</div>
                         </div>
                     </div>
-                    <!-- Commento 2 -->
-                    <div class="comment">
-                        <img class="comment-user-image" src="" alt="User" />
-                        <div class="comment-content">
-                            <div class="comment-user-name">markus92</div>
-                            <div class="comment-text">Wow, che panorama!</div>
-                        </div>
-                    </div>
+
                 </div>
-                <div class="comment-input">
-                    <input type="text" id="commentInput" placeholder="Aggiungi un commento...">
-                    <button id="addCommentButton" disabled>Invia</button>
+
+                <div v-if="loggedUser.token !== undefined" class="comment-input">
+                    <input type="text" id="commentInput" placeholder="Aggiungi un commento..." v-model="newCommentText" >
+                    <button id="addCommentButton" @click="addComment">Invia</button>
                 </div>
             </div>
 
-
+            <button id="azionePartyButton" class="button-iscrizione" @click="deletePost" v-if="organizzaP && loggedUser.token !== undefined">
+                Elimina
+            </button>
 
         </div>
     </div>
 </template>
 
 <script setup>
+import { ref, onMounted } from 'vue';
+import { estraiInformazioniPost, aggiungiCommento, aggiungiLikeCommenti, aggiungiLikePost, eliminaLikeCommenti, eliminaLikePost, eliminaPost } from '../../../scripts/MapPage/popup';
+import { loggedUser } from '../../../states/loggedUser';
+import { idp } from '../../../scripts/MapPage/PageScript';
+
+const newCommentText = ref('');
+
+const idLike = ref();
+const like = ref();
+const commenti = ref([]);
 
 // Props accettati dal componente
 defineProps({
@@ -91,15 +101,62 @@ defineProps({
         type: Boolean,
         default: true, // Se il popup è visibile
     },
+    organizzaP: {
+        type: Boolean,
+        required: true
+    }
 });
 
 // Gestione degli eventi
 const emit = defineEmits(["close-popup"]);
 
+async function addComment() {
+    if (!newCommentText) {
+        console.log("Il commento non può essere vuoto");
+        return;
+    } else {
+        await aggiungiCommento(idp.value, newCommentText.value)
+        newCommentText.value = '';
+    }
+
+    await refresh();
+
+}
+
+async function deletePost() {
+    
+    await eliminaPost(idp.value)
+    closePopup();
+}
+
+async function likePost() {
+    if (loggedUser.token) {
+
+        if (idLike.value) {
+            eliminaLikePost(idLike.value);
+        } else {
+            await aggiungiLikePost(idp.value);
+        }
+    }
+    await refresh();
+}
+
+async function refresh() {
+    const infoPost = await estraiInformazioniPost(idp.value);
+    idLike.value = infoPost.idLike;
+    like.value = infoPost.like.length;
+    commenti.value = infoPost.commenti;
+}
+
 // Funzione per chiudere il popup
 function closePopup() {
     emit("close-popup");
 }
+
+onMounted(async () => {
+    await refresh(); // Esegui il refresh all'inizializzazione
+});
+
 </script>
 
 <style scoped src="@/styles/visualizzaPost.css"></style>

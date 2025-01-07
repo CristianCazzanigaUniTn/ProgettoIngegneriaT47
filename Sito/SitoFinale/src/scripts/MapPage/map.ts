@@ -1,4 +1,5 @@
 var map: any;
+var behavior: any;
 
 export const initializeMap = () => {
     // Ottieni la chiave API dalla variabile d'ambiente
@@ -36,7 +37,7 @@ export const initializeMap = () => {
     });
     window.addEventListener('resize', () => map.getViewPort().resize());
 
-    var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
+    behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
 
 
     function interleave() {
@@ -55,6 +56,27 @@ export const initializeMap = () => {
     interleave();
 
 };
+
+export function apriPopUpAnim(posizione:any){
+    behavior.disable();
+    map.getViewModel().setLookAtData({
+        position: posizione,
+        zoom: 18,
+        tilt: 0
+    }, {
+    });
+}
+
+export function chiudiPopUpAnim(){
+    behavior.enable();
+    map.getViewModel().setLookAtData({
+        zoom: 16,
+        tilt: 55
+    }, {
+        
+    });
+    
+}
 
 //mettere i marker 
 
@@ -86,12 +108,6 @@ export async function AggiornaMappa(posteds: Posted[]) {
     });
 }
 
-
-
-
-
-
-
 //GESTIONE AGGIUNTA MARKER E DIVE (POSSIBILITA DI DIVIDERLO IN PIU FILE)
 
 import postImage from '@/assets/post.png';
@@ -108,7 +124,6 @@ async function aggiungiPost(post: any) {
     
     
     marker.addEventListener('tap', function (evt: any) {
-        //animazione
         apriPopUpVisualizza(post);
     });
     marker.addEventListener('pointerenter', function (evt: any) {
