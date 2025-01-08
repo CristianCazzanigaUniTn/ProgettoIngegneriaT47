@@ -1,0 +1,12 @@
+.contenitoreGenerale
+{
+    position: absolute;
+    height: 87%;
+    width: 100%;
+    left: 0;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    bottom: 0;
+    overflow: hidden;
+}

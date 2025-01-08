@@ -4,7 +4,7 @@ import { estraiDati, Posted } from './estraiDati.ts'
 import { AggiornaMappa, chiudiPopUpAnim, apriPopUpAnim } from './map.ts';
 import { estraieventoid, estraipartyid } from './popup';
 import { loggedUser } from '../../states/loggedUser.ts';
-import { getPosition } from '../tools/posizione';
+import { getPosition } from '../Tools/posizione';
 
 
 // Logica della mappa e popup

@@ -63,6 +63,7 @@ onMounted(() => {
 
 
 <template>
+  <div class="contenitoreGenerale">
   <!-- Loader -->
   <div v-if="isLoading" class="loading-overlay">
     <div class="loading-spinner">
@@ -174,6 +175,7 @@ onMounted(() => {
   <!-- Popup per la creazione di Evento -->
   <CreaEventoPopup v-if="showPopupCreaEvento" :isVisible="showPopupCreaEvento"
     @close-popup="closePopup('CreaEvento')" />
+  </div>
 </template>
 
 

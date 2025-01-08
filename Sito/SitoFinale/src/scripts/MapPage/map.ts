@@ -2,8 +2,8 @@ var map: any;
 var behavior: any;
 
 
-import { getPosition, Posizione } from '../tools/posizione';
 
+import { getPosition, Posizione } from '../Tools/posizione';
 let posizione: Posizione | null = await getPosition();;
 
 export const initializeMap = () => {

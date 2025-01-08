@@ -1,8 +1,7 @@
 .container-box {
     display: flex;
-    height: 96vh;
+    height: 85vh;
     width: 100vw;
-    margin-top: 20vh;
     justify-content: space-between;
     font-family: "Montserrat", sans-serif;
     overflow: hidden;
@@ -40,7 +39,7 @@
 
 .filtri {
     width: 85%;
-    height: 20%;
+    height: 200px;
     background-color: rgba(15, 31, 58, 0.713);
     border-radius: 55px;
     display: flex;
@@ -312,6 +311,8 @@
     display: flex;
     gap: 20px;
     position: relative;
+    margin-bottom: 10px;
+    max-height: 100px;
 }
 
 .filter-container {
