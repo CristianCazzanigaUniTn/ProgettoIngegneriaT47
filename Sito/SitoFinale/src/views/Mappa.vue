@@ -136,7 +136,7 @@ onMounted(() => {
         <aside class="sidebar">
           <div v-for="(card, index) in sideCards" :key="index">
             <SideCard :profileName="card.profileName" :profileImage="card.profileImage" :postImage="card.postImage"
-              :description="card.description" :dataIndex="card.dataIndex" :dataType="card.dataType" :id="card.id" />
+              :description="card.description" :dataIndex="card.dataIndex" :dataType="card.dataType" :id="card.id" :latitudine="card.latitudine" :longitudine="card.longitudine" />
           </div>
         </aside>
       </div>

@@ -1,5 +1,5 @@
 <template>
-    <div class="card" :data-index="dataIndex" :data-type="dataType" @click="apriPopUpVisualizza(props)">
+    <div class="card" :data-index="dataIndex" :data-type="dataType" @click="apriPopUpVisualizza(props, {lat: props.latitudine, lgn: props.longitudine})">
         <div class="card-header">
         
             <img class="card-img-top" :src="profileImage" alt="Foto Profilo">
@@ -32,6 +32,8 @@ const props = defineProps({
     description: String,
     dataIndex: String,
     dataType: String,
+    latitudine: Number,
+    longitudine: Number,
     id: String
 });
 
