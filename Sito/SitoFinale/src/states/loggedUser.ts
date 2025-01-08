@@ -36,4 +36,7 @@ function clearLoggedUser(): void {
     loggedUser.ruolo = undefined;
 }
 
-export { loggedUser, setLoggedUser, clearLoggedUser };
+
+
+
+export { loggedUser, setLoggedUser, clearLoggedUser};

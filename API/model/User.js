@@ -1,5 +1,4 @@
 var mongoose = require('mongoose');
-var bcrypt = require('bcrypt');
 var Schema = mongoose.Schema;
 
 var UserSchema = new Schema({
@@ -55,15 +54,12 @@ var UserSchema = new Schema({
     verified: {
         type: Boolean,
         required: true,
+    },
+    verificationToken: {
+        type: String,
+        required: false
     }
 
-});
-
-UserSchema.pre('save', async function(next) {
-    if (this.isModified('password')) {
-        this.password = await bcrypt.hash(this.password, 10);
-    }
-    next();
 });
 
 UserSchema.methods.comparePassword = function(password) {

@@ -1,5 +1,5 @@
 <template>
-    <div class="card" :data-index="dataIndex" :data-type="dataType" @click="apriPopUpVisualizza(props, {lat: props.latitudine, lgn: props.longitudine})">
+    <div class="card" :data-index="dataIndex" :data-type="dataType" @click="apriPopUpVisualizza(props, {lat: props.latitudine, lng: props.longitudine})">
         <div class="card-header">
         
             <img class="card-img-top" :src="profileImage" alt="Foto Profilo">
