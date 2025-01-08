@@ -36,13 +36,13 @@ function login() {
   const password = String(userPassword.value);
 
   // Hash della password prima di inviarla
-  const hashedPassword = String(CryptoJS.SHA256(password).toString(CryptoJS.enc.Base64)); 
+  const hashedPassword = String(CryptoJS.SHA256(password).toString(CryptoJS.enc.Base64));
 
   fetch(API_URL + '/authentications', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     //hasha password
-    body: JSON.stringify({ username: userName.value, password: hashedPassword  }),
+    body: JSON.stringify({ username: userName.value, password: hashedPassword }),
   })
     .then((resp) => resp.json())
     .then(function (data) {
@@ -57,7 +57,7 @@ function login() {
 }
 
 
- // Funzione per inviare un'email di prova
+// Funzione per inviare un'email di prova
 async function sendEmail() {
 
   const emailSubject = 'Messaggio di verifica per la registrazione';
@@ -68,18 +68,18 @@ async function sendEmail() {
     const response = await fetch('http://localhost:3000/send-email', {
       method: 'POST',
       headers: {
-          'Content-Type': 'application/json',
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-          to: userEmail.value,
-          subject: emailSubject,
-          text: emailMessage,
-          html: `<p>${emailMessage.replace(/\n/g, '<br>')}</p>`, // Formattazione HTML
+        to: userEmail.value,
+        subject: emailSubject,
+        text: emailMessage,
+        html: `<p>${emailMessage.replace(/\n/g, '<br>')}</p>`, // Formattazione HTML
       }),
     });
 
     if (!response.ok) {
-        throw new Error('Errore durante l\'invio dell\'email');
+      throw new Error('Errore durante l\'invio dell\'email');
     }
 
     const data = await response.json();
@@ -92,7 +92,7 @@ async function sendEmail() {
 
 
 // Funzione per registrare l'utente
-async function registerUser(){
+async function registerUser() {
 
   const dataRegistrazione = new Date().toISOString();
 
@@ -106,27 +106,27 @@ async function registerUser(){
 
     verificationToken.value = generateVerificationToken();
 
-      const response = await fetch('http://localhost:3000/api/Utenti', {
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-              nome: userName.value,
-              username: userUsername.value,
-              email: userEmail.value,
-              password: hashedPassword,
-              genere: userGender.value,
-              data_registrazione: dataRegistrazione,
-              preferenze_notifiche: userNotifications.value,
-              ruolo: userRole.value,
-              verificationToken: verificationToken.value,
-              foto_profilo: "fotofinta"
-          }),
-      });
+    const response = await fetch('http://localhost:3000/api/Utenti', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        nome: userName.value,
+        username: userUsername.value,
+        email: userEmail.value,
+        password: hashedPassword,
+        genere: userGender.value,
+        data_registrazione: dataRegistrazione,
+        preferenze_notifiche: userNotifications.value,
+        ruolo: userRole.value,
+        verificationToken: verificationToken.value,
+        foto_profilo: "fotofinta"
+      }),
+    });
 
-      if (!response.ok) {
-          throw new Error('Errore durante la registrazione dell\'utente');
+    if (!response.ok) {
+      throw new Error('Errore durante la registrazione dell\'utente');
     }
 
     const data = await response.json();
@@ -158,61 +158,61 @@ function logout() {
 
 <template>
   <div class="contenitoreGenerale">
-  <form>
-    <span v-if="loggedUser.token">
-      Welcome <a :href="HOST + '/' + loggedUser.self">{{ loggedUser.username }}</a>
-      <button type="button" @click="logout">LogOut</button>
-    </span>
+    <form>
+      <span v-if="loggedUser.token">
+        Welcome <a :href="HOST + '/' + loggedUser.self">{{ loggedUser.username }}</a>
+        <button type="button" @click="logout">LogOut</button>
+      </span>
+      
+      <span v-if="!loggedUser.token">
+        <div class="login-box">
+          <p class="small-text">IL SOCIAL NETWORK DI CUI HAI BISOGNO</p>
+          <h1 class="title">EVENTLY</h1>
+          <p class="sub-text">ENTRA e partecipa ad EVENTI</p>
 
-    <span v-if="!loggedUser.token">
-      <div class="login-box">
-        <p class="small-text">IL SOCIAL NETWORK DI CUI HAI BISOGNO</p>
-        <h1 class="title">EVENTLY</h1>
-        <p class="sub-text">ENTRA e partecipa ad EVENTI</p>
+          <form v-if="isLoginForm" class="login-form">
+            <input v-model="userName" type="text" placeholder="Email, Username o Telefono" class="input-field" />
+            <input v-model="userPassword" type="password" placeholder="Password" class="input-field" />
+            <div class="buttons">
+              <button type="button" class="btn access" @click="login">LogIn</button>
+              <button type="button" class="btn register" @click="clear()">Registrati</button>
+            </div>
+          </form>
 
-        <form v-if="isLoginForm" class="login-form">
-          <input v-model="userName" type="text" placeholder="Email, Username o Telefono" class="input-field" />
-          <input v-model="userPassword" type="password" placeholder="Password" class="input-field" />
-          <div class="buttons">
-            <button type="button" class="btn access" @click="login">LogIn</button>
-            <button type="button" class="btn register" @click="clear()">Registrati</button>
-          </div>
-        </form>
-
-        <form v-if="!isLoginForm" class="login-form" @submit.prevent="registerUser">
-          <input v-model="userName" type="text" placeholder="Nome" class="input-field" required />
-          <input v-model="userUsername" type="text" placeholder="Username" class="input-field" required />
-          <input v-model="userEmail" type="email" placeholder="Email" class="input-field" required />
-          <input v-model="userPassword" type="password" placeholder="Password" class="input-field" required />
-          <select v-model="userGender" class="input-field" required>
+          <form v-if="!isLoginForm" class="login-form" @submit.prevent="registerUser">
+            <input v-model="userName" type="text" placeholder="Nome" class="input-field" required />
+            <input v-model="userUsername" type="text" placeholder="Username" class="input-field" required />
+            <input v-model="userEmail" type="email" placeholder="Email" class="input-field" required />
+            <input v-model="userPassword" type="password" placeholder="Password" class="input-field" required />
+            <select v-model="userGender" class="input-field" required>
               <option value="" disabled selected>Seleziona Genere</option>
               <option value="Male">Maschio</option>
               <option value="Female">Femmina</option>
               <option value="Other">Altro</option>
-          </select>
+            </select>
 
-          <select v-model="userNotifications" class="input-field" required>
+            <select v-model="userNotifications" class="input-field" required>
               <option value="" disabled selected>Seleziona preferenze sulle notifiche</option>
               <option value="email">Email</option>
-          </select>
-          
-          <select v-model="userRole" class="input-field" required>
+            </select>
+
+            <select v-model="userRole" class="input-field" required>
               <option value="" disabled selected>Seleziona Ruolo</option>
               <option value="utente_base">Utente Base</option>
               <option value="organizzatore">Organizzatore</option>
-          </select>
-          
-          <div class="buttons">
-            <button type="button" class="btn access" @click="registerUser">Registrati</button>
-            <button type="button" class="btn register" @click="clear()">Hai già un account? Accedi</button>
-          </div>
+            </select>
 
-        </form>
+            <div class="buttons">
+              <button type="button" class="btn access" @click="registerUser">Registrati</button>
+              <button type="button" class="btn register" @click="clear()">Hai già un account? Accedi</button>
+            </div>
 
-        <LoginGoogle />
-      </div>
-    </span>
-  </form>
+          </form>
+
+          <LoginGoogle />
+        </div>
+      </span>
+    </form>
   </div>
 </template>
 
