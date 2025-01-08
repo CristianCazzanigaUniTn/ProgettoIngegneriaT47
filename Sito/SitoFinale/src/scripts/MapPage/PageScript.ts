@@ -4,7 +4,7 @@ import { estraiDati, Posted } from './estraiDati.ts'
 import { AggiornaMappa, chiudiPopUpAnim, apriPopUpAnim } from './map.ts';
 import { estraieventoid, estraipartyid } from './popup';
 import { loggedUser } from '../../states/loggedUser.ts';
-import { getPosition } from '../tools/posizione';
+import { getPosition } from '../Tools/posizione';
 
 
 // Logica della mappa e popup
@@ -39,18 +39,14 @@ export interface FiltriRicerca {
   party: boolean;
 }
 
-export async function aggiornaTutto(filtri: FiltriRicerca) {
-  const posizione = await getPosition();
-  const lat = posizione.latitudine; // Latitudine, puoi cambiarla con i dati correnti della mappa
-  const lng = posizione.longitudine; // Longitudine, anche qui usa i dati correnti
-  const rad = 15;
+export async function aggiornaTutto(filtri: FiltriRicerca, latitudine: number, longitudine: number, raggio :number) {
+  
 
   // Recupera i dati
-  const cards = await estraiDati(lat, lng, rad);
+  const cards = await estraiDati(latitudine, longitudine, raggio);
  
   // Filtra i dati in base ai filtri attivi
   const filteredCards = cards.filter((card) => {
-    console.log(card.dataType);
     switch (card.dataType) {
       case 'post':
         return filtri.post;
@@ -73,7 +69,7 @@ export async function aggiornaTutto(filtri: FiltriRicerca) {
   sideCards.value = shuffledCards;
 
   // Aggiorna la mappa
-  AggiornaMappa(shuffledCards);
+  await AggiornaMappa(shuffledCards);
 }
 
 export async function ordinaSidebar(tipo: string = '') {
@@ -223,10 +219,36 @@ export function selectOption(option: string) {
   }
 }
 
+export const isLoading = ref(true);
 
-export async function Aggiorna() {
-  aggiornaTutto(filtri.value);
-  if (selectedOption.value) {
-    ordinaSidebar(selectedOption.value);
+export async function Aggiorna(lat?: number, lng?: number, rad: number = 15): Promise<void> {
+  try {
+    // Attiva il loader
+    isLoading.value = true;
+    console.log("eccomi");
+    let posizioneLat: number;
+    let posizioneLng: number;
+
+    if (lat !== undefined && lng !== undefined) {
+      posizioneLat = lat;
+      posizioneLng = lng;
+    } else {
+      const posizione = await getPosition();
+      posizioneLat = posizione.latitudine;
+      posizioneLng = posizione.longitudine;
+    }
+
+    // Aggiorna i dati
+    await aggiornaTutto(filtri.value, posizioneLat, posizioneLng, rad);
+    
+    // Ordina la sidebar se un'opzione è selezionata
+    if (selectedOption.value) {
+      await ordinaSidebar(selectedOption.value);
+    }
+  } catch (error) {
+    alert("Errore durante l'aggiornamento: " + error);
+  } finally {
+    // Disattiva il loader
+    isLoading.value = false;
   }
 }

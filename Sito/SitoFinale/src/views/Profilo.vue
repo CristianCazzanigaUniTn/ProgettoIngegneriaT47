@@ -1,4 +1,5 @@
 <template>
+  <div class="contenitoreGenerale">
   <div class="container-box">
     <!-- Sezione sinistra: Profilo Utente -->
     <div class="left">
@@ -21,6 +22,7 @@
         />
       </div>
     </div>
+  </div>
   </div>
 </template>
 

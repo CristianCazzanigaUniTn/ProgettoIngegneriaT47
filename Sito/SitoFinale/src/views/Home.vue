@@ -49,7 +49,7 @@ function login() {
       setLoggedUser(data);
       emit('login', loggedUser);
       if (loggedUser.token) {
-        router.push("/mappa");
+        router.push("/");
       }
       return;
     })
@@ -157,6 +157,7 @@ function logout() {
 </script>
 
 <template>
+  <div class="contenitoreGenerale">
   <form>
     <span v-if="loggedUser.token">
       Welcome <a :href="HOST + '/' + loggedUser.self">{{ loggedUser.username }}</a>
@@ -212,6 +213,7 @@ function logout() {
       </div>
     </span>
   </form>
+  </div>
 </template>
 
 <style scoped src="@/styles/login.css"></style>

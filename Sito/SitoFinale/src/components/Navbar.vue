@@ -62,10 +62,10 @@ function handleSuggestionClick(city) {
 
 function handleLogout() {
   clearLoggedUser();
-  router.push('/');
+  router.push('/login');
 }
 
-const showSearchBar = computed(() => route.path === '/mappa');
+const showSearchBar = computed(() => route.path === '/');
 
 
 const isSettingsMenuVisible = ref(false);
@@ -89,9 +89,9 @@ function showAlert() {
           {{ username }}
         </span>
       </router-link>
-      <router-link v-if="!isAuthenticated" to="/" id="home">ACCEDI</router-link>
-      <router-link to="/mappa" id="mappa">MAPPA</router-link>
-      <router-link v-if="!isAuthenticated" to="/" id="profilo" class="profilo-link disabled" @click.prevent>
+      <router-link v-if="!isAuthenticated" to="/login" id="home">ACCEDI</router-link>
+      <router-link to="/" id="mappa">MAPPA</router-link>
+      <router-link v-if="!isAuthenticated" to="/login" id="profilo" class="profilo-link disabled" @click.prevent>
         PROFILO
       </router-link>
       <router-link to="/chiSiamo" id="chiSiamo">CHI SIAMO</router-link>
@@ -122,7 +122,7 @@ function showAlert() {
             <li @click="showAlert">Elimina account <span>></span></li>
             <li v-if="isAuthenticated"  @click="isAuthenticated ? handleLogout() : null" >Log-out <span>></span></li>
             <div v-if="!isAuthenticated">
-              <router-link to="/" id="home">
+              <router-link to="/login">
                 <li>Log in <span>></span></li>
               </router-link>
             </div>
@@ -135,3 +135,4 @@ function showAlert() {
 </template>
 
 <style scoped src="@/styles/navbar.css"></style>
+<style src="@/styles/contenitoreGenerale.css"></style>

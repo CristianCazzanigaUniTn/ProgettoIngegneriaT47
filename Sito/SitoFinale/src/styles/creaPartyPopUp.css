@@ -13,18 +13,36 @@
 .party-form-container {
     position: fixed;
     top: 50%;
-    left: 55%;
+    left: 50%;
     transform: translate(-50%, -50%);
     background-color: white;
     max-width: 600px;
+    height: auto;
     padding: 20px;
     border-radius: 15px;
     box-shadow: 0 10px 20px rgba(0, 2, 0, 12);
     max-width: 800px;
+    max-height: 90%;
     width: 90%;
     z-index: 1000;
+    overflow: auto;
     flex-direction: column;
 }
+.party-form-container::-webkit-scrollbar {
+    width: 10px; 
+  }
+  .party-form-container::-webkit-scrollbar-thumb {
+    background-color: #161d1a67;
+    border-radius: 10px;
+    border: 2px solid #ffffff; 
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  }
+  .party-form-container::-webkit-scrollbar-track {
+    background: #00000017;
+    border-radius: 10px;
+  }
+
+
 .party-form-container .close-button {
     position: absolute;
     top: 10px;
@@ -39,13 +57,14 @@
 }
 
 .party-form-container .event-form-header h2 {
-    font-size: 2.2rem;
+    font-size: 1.2rem;
     margin-bottom: 5px;
 }
 
 .party-form-container .event-form-header p {
     color: #2f3542;
     font-size: 1.1rem;
+    margin-bottom: 15px;
 }
 
 .party-form-container form {

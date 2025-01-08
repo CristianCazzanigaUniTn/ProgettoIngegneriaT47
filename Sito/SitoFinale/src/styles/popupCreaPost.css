@@ -8,19 +8,47 @@
     display: flex;
     justify-content: center;
     align-items: center;
+
     z-index: 9999;
 }
 
+
+
 .popup-container {
     background-color: white;
+    position: fixed;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
     border-radius: 15px;
     padding: 20px;
+    height: auto;
     max-width: 800px;
     width: 90%;
+    max-height: 90%;
+    overflow-x: hidden;
     display: flex;
-    flex-direction: column;
+    z-index: 1000;
+overflow: auto;
+flex-direction: column;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
 }
+
+.popup-container::-webkit-scrollbar {
+    width: 10px; 
+}
+.popup-container::-webkit-scrollbar-thumb {
+    background-color: #161d1a67;
+    border-radius: 10px;
+    border: 2px solid #ffffff; 
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+.popup-container::-webkit-scrollbar-track {
+    background: #00000017;
+    border-radius: 10px;
+}
+
+
 
 .popup-header {
     display: flex;
@@ -154,4 +182,26 @@ textarea:focus {
 #desc {
     display: flex;
     flex-direction: column;
+}
+
+
+@media (max-width: 768px) {
+    .form-group {
+        flex-direction: column;
+    }
+    .image-upload 
+    {
+        width: 300px;
+        height: 300px;
+    }
+    .image-preview
+    {
+        width: 300px;
+        height: 300px;
+    }
+    .image-preview img
+    {
+        width: 300px;
+        height: 300px;
+    }
 }
