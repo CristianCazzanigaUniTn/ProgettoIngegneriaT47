@@ -237,7 +237,7 @@ router.post('/api/Utenti', async (req, res) => {
         if (!nome || !username || !email || !password || !genere || !data_registrazione || !preferenze_notifiche || !ruolo) {
             return res.status(400).json({ success: false, message: 'Missing required fields' });
         }
-
+        
         const existingUser = await User.findOne({ email }).exec();
         if (existingUser) {
             return res.status(400).json({ success: false, message: 'Email already registered' });

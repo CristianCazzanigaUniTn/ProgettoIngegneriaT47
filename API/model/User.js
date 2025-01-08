@@ -1,5 +1,4 @@
 var mongoose = require('mongoose');
-var bcrypt = require('bcrypt');
 var Schema = mongoose.Schema;
 
 var UserSchema = new Schema({
@@ -57,13 +56,6 @@ var UserSchema = new Schema({
         required: true,
     }
 
-});
-
-UserSchema.pre('save', async function(next) {
-    if (this.isModified('password')) {
-        this.password = await bcrypt.hash(this.password, 10);
-    }
-    next();
 });
 
 UserSchema.methods.comparePassword = function(password) {
