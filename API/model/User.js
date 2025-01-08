@@ -54,6 +54,10 @@ var UserSchema = new Schema({
     verified: {
         type: Boolean,
         required: true,
+    },
+    verificationToken: {
+        type: String,
+        required: false
     }
 
 });

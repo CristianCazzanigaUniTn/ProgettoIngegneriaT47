@@ -192,6 +192,7 @@ router.get('/api/Utenti/:id', async (req, res) => {
  *               - data_registrazione
  *               - preferenze_notifiche
  *               - ruolo
+ *               - verificationToken
  *             properties:
  *               nome:
  *                 type: string
@@ -222,6 +223,9 @@ router.get('/api/Utenti/:id', async (req, res) => {
  *               foto_profilo:
  *                 type: string
  *                 description: Foto profilo dell'utente
+ *               verificationToken:
+ *                 type: string
+ *                 description: Token per verifica dell'utente
  *     responses:
  *       201:
  *         description: Utente creato con successo
@@ -232,12 +236,12 @@ router.get('/api/Utenti/:id', async (req, res) => {
  */
 router.post('/api/Utenti', async (req, res) => {
     try {
-        const { nome, username, email, password, genere, data_registrazione, preferenze_notifiche, ruolo, foto_profilo} = req.body;
+        const { nome, username, email, password, genere, data_registrazione, preferenze_notifiche, ruolo, foto_profilo, verificationToken} = req.body;
 
-        if (!nome || !username || !email || !password || !genere || !data_registrazione || !preferenze_notifiche || !ruolo) {
+        if (!nome || !username || !email || !password || !genere || !data_registrazione || !preferenze_notifiche || !ruolo || !verificationToken) {
             return res.status(400).json({ success: false, message: 'Missing required fields' });
         }
-        
+
         const existingUser = await User.findOne({ email }).exec();
         if (existingUser) {
             return res.status(400).json({ success: false, message: 'Email already registered' });
@@ -255,7 +259,8 @@ router.post('/api/Utenti', async (req, res) => {
             preferenze_notifiche,
             ruolo,
             foto_profilo,
-            verified
+            verified,
+            verificationToken
         });
 
         const savedUser = await newUser.save();
@@ -271,7 +276,8 @@ router.post('/api/Utenti', async (req, res) => {
                 preferenze_notifiche: savedUser.preferenze_notifiche,
                 ruolo: savedUser.ruolo,
                 foto_profilo: foto_profilo,
-                verified: false
+                verified: false,
+                verificationToken: savedUser.verificationToken
             }
         });
     } catch (err) {

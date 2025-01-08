@@ -17,14 +17,18 @@ const userNotifications = ref(false);
 const userRole = ref('');
 
 // Variabili per la risposta e l'errore dell'email
-const emailResponse = ref(null);
-const emailError = ref(null);
-const registrationResponse = ref(null);
-const registrationError = ref(null);
+const verificationToken = ref('');
 
 const isLoginForm = ref(true);
 
 const emit = defineEmits(['login']);
+
+function generateVerificationToken() {
+  // Usa un valore casuale e crea un hash SHA256
+  const randomValue = Math.random().toString(36).substring(2); // Genera un valore casuale
+  const hash = CryptoJS.SHA256(randomValue).toString(CryptoJS.enc.Base64); // Hash casuale
+  return hash;
+}
 
 
 function login() {
@@ -55,11 +59,10 @@ function login() {
 
  // Funzione per inviare un'email di prova
 async function sendEmail() {
-  emailResponse.value = null;
-  emailError.value = null;
 
-  const emailSubject = 'Messaggio di prova per la registrazione';
-  const emailMessage = `Ciao ${userName.value},\n\nBenvenuto nel nostro servizio! La tua registrazione è stata ricevuta.`;
+  const emailSubject = 'Messaggio di verifica per la registrazione';
+  const verificationLink = `http://localhost:3000/verify?token=${verificationToken.value}`; // Inserisci il token dinamico
+  const emailMessage = `Ciao ${userName.value},\n\nBenvenuto nel nostro servizio! La tua registrazione è stata ricevuta.\n\nClicca sul link per verificare il tuo account:\n${verificationLink}`;
 
   try {
     const response = await fetch('http://localhost:3000/send-email', {
@@ -80,17 +83,16 @@ async function sendEmail() {
     }
 
     const data = await response.json();
-    emailResponse.value = data.message;
+    console.log(data.message);
 
   } catch (error) {
-      emailError.value = error.message;
+    console.error(error.message)
   }
 };
 
+
 // Funzione per registrare l'utente
 async function registerUser(){
-  registrationResponse.value = null;
-  registrationError.value = null;
 
   const dataRegistrazione = new Date().toISOString();
 
@@ -101,6 +103,8 @@ async function registerUser(){
 
     // Hash della password prima di inviarla
     const hashedPassword = String(CryptoJS.SHA256(password).toString(CryptoJS.enc.Base64));
+
+    verificationToken.value = generateVerificationToken();
 
       const response = await fetch('http://localhost:3000/api/Utenti', {
           method: 'POST',
@@ -116,19 +120,22 @@ async function registerUser(){
               data_registrazione: dataRegistrazione,
               preferenze_notifiche: userNotifications.value,
               ruolo: userRole.value,
+              verificationToken: verificationToken.value,
               foto_profilo: "fotofinta"
           }),
       });
 
       if (!response.ok) {
           throw new Error('Errore durante la registrazione dell\'utente');
-      }
+    }
 
-      const data = await response.json();
-      registrationResponse.value = `Utente ${data.user.username} creato con successo!`;
+    const data = await response.json();
+    console.log(`Utente ${data.user.username} creato con successo!`);
+
+    sendEmail();
 
   } catch (error) {
-      registrationError.value = error.message;
+    console.error(error.message);
   }
 };
 
