@@ -90,22 +90,21 @@ function closePopup() {
 function handleImageUpload(event) {
     const file = event.target.files && event.target.files[0];
     if (!file) {
-        console.error('Nessun file selezionato o errore nel caricamento del file.');
+        alert('Nessun file selezionato o errore nel caricamento del file.');
         return;
     }
 
     if (!file.type.startsWith('image/')) {
-        console.error('Il file selezionato non è un\'immagine.');
+        alert('Il file selezionato non è un\'immagine.');
         return;
     }
 
     const reader = new FileReader();
     reader.onload = (e) => {
         imagePreview.value = e.target.result;
-        console.log('Anteprima immagine caricata con successo.');
     };
     reader.onerror = () => {
-        console.error('Errore nel caricamento dell\'immagine.');
+        alert('Errore nel caricamento dell\'immagine.');
     };
     reader.readAsDataURL(file);
 }
@@ -118,13 +117,13 @@ function removeImage() {
 
 async function eventFormHandler() {
     if (!nomeEvento.value || !eventDate.value || !eventLocation.value || !eventType.value || !eventParticipants.value || !eventDescription.value) {
-        console.error('Tutti i campi sono obbligatori.');
+        alert('Tutti i campi sono obbligatori.');
         return;
     }
 
     const file = document.getElementById('immagineEvento').files[0];
     if (!file) {
-        console.error('Per creare un evento è necessario caricare un\'immagine.');
+        alert('Per creare un evento è necessario caricare un\'immagine.');
         return;
     }
 
@@ -180,10 +179,10 @@ async function eventFormHandler() {
         });
 
         const eventResponseData = await eventResponse.json();
-        console.log('Evento creato con successo:', eventResponseData);
+        alert('Evento creato con successo');
         Aggiorna();
     } catch (error) {
-        console.error('Errore nel caricamento:', error);
+        alert('Errore nel caricamento: ' +  error);
     } finally {
         // Reset dello stato di invio
         isSubmitting.value = false;

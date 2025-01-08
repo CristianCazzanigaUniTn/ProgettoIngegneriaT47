@@ -24,8 +24,6 @@ export const initializeMap = () => {
     var defaultLayers = platform.createDefaultLayers({
         tileSize: 256
     });
-
-    console.log(posizione);
     map = new H.Map(document.getElementById('map'),
         defaultLayers.vector.normal.map, {
         center: { lat: posizione.latitudine, lng: posizione.longitudine },
@@ -101,8 +99,7 @@ let markers: any[] = [];
 
 export async function AggiornaMappa(posteds: Posted[]) {
     try{
-        removeAllMarkers();
-        console.log("andato");
+        await removeAllMarkers();
     }
     catch
     {
@@ -128,7 +125,6 @@ export async function AggiornaMappa(posteds: Posted[]) {
 
 function removeAllMarkers() {
     markers.forEach(marker => {
-        console.log("rimozione di marker");
         map.removeObject(marker);
     });
     // Pulisci la lista di marker
@@ -156,7 +152,7 @@ async function aggiungiPost(post: any) {
     
     markers.push(marker);
 
-    marker.addEventListener('tap', function (evt: any) {
+    marker.addEventListener('tap', function () {
         apriPopUpVisualizza(post);
     });
     marker.addEventListener('pointerenter', function (evt: any) {
@@ -184,7 +180,7 @@ async function aggiungiParty(party: any) {
     var marker = new H.map.Marker(punto, { icon: icona });
     map.addObject(marker);
     markers.push(marker);
-    marker.addEventListener('tap', function (evt: any) {
+    marker.addEventListener('tap', function () {
         apriPopUpVisualizza(party);
     });
     marker.addEventListener('pointerenter', function (evt: any) {
@@ -200,7 +196,7 @@ async function aggiungiEvento(evento: any) {
     var marker = new H.map.Marker(punto, { icon: icona });
     map.addObject(marker);
     markers.push(marker);
-    marker.addEventListener('tap', function (evt: any) {
+    marker.addEventListener('tap', function () {
         apriPopUpVisualizza(evento);
     });
     marker.addEventListener('pointerenter', function (evt: any) {
@@ -300,7 +296,7 @@ export function teletrasportati(lat: number, lng: number) {
         requestAnimationFrame(animate);
         Aggiorna(lat, lng);
     } else {
-        console.error("La mappa non è stata inizializzata.");
+       alert("La mappa non è stata inizializzata.");
     }
 }
 

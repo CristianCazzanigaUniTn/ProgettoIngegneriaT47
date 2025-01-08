@@ -42,11 +42,7 @@ function handleLogout() {
 
 async function initMap() {
   try {
-    // Inizializza la mappa
     initializeMap();
-    console.log("Mappa inizializzata");
-
-    // Aggiorna i dati (il loader è gestito internamente da Aggiorna)
     await Aggiorna();
   } catch (error) {
     console.error("Errore durante l'inizializzazione della mappa:", error);

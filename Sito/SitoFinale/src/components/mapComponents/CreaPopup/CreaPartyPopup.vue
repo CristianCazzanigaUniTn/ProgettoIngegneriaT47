@@ -88,13 +88,13 @@ function closePopup() {
 function handleImageUpload(event) {
     const file = event.target.files && event.target.files[0];
     if (!file) {
-        console.error('Nessun file selezionato o errore nel caricamento del file.');
+        alert('Nessun file selezionato o errore nel caricamento del file.');
         return;
     }
 
     // Verifica se il file è un'immagine
     if (!file.type.startsWith('image/')) {
-        console.error('Il file selezionato non è un\'immagine.');
+        alert('Il file selezionato non è un\'immagine.');
         return;
     }
 
@@ -103,12 +103,11 @@ function handleImageUpload(event) {
     // Gestisci il caricamento con onload
     reader.onload = (e) => {
         imagePreview.value = e.target.result;
-        console.log('Anteprima immagine caricata con successo.');
     };
 
     // Gestisci eventuali errori
     reader.onerror = () => {
-        console.error('Errore nel caricamento dell\'immagine.');
+        alert('Errore nel caricamento dell\'immagine.');
     };
 
     // Avvia il caricamento
@@ -123,13 +122,13 @@ function removeImage() {
 
 async function partyFormHandler() {
     if (!partyName.value || !partyDate.value || !partyLocation.value || !partyType.value || !partyParticipants.value || !partyDescription.value) {
-        console.error('Tutti i campi sono obbligatori.');
+        alert('Tutti i campi sono obbligatori.');
         return;
     }
 
     const file = document.getElementById('partyImage').files[0];
     if (!file) {
-        console.error('Per creare un party è necessario caricare un\'immagine.');
+        alert('Per creare un party è necessario caricare un\'immagine.');
         return;
     }
 
@@ -184,10 +183,10 @@ async function partyFormHandler() {
         });
 
         const partyResponseData = await partyResponse.json();
-        console.log('Party creato con successo:', partyResponseData);
+        alert('Party creato con successo');
         Aggiorna();
     } catch (error) {
-        console.error('Errore nel caricamento:', error);
+        alert('Errore nel caricamento:' + error);
     } finally {
         // Reset dello stato di invio
         isSubmitting.value = false;

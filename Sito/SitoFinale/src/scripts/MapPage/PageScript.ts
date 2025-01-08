@@ -47,7 +47,6 @@ export async function aggiornaTutto(filtri: FiltriRicerca, latitudine: number, l
  
   // Filtra i dati in base ai filtri attivi
   const filteredCards = cards.filter((card) => {
-    console.log(card.dataType);
     switch (card.dataType) {
       case 'post':
         return filtri.post;
@@ -70,7 +69,7 @@ export async function aggiornaTutto(filtri: FiltriRicerca, latitudine: number, l
   sideCards.value = shuffledCards;
 
   // Aggiorna la mappa
-  AggiornaMappa(shuffledCards);
+  await AggiornaMappa(shuffledCards);
 }
 
 export async function ordinaSidebar(tipo: string = '') {
@@ -247,7 +246,7 @@ export async function Aggiorna(lat?: number, lng?: number, rad: number = 15): Pr
       await ordinaSidebar(selectedOption.value);
     }
   } catch (error) {
-    console.error("Errore durante l'aggiornamento:", error);
+    alert("Errore durante l'aggiornamento: " + error);
   } finally {
     // Disattiva il loader
     isLoading.value = false;

@@ -115,7 +115,7 @@ const emit = defineEmits(["close-popup"]);
 
 async function addComment() {
     if (!newCommentText) {
-        console.log("Il commento non può essere vuoto");
+        alert("Il commento non può essere vuoto");
         return;
     } else {
         await aggiungiCommento(idp.value, newCommentText.value)
