@@ -12,7 +12,7 @@ import SideCard from '@/components/mapComponents/mapElements/SideCard.vue';
 import PartyEventoPopup from '@/components/mapComponents/ViewPopup/VisualizzaEventoParty.vue';
 
 import { showPopupPartyEvento, showPopupCreaEvento, showPopupCreaParty, showPopupCreaPost, showPopupPost, aggiornaTutto, sideCards, openPopup, closePopup, description, location, dateTime, apriPopUpVisualizza, postUserName, postProfilePicture, postTime, postImage, postDescription, userIdView } from '@/scripts/MapPage/PageScript.ts';
-import { filtri, selectedOption, selectOption, Aggiorna, ordinaSidebar, CloseAllPopup, idep, isParty, organizza, profileNameep, profileImageep, partyImageep, descriptionep, timeep, userIdViewep, maxParticipantsep, categoryep } from '@/scripts/MapPage/PageScript.ts';
+import { isLoading, filtri, selectedOption, selectOption, Aggiorna, ordinaSidebar, CloseAllPopup, idep, isParty, organizza, profileNameep, profileImageep, partyImageep, descriptionep, timeep, userIdViewep, maxParticipantsep, categoryep } from '@/scripts/MapPage/PageScript.ts';
 
 
 import { eliminaEvento, eliminaParty, partecipaEvento, partecipaParty, disinscriviEvento, disinscriviParty } from '../scripts/MapPage/popup';
@@ -39,10 +39,14 @@ function handleLogout() {
 
 
 
-function initMap() {
-  initializeMap();
-  console.log("Mappa inizializzata");
-  Aggiorna();
+
+async function initMap() {
+  try {
+    initializeMap();
+    await Aggiorna();
+  } catch (error) {
+    console.error("Errore durante l'inizializzazione della mappa:", error);
+  }
 }
 
 
@@ -55,15 +59,14 @@ onMounted(() => {
 
 
 <template>
+  <div class="contenitoreGenerale">
   <!-- Loader -->
-  <!-- <div id="loader" v-if="!isAuthenticated">
-    <div class="left-curtain"></div>
-    <div class="right-curtain"></div>
-    <div class="center-content">
-      <h1>Loading..</h1>
-      <img src="@/assets/attendi.png" alt="Logoload" class="logoload" />
+  <div v-if="isLoading" class="loading-overlay">
+    <div class="loading-spinner">
+      <div class="spinner"></div>
+      <h1>Caricamento...</h1>
     </div>
-  </div> -->
+  </div>
 
   <!-- Contenuto -->
   <div class="content">
@@ -168,6 +171,7 @@ onMounted(() => {
   <!-- Popup per la creazione di Evento -->
   <CreaEventoPopup v-if="showPopupCreaEvento" :isVisible="showPopupCreaEvento"
     @close-popup="closePopup('CreaEvento')" />
+  </div>
 </template>
 
 

@@ -122,7 +122,7 @@ function showAlert() {
             <li @click="showAlert">Elimina account <span>></span></li>
             <li v-if="isAuthenticated"  @click="isAuthenticated ? handleLogout() : null" >Log-out <span>></span></li>
             <div v-if="!isAuthenticated">
-              <router-link to="/" id="home">
+              <router-link to="/">
                 <li>Log in <span>></span></li>
               </router-link>
             </div>
@@ -135,3 +135,4 @@ function showAlert() {
 </template>
 
 <style scoped src="@/styles/navbar.css"></style>
+<style src="@/styles/contenitoreGenerale.css"></style>

@@ -85,9 +85,8 @@ async function postFormHandler() {
   let imageUrl;
 
   if (descriptionValue === '') {
-    console.error("Per creare un post è necessario inserire una descrizione.");
+    alert("Per creare un post è necessario inserire una descrizione.");
     if (!file) {
-      console.error("Se non c'è immagine");
       try {
         let posizionePost = await getPosition();
         const postData = {
@@ -111,10 +110,10 @@ async function postFormHandler() {
         });
 
         const postDataResponse = await postResponse.json();
-        console.log('Post creato con successo', postDataResponse);
+        alert('Post creato con successo');
         Aggiorna();
       } catch (error) {
-        console.error('Errore nel caricamento:', error);
+        alert('Errore nel caricamento: ' + error);
       } finally {
         isSubmitting.value = false; // Riabilita il bottone dopo la richiesta
       }
@@ -128,7 +127,6 @@ async function postFormHandler() {
     }
 
     try {
-      console.log("cuiaoi");
       const response = await fetch('http://localhost:3000/generate-signed-url-post', {
         method: 'POST',
         headers: {
@@ -174,10 +172,10 @@ async function postFormHandler() {
       });
 
       const postDataResponse = await postResponse.json();
-      console.log('Post creato con successo', postDataResponse);
+      alert('Post creato con successo');
       Aggiorna();
     } catch (error) {
-      console.error('Errore nel caricamento:', error);
+      alert('Errore nel caricamento:' + error);
     } finally {
       isSubmitting.value = false; // Riabilita il bottone dopo la richiesta
     }

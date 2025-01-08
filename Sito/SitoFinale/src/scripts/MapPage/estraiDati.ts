@@ -31,7 +31,6 @@ export async function estraiDati(lat: number, lng: number, rad: number): Promise
         // Combina tutti i dati estratti in un'unica lista
         return [...posts, ...eventi, ...parties, ...textuals];
     } catch (error) {
-        console.error('Errore durante l\'estrazione dei dati:', error);
         return [];
     }
 }
@@ -48,7 +47,6 @@ async function estraiPartyDaFile(lat: number, lng: number, rad: number, parties:
         });
 
         if (response.status === 404) {
-            console.warn('Nessun party trovato.');
             return;
         }
 
@@ -72,7 +70,7 @@ async function estraiPartyDaFile(lat: number, lng: number, rad: number, parties:
             });
         }
     } catch (error) {
-        console.error('Errore durante l\'estrazione dei party:', error);
+        alert("Errore durante l'estrazione: " + error);
     }
 }
 
@@ -88,7 +86,6 @@ async function estraiPostDaFile(lat: number, lng: number, rad: number, posts: Po
         });
 
         if (response.status === 404) {
-            console.warn('Nessun post trovato.');
             return;
         }
 
@@ -126,7 +123,7 @@ async function estraiPostDaFile(lat: number, lng: number, rad: number, posts: Po
             }
         }
     } catch (error) {
-        console.error('Errore durante l\'estrazione dei post:', error);
+        alert("Errore durante l'estrazione: " + error);
     }
 }
 
@@ -141,7 +138,6 @@ async function estraiEventiDaFile(lat: number, lng: number, rad: number, eventi:
         });
 
         if (response.status === 404) {
-            console.warn('Nessun evento trovato.');
             return;
         }
 
@@ -165,7 +161,7 @@ async function estraiEventiDaFile(lat: number, lng: number, rad: number, eventi:
             });
         }
     } catch (error) {
-        console.error('Errore durante l\'estrazione degli eventi:', error);
+        alert("Errore durante l'estrazione: " + error);
     }
 }
 
@@ -178,7 +174,6 @@ async function estraiUtente(userId: number) {
         }
         return await response.json();
     } catch (error) {
-        console.error('Errore durante l\'estrazione dell\'utente:', error);
         return { nome: 'Nome Utente', foto_profilo: 'https://via.placeholder.com/150' }; // Valori di fallback
     }
 }
