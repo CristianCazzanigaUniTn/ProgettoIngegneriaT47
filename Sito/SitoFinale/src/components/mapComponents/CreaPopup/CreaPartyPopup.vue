@@ -53,15 +53,16 @@
                                 class="fas fa-times"></i></button>
                     </div>
                 </div>
-                <button type="submit" class="submit-button">Crea Party</button>
+                <button type="submit" class="submit-button" :disabled="isSubmitting">
+                    <span v-if="isSubmitting">Caricamento...</span>
+                    <span v-else>Crea Party</span>
+                </button>
             </form>
-    </div>
+        </div>
     </div>
 </template>
 
 <script setup>
-
-
 import { ref, computed } from 'vue';
 import { loggedUser } from '@/states/loggedUser.ts';
 import { getPosition } from '@/scripts/Tools/posizione';
@@ -75,6 +76,7 @@ const partyType = ref('');
 const partyParticipants = ref('');
 const partyDescription = ref('');
 const imagePreview = ref(null);
+const isSubmitting = ref(false);  // Variabile per gestire lo stato di invio
 const emit = defineEmits(['close-popup']);
 
 const tokenFromStorage = computed(() => loggedUser.token);
@@ -82,7 +84,6 @@ const tokenFromStorage = computed(() => loggedUser.token);
 function closePopup() {
     emit('close-popup');
 }
-
 
 function handleImageUpload(event) {
     const file = event.target.files && event.target.files[0];
@@ -137,6 +138,9 @@ async function partyFormHandler() {
     }
 
     try {
+        // Impostiamo isSubmitting a true per bloccare ulteriori invii
+        isSubmitting.value = true;
+
         const signedUrlResponse = await fetch('http://localhost:3000/generate-signed-url-party', {
             method: 'POST',
             headers: {
@@ -184,6 +188,9 @@ async function partyFormHandler() {
         Aggiorna();
     } catch (error) {
         console.error('Errore nel caricamento:', error);
+    } finally {
+        // Reset dello stato di invio
+        isSubmitting.value = false;
     }
 
     emit('close-popup');
