@@ -69,6 +69,10 @@ function logout() {
           <input v-model="username" type="text" placeholder="Username" class="input-field" />
           <input v-model="email" type="email" placeholder="Email" class="input-field" />
           <input v-model="password" type="password" placeholder="Password" class="input-field" />
+          <select v-model="role" class="input-field">
+            <option value="utente_base">Utente Base</option>
+            <option value="organizzatore">Organizzatore</option>
+          </select>
           <div class="buttons">
             <button type="button" class="btn access" @click="register">Registrati</button>
             <button type="button" class="btn register" @click="isLoginForm = true">Hai già un account? Accedi</button>
