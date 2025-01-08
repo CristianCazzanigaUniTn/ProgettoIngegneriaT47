@@ -98,6 +98,36 @@ async function registerUser() {
 
   try {
 
+    const file = document.getElementById('profilePictureInput').files[0];
+    if (!file) {
+      alert('metti la foto profilo');
+      return;
+    }
+
+    const signedUrlResponse = await fetch('http://localhost:3000/generate-signed-url-foto-profilo', {
+      method: 'POST',
+      headers: {
+      },
+    });
+
+    const signedUrlData = await signedUrlResponse.json();
+
+    const formData = new FormData();
+        formData.append('file', file);
+        formData.append('upload_preset', signedUrlData.upload_preset);
+        formData.append('timestamp', signedUrlData.timestamp);
+        formData.append('signature', signedUrlData.signature);
+        formData.append('api_key', signedUrlData.api_key);
+
+        const uploadResponse = await fetch('https://api.cloudinary.com/v1_1/dc2ga9rlo/image/upload', {
+            method: 'POST',
+            body: formData,
+        });
+
+
+        const uploadData = await uploadResponse.json();
+        const imageUrl = uploadData.secure_url || 'null';
+
     // Assicurati che userPassword.value sia una stringa
     const password = String(userPassword.value);
 
@@ -121,7 +151,7 @@ async function registerUser() {
         preferenze_notifiche: userNotifications.value,
         ruolo: userRole.value,
         verificationToken: verificationToken.value,
-        foto_profilo: "fotofinta"
+        foto_profilo: imageUrl
       }),
     });
 
@@ -154,6 +184,23 @@ function clear() {
 function logout() {
   clearLoggedUser();
 }
+
+const profilePicturePreview = ref(null); // Variabile per memorizzare l'anteprima
+
+function handleProfilePictureChange(event) {
+  const file = event.target.files[0]; // Ottieni il file selezionato
+  if (file) {
+    const reader = new FileReader();
+
+    // Imposta l'anteprima dell'immagine
+    reader.onload = function (e) {
+      profilePicturePreview.value = e.target.result; // Memorizza l'anteprima
+    };
+
+    // Leggi il file come URL
+    reader.readAsDataURL(file);
+  }
+}
 </script>
 
 <template>
@@ -163,7 +210,7 @@ function logout() {
         Welcome <a :href="HOST + '/' + loggedUser.self">{{ loggedUser.username }}</a>
         <button type="button" @click="logout">LogOut</button>
       </span>
-      
+
       <span v-if="!loggedUser.token">
         <div class="login-box">
           <p class="small-text">IL SOCIAL NETWORK DI CUI HAI BISOGNO</p>
@@ -180,6 +227,17 @@ function logout() {
           </form>
 
           <form v-if="!isLoginForm" class="login-form" @submit.prevent="registerUser">
+            <div class="profile-picture-container">
+              <label for="profilePictureInput" class="profile-picture-label">
+                <div class="profile-picture-circle">
+                  <img v-if="profilePicturePreview" :src="profilePicturePreview" alt="Foto Profilo"
+                    class="profile-picture" />
+                  <span v-else>foto profilo</span>
+                </div>
+              </label>
+              <input type="file" id="profilePictureInput" @change="handleProfilePictureChange"
+                class="profile-picture-input" />
+            </div>
             <input v-model="userName" type="text" placeholder="Nome" class="input-field" required />
             <input v-model="userUsername" type="text" placeholder="Username" class="input-field" required />
             <input v-model="userEmail" type="email" placeholder="Email" class="input-field" required />
@@ -217,3 +275,40 @@ function logout() {
 </template>
 
 <style scoped src="@/styles/login.css"></style>
+
+<style scoped>
+.profile-picture-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.profile-picture-label {
+  cursor: pointer;
+  color: black;
+}
+
+.profile-picture-circle {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  border: 2px solid #ccc;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f2f2f2;
+  overflow: hidden;
+  position: relative;
+}
+
+.profile-picture-circle img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profile-picture-input {
+  display: none;
+}
+</style>
