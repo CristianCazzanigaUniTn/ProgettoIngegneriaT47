@@ -34,7 +34,10 @@
         </div>
       </div>
 
-      <button type="submit" class="submit-button" @click="postFormHandler">Pubblica</button>
+      <button type="submit" class="submit-button" @click="postFormHandler" :disabled="isSubmitting">
+        <span v-if="isSubmitting">Caricamento...</span>
+        <span v-else>Crea Post</span>
+      </button>
     </div>
   </div>
 </template>
@@ -45,6 +48,7 @@ import { loggedUser } from '@/states/loggedUser.ts';
 import router from '../../../router';
 import { getPosition } from '@/scripts/Tools/posizione';
 import { Aggiorna } from '@/scripts/MapPage/PageScript';
+const isSubmitting = ref(false); // Variabile per il controllo dello stato di invio
 
 const isAuthenticated = computed(() => loggedUser.token !== undefined);
 const userId = computed(() => loggedUser.id);
@@ -81,11 +85,8 @@ async function postFormHandler() {
   let imageUrl;
 
   if (descriptionValue === '') {
-    console.error("Per creare un post è necessario inserire una descrizione.");
-
- 
+    alert("Per creare un post è necessario inserire una descrizione.");
     if (!file) {
-      console.error("se non c'è immagine");
       try {
         let posizionePost = await getPosition();
         const postData = {
@@ -95,6 +96,9 @@ async function postFormHandler() {
           posizione: posizionePost,
           data_creazione: dateTime.value,
         };
+
+        // Disabilita il bottone "Pubblica"
+        isSubmitting.value = true;
 
         const postResponse = await fetch('http://localhost:3000/api/Post', {
           method: 'POST',
@@ -106,14 +110,15 @@ async function postFormHandler() {
         });
 
         const postDataResponse = await postResponse.json();
-        console.log('Post creato con successo', postDataResponse);
+        alert('Post creato con successo');
         Aggiorna();
       } catch (error) {
-        console.error('Errore nel caricamento:', error);
+        alert('Errore nel caricamento: ' + error);
+      } finally {
+        isSubmitting.value = false; // Riabilita il bottone dopo la richiesta
       }
     }
-  }
-  else {
+  } else {
     const file = document.getElementById('postImage').files[0];
     const tokenFromStorage = loggedUser.token;
 
@@ -122,7 +127,6 @@ async function postFormHandler() {
     }
 
     try {
-      console.log("cuiaoi");
       const response = await fetch('http://localhost:3000/generate-signed-url-post', {
         method: 'POST',
         headers: {
@@ -137,6 +141,9 @@ async function postFormHandler() {
       formData.append("timestamp", data.timestamp);
       formData.append("signature", data.signature);
       formData.append("api_key", data.api_key);
+
+      // Disabilita il bottone "Pubblica"
+      isSubmitting.value = true;
 
       const uploadResponse = await fetch('https://api.cloudinary.com/v1_1/dc2ga9rlo/image/upload', {
         method: 'POST',
@@ -165,10 +172,12 @@ async function postFormHandler() {
       });
 
       const postDataResponse = await postResponse.json();
-      console.log('Post creato con successo', postDataResponse);
+      alert('Post creato con successo');
       Aggiorna();
     } catch (error) {
-      console.error('Errore nel caricamento:', error);
+      alert('Errore nel caricamento:' + error);
+    } finally {
+      isSubmitting.value = false; // Riabilita il bottone dopo la richiesta
     }
   }
 

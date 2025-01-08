@@ -55,7 +55,10 @@
                                 class="fas fa-times"></i></button>
                     </div>
                 </div>
-                <button type="submit" class="pulsante-invio">Crea Evento</button>
+                <button type="submit" class="pulsante-invio" :disabled="isSubmitting">
+                    <span v-if="isSubmitting">Caricamento...</span>
+                    <span v-else>Crea Evento</span>
+                </button>
             </form>
         </div>
     </div>
@@ -75,6 +78,7 @@ const eventType = ref('');
 const eventParticipants = ref('');
 const eventDescription = ref('');
 const imagePreview = ref(null);
+const isSubmitting = ref(false);  // Variabile per tenere traccia dello stato di invio del modulo
 const emit = defineEmits(['close-popup']);
 
 const tokenFromStorage = computed(() => loggedUser.token);
@@ -86,22 +90,21 @@ function closePopup() {
 function handleImageUpload(event) {
     const file = event.target.files && event.target.files[0];
     if (!file) {
-        console.error('Nessun file selezionato o errore nel caricamento del file.');
+        alert('Nessun file selezionato o errore nel caricamento del file.');
         return;
     }
 
     if (!file.type.startsWith('image/')) {
-        console.error('Il file selezionato non è un\'immagine.');
+        alert('Il file selezionato non è un\'immagine.');
         return;
     }
 
     const reader = new FileReader();
     reader.onload = (e) => {
         imagePreview.value = e.target.result;
-        console.log('Anteprima immagine caricata con successo.');
     };
     reader.onerror = () => {
-        console.error('Errore nel caricamento dell\'immagine.');
+        alert('Errore nel caricamento dell\'immagine.');
     };
     reader.readAsDataURL(file);
 }
@@ -112,17 +115,15 @@ function removeImage() {
     input.value = '';
 }
 
-
-
 async function eventFormHandler() {
     if (!nomeEvento.value || !eventDate.value || !eventLocation.value || !eventType.value || !eventParticipants.value || !eventDescription.value) {
-        console.error('Tutti i campi sono obbligatori.');
+        alert('Tutti i campi sono obbligatori.');
         return;
     }
 
     const file = document.getElementById('immagineEvento').files[0];
     if (!file) {
-        console.error('Per creare un evento è necessario caricare un\'immagine.');
+        alert('Per creare un evento è necessario caricare un\'immagine.');
         return;
     }
 
@@ -131,6 +132,9 @@ async function eventFormHandler() {
     }
 
     try {
+        // Impostiamo isSubmitting a true per bloccare ulteriori invii
+        isSubmitting.value = true;
+
         const signedUrlResponse = await fetch('http://localhost:3000/generate-signed-url-eventi', {
             method: 'POST',
             headers: {
@@ -154,7 +158,6 @@ async function eventFormHandler() {
         const imageUrl = uploadData.secure_url || 'null';
         let posizioneEvento = await getPosition(); // Ottieni la posizione dal dispositivo o usa Trento
 
-
         const eventData = {
             nome: nomeEvento.value,
             data_inizio: eventDate.value,
@@ -176,10 +179,13 @@ async function eventFormHandler() {
         });
 
         const eventResponseData = await eventResponse.json();
-        console.log('Evento creato con successo:', eventResponseData);
+        alert('Evento creato con successo');
         Aggiorna();
     } catch (error) {
-        console.error('Errore nel caricamento:', error);
+        alert('Errore nel caricamento: ' +  error);
+    } finally {
+        // Reset dello stato di invio
+        isSubmitting.value = false;
     }
 
     emit('close-popup');

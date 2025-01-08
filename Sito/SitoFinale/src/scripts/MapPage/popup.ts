@@ -16,7 +16,6 @@ async function estraiLikeAiCommenti(id: any) {
         return likes.length;
         
     } catch (error){
-        console.error("Errore durante l'estrazione dei like:", error);
         return null;
     }
 }
@@ -36,7 +35,6 @@ async function estraiCategoria(id: any) {
         return await c.json();
         
     } catch (error){
-        console.error("Errore durante l'estrazione della categoria:", error);
         return null;
     }
 }
@@ -46,7 +44,6 @@ export async function estraipartyid(id: any) {
         const p = await fetch(`http://localhost:3000/api/party/${id}`);
 
         if (p.status === 404) {
-            console.warn('Nessun party trovato.');
             return;
         }
 
@@ -57,7 +54,6 @@ export async function estraipartyid(id: any) {
         const party = await p.json();
 
         const categoria = await estraiCategoria(party.Categoria);
-        console.log(categoria.nome);
         const utente = await estraiUtente(party.Organizzatore);
 
         const res = {
@@ -79,7 +75,7 @@ export async function estraipartyid(id: any) {
         return res;
         
     } catch (error) {
-        console.error('Errore durante l\'estrazione dei party:', error);
+        alert('Errore durante l\'estrazione dei party: ' + error);
     }
 }
 
@@ -88,7 +84,6 @@ export async function estraieventoid(id: any) {
         const e = await fetch(`http://localhost:3000/api/eventi/${id}`);
 
         if (e.status === 404) {
-            console.warn('Nessun evento trovato.');
             return;
         }
 
@@ -121,7 +116,7 @@ export async function estraieventoid(id: any) {
         return res;
         
     } catch (error) {
-        console.error('Errore durante l\'estrazione dell\'evento:', error);
+        alert("Errore durante l'estrazione: " + error);
     }
 }
 //Estrai utente da id
@@ -129,7 +124,6 @@ async function estraiUtente(id : any) {
     try {
         const response = await fetch(`http://localhost:3000/api/Utenti/${id}`);
         if (response.status === 404) {
-            console.warn("Nessun utente trovato.");
             return null;
         }
 
@@ -142,7 +136,7 @@ async function estraiUtente(id : any) {
         return ut.user;
 
     } catch (error) {
-        console.error("Errore durante l'estrazione dell'utente:", error);
+        alert("Errore durante l'estrazione: " + error);
         return null;
     }
 }
@@ -156,10 +150,6 @@ export async function estraiInformazioniPost(id: any) {
         const l = await fetch(`http://localhost:3000/api/like/post/${id}`);
         const c = await fetch(`http://localhost:3000/api/commenti/post/${id}`);
 
-        if (l.status === 404) {
-            console.warn("Nessuna like trovata.");
-        }
-
         if (l.ok) {
             const likes = await l.json();
 
@@ -170,10 +160,6 @@ export async function estraiInformazioniPost(id: any) {
                 }
                 like.push({ id_utente: ut.id, username: ut.username });
             }
-        }
-
-        if (c.status === 404) {
-            console.warn("Nessun commento trovato.");
         }
 
         if (c.ok) {
@@ -203,7 +189,6 @@ export async function estraiInformazioniPost(id: any) {
         return { like: like, commenti: commento_like, idLike: idLike };
 
     } catch (error) {
-        console.error("Errore durante l'estrazione dei post:", error);
         return { like: like, commenti: commento_like, idLike: idLike };
     }
 }
@@ -217,7 +202,6 @@ export async function estraiPartecipazioniParty(id: any){
         var partecipa = false;
         var npart = 0;
         if (response.status === 404) {
-            console.warn("Nessun partecipante trovato.");
             return {numero_partecipazioni: npart, partecipa: partecipa};
         }
 
@@ -240,7 +224,6 @@ export async function estraiPartecipazioniParty(id: any){
         return {numero_partecipazioni: npart, partecipa: partecipa};
 
     } catch (error) {
-        console.error("Errore durante l'estrazione delle partecipazioni:", error);
         return {numero_partecipazioni: 0, partecipa: []};
     }
 
@@ -256,18 +239,10 @@ export async function estraiInformazioniEventi(id: any) {
         const p = await fetch(`http://localhost:3000/api/Partecipazioni/Eventi/${id}`);
         const f = await fetch(`http://localhost:3000/api/faqeventi/evento/${id}`);
 
-        if (f.status === 404) {
-            console.warn("Nessuna faq trovata.");
-        }
-
         if (f.ok){
             faq = await f.json();
         }
-
-
-        if (p.status === 404) {
-            console.warn("Nessun partecipante trovato.");
-        }
+        
 
         if (p.ok){
             const partecipazioni = await p.json();
@@ -281,7 +256,6 @@ export async function estraiInformazioniEventi(id: any) {
                 });
             }
         }
-
         if (!f.ok) {
             throw new Error(`Errore nella richiesta: ${f.status} ${f.statusText}`); 
         }
@@ -289,11 +263,8 @@ export async function estraiInformazioniEventi(id: any) {
         if (!p.ok) {
             throw new Error(`Errore nella richiesta: ${p.status} ${p.statusText}`); 
         }
-
         return {numero_partecipazioni: npart, partecipa: partecipa, faq: faq};
-
     } catch (error) {
-        console.error("Errore durante l'estrazione delle partecipazioni:", error);
         return {numero_partecipazioni: npart, partecipa: partecipa, faq: faq};
     }
 
@@ -308,19 +279,14 @@ export async function partecipaParty(id_party: any) {
                 }
             }
         );
-
         if (!response.ok) {
             throw new Error(`Errore nella richiesta: ${response.status} ${response.statusText}`);
         }
-
-        const partecipazione = await response.json();
-
-        console.log(partecipazione);
-
     } catch (error) {
-        console.error("Errore durante l'iscrizione:", error);
+        alert("Errore durante l'iscrizione: " + error);
     }
 }
+
 export async function partecipaEvento(id_evento: any) {
     try {
         const response = await fetch(`http://localhost:3000/api/Partecipazioni/Eventi/${id_evento}`, {
@@ -334,13 +300,8 @@ export async function partecipaEvento(id_evento: any) {
         if (!response.ok) {
             throw new Error(`Errore nella richiesta: ${response.status} ${response.statusText}`);
         }
-
-        const partecipazione = await response.json();
-
-        console.log(partecipazione);
-
     } catch (error) {
-        console.error("Errore durante l'iscrizione:", error);
+        alert("Errore durante l'iscrizione: " + error);
     }
 }
 export async function disinscriviParty(id_party: any) {
@@ -351,15 +312,11 @@ export async function disinscriviParty(id_party: any) {
                 'Authorization': `Bearer ${loggedUser.token}`
             }
         });
-
         if (!response.ok) {
             throw new Error(`Errore nella richiesta: ${response.status} ${response.statusText}`);
         }
-
-        console.log("Partecipazione eliminata con successo!");
-
     } catch (error) {
-        console.error("Errore durante l'eliminazione della partecipazione:", error);
+        alert("Errore durante la disicrizione: " + error);
     }
 }
 export async function disinscriviEvento(id_evento: any) {
@@ -370,15 +327,11 @@ export async function disinscriviEvento(id_evento: any) {
                 'Authorization': `Bearer ${loggedUser.token}`
             }
         });
-
         if (!response.ok) {
             throw new Error(`Errore nella richiesta: ${response.status} ${response.statusText}`);
         }
-
-        console.log("Partecipazione eliminata con successo!");
-
     } catch (error) {
-        console.error("Errore durante l'eliminazione della partecipazione:", error);
+        alert("Errore durante la disicrizione: " + error);
     }
     
 }
@@ -395,10 +348,8 @@ export async function eliminaParty(id_party: any) {
             throw new Error(`Errore nella richiesta: ${response.status} ${response.statusText}`);
         }
 
-        console.log("Party eliminato con successo!");
-
     } catch (error) {
-        console.error("Errore durante l'eliminazione del party:", error);
+        alert("Errore durante l'eliminazione: " + error);
     }
 }
 export async function eliminaEvento(id_evento: any) {
@@ -414,10 +365,8 @@ export async function eliminaEvento(id_evento: any) {
             throw new Error(`Errore nella richiesta: ${response.status} ${response.statusText}`);
         }
 
-        console.log("Evento eliminato con successo!");
-
     } catch (error) {
-        console.error("Errore durante l'eliminazione dell'evento:", error);
+        alert("Errore durante l'eliminazione: " + error);
     }
 }
 
@@ -433,11 +382,8 @@ export async function eliminaPost(id_post: any) {
         if (!response.ok) {
             throw new Error(`Errore nella richiesta: ${response.status} ${response.statusText}`);
         }
-
-        console.log("Post eliminato con successo!");
-
     } catch (error) {
-        console.error("Errore durante l'eliminazione del Post:", error);
+        alert("Errore durante l'eliminazione: " + error);
     }
 }
 
@@ -453,17 +399,11 @@ export async function aggiungiCommento(post_id: any, contenuto: string) {
         });
 
         if (!response.ok) {
-            // Stampa i dettagli per il debug
-            const errorBody = await response.text();
-            console.error(`Errore nella richiesta: ${response.status} ${response.statusText}`);
-            console.error(`Dettagli del server: ${errorBody}`);
             throw new Error(`Errore nella richiesta: ${response.status}`);
         }
 
-        const commenti = await response.json();
-        console.log(commenti);
     } catch (error) {
-        console.error("Errore durante l'aggiunta del commento:", error);
+        alert("Errore nell'aggiunta del commento: " + error);
     }
 }
 
@@ -483,7 +423,7 @@ export async function aggiungiLikePost(post_id: any) {
         }
 
     } catch (error) {
-        console.error("Errore durante l'aggiunta del like:", error);
+        alert("Errore durante l'aggiunta: " + error);
         return undefined
     }
 }
@@ -502,7 +442,7 @@ export async function eliminaLikePost(like_id: any) {
         }
 
     } catch (error) {
-        console.error("Errore durante l'eliminazione del like:", error);
+        alert("Errore nell'elminazione: " + error);
     }
     
 }
@@ -521,12 +461,8 @@ export async function aggiungiLikeCommenti(commenti_id: any) {
             // Stampa i dettagli per il debug
             throw new Error(`Errore nella richiesta: ${response.status}`);
         }
-
-        const r = await response.json();
-
-        console.log(r);
     } catch (error) {
-        console.error("Errore durante l'aggiunta del commento:", error);
+        alert("Errore durante l'aggiunta: " + error);
     }
 }
 
@@ -542,11 +478,8 @@ export async function eliminaLikeCommenti(commenti_id: any) {
         if (!response.ok) {
             throw new Error(`Errore nella richiesta: ${response.status} ${response.statusText}`);
         }
-
-        console.log("Partecipazione eliminata con successo!");
-
     } catch (error) {
-        console.error("Errore durante l'eliminazione della partecipazione:", error);
+        alert("Errore nell'elminazione: " + error);
     }
     
 }
@@ -562,16 +495,12 @@ export async function aggiungiFaq(id_evento: any, domanda: string) {
             body: JSON.stringify({ id_evento, domanda }) // Cambia i nomi dei campi
         });
 
-        if (!response.ok) {
-            // Stampa i dettagli per il debug
-            const errorBody = await response.text();
-            console.error(`Errore nella richiesta: ${response.status} ${response.statusText}`);
-            console.error(`Dettagli del server: ${errorBody}`);
+        if (!response.ok) {      
             throw new Error(`Errore nella richiesta: ${response.status}`);
         }
 
     } catch (error) {
-        console.error("Errore durante l'aggiunta della faq:", error);
+        alert("Errore durante l'aggiunta: " + error);
     }
 }
 
@@ -587,18 +516,10 @@ export async function rispondiFaq(id: any, risposta: string) {
         });
 
         if (!response.ok) {
-            // Stampa i dettagli per il debug
-            const errorBody = await response.text();
-            console.error(`Errore nella richiesta: ${response.status} ${response.statusText}`);
-            console.error(`Dettagli del server: ${errorBody}`);
             throw new Error(`Errore nella richiesta: ${response.status}`);
         }
 
-        const r = await response.json();
-
-        console.log(r);
-
     } catch (error) {
-        console.error("Errore durante l'aggiunta della faq:", error);
+        alert("Errore durante l'aggiunta: " + error);
     }
 }

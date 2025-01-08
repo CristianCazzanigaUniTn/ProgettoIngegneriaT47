@@ -4,13 +4,13 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    height: 120px;
     padding: 40px 40px;
-    background-color: rgba(0, 0, 0, 0); 
+    background-color: rgba(218, 191, 191, 0); 
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
-    margin-top: 2%;
     width: 100%;
     z-index: 1000;
     border-radius: 10px;
@@ -26,9 +26,6 @@
     overflow-x: hidden;
   }
   
-  .main-content {
-    padding-top: 120px; /* Adjusta in base all'altezza della navbar */
-  }
   
   .navbar-left {
     position: absolute;
@@ -173,24 +170,6 @@
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 .settings-icon {
   width: 30px;
   height: 30px;
@@ -244,3 +223,51 @@
   font-size: 16px; /* Adjusted font size for the arrow */
   color: #192a56; /* Dark blue color for the arrow */
 }
+
+
+
+@media (max-width: 768px) {
+  .navbar {
+      flex-wrap: wrap;
+      justify-content: center;
+      padding: 10px 20px;
+  }
+
+  .navbar-center {
+      position: static;
+      transform: none;
+      gap: 20px;
+  }
+
+  .navbar-left h1 {
+      display: none;
+  }
+
+  .search-bar {
+      display: none;
+  }
+
+  #chiSiamo {
+    display: none;
+  }
+  #home {
+    display: none;
+  }
+
+  .navbar-right {
+      gap: 10px;
+  }
+}
+
+
+
+
+@media (max-width: 500px) {
+  .logo
+  {
+    display: none;
+  }
+}
+
+
+

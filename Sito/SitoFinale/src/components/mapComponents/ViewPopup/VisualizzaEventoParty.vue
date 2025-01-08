@@ -139,7 +139,7 @@ function closePopup() {
 
 async function addFaq() {
     if (!newFaqText.value) {
-        console.log("La faq non può essere vuota");
+        alert("La faq non può essere vuota");
         return;
     } else {
         aggiungiFaq(idep.value, newFaqText.value);
@@ -174,10 +174,10 @@ function selezionaFaq(index, faq) {
 
 async function AnswerFaq() {
     if (!selectedFaq.value) {
-        console.log("Seleziona una faq a cui rispondere");
+        alert("Seleziona una faq a cui rispondere");
     } else {
         if (!newFaqText.value) {
-            console.log("La risposta non può essere vuota");
+            alert("La risposta non può essere vuota");
             return;
         } else {
             rispondiFaq(selectedFaq.value._id, newFaqText.value);
