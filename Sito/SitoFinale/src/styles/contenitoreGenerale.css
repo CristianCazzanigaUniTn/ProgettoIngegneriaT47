@@ -1,11 +1,10 @@
-.contenitoreGenerale
-{
+.contenitoreGenerale {
     position: absolute;
-    height: 87%;
+    height: calc(100% - 120px); /* Altezza responsiva con spazio per la navbar */
     width: 100%;
     left: 0;
-    align-items: center;
     display: flex;
+    align-items: center;
     justify-content: center;
     bottom: 0;
     overflow: hidden;

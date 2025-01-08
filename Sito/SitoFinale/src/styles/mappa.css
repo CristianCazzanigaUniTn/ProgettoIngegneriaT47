@@ -6,6 +6,7 @@
     font-family: "Montserrat", sans-serif;
     overflow: hidden;
     color: white;
+    flex-wrap: wrap; /* Per adattarsi a schermi stretti */
 }
 
 .left {
@@ -21,20 +22,19 @@
     text-align: center;
     margin-right: 1%;
 }
-
 .right {
-    width: 85%;
-    height: 100%;
-    background-color: rgba(15, 31, 58, 0.713);
-    border-radius: 55px;
+    width: 82%;
+    height: calc(100% - 130px);
+    background-color: rgba(15, 31, 58, 0);
+    border-radius: 3%;
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
-    box-shadow: 4px 4px 8px rgba(255, 255, 255, 0.3);
+    box-shadow: 2% 2% 4% rgba(255, 255, 255, 0.3);
     overflow-y: auto;
     scroll-behavior: smooth;
-    padding: 20px;
+    padding: 2%;
 }
 
 .filtri {
@@ -58,60 +58,52 @@
 
 #map {
     display: block;
-    position: absolute;
-    bottom: 0px;
-
-    right: 0px;
-    height: 88vh;
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    height: calc(100% - 130px);
     width: 82%;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    border-radius: 20px;
-    border: solid 3px black;
+    box-shadow: 0 2% 5% rgba(0, 0, 0, 0.2);
+    border-radius: 2%;
+    border: solid 0.5% black;
     transition: transform 0.4s ease;
 }
 
 
 
 .sidebar {
-    top: 0px;
     width: 100%;
     color: black;
-    padding: 30px;
+    padding: 5%;
     overflow-y: auto;
     scrollbar-width: none;
     overflow-x: hidden;
-
 }
 
 .sidebar h2 {
-    margin-bottom: 30px;
-    font-size: 24px;
+    margin-bottom: 3%;
+    font-size: 1.5rem;
     color: white;
-    /* Aggiunto per migliorare la leggibilità */
 }
-
 /* Stile delle card */
 .sidebar .card {
     background-color: white;
-    border-radius: 0.5rem;
-    padding: 10px;
-    margin-bottom: 20px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border-radius: 5%;
+    padding: 2%;
+    margin-bottom: 5%;
+    box-shadow: 0 2% 4% rgba(0, 0, 0, 0.1);
     width: 100%;
-
-    box-sizing: border-box;
-    /* Considera il padding e il bordo nella larghezza totale */
     display: flex;
     flex-direction: column;
-    /* Dispone gli elementi in colonna */
 }
 
 
 .sidebar .card-header {
     display: flex;
     align-items: center;
-    margin-bottom: 10px;
+    margin-bottom: 2%;
 }
+
 
 
 .sidebar .card-img-top {
@@ -311,7 +303,8 @@
     display: flex;
     gap: 20px;
     position: relative;
-    margin-bottom: 10px;
+    margin-top: 20px;
+    margin-bottom: 20px;
     max-height: 100px;
 }
 
@@ -386,7 +379,7 @@ hr {
   bottom: 0;
   left: 0;
   width: 100vw;
-  height: 88%;
+  height: calc(100% - 130px);
   background-color: rgba(255, 255, 255, 0.9);
   z-index: 9999; /* Assicurati che il loader sia sopra tutto tranne la navbar */
   display: flex;
@@ -423,3 +416,29 @@ h1 {
   margin-top: 20px;
 }
 
+@media (max-width: 768px) {
+    .left
+    {
+        display: none;
+    }
+    .right
+    {
+        width: 100%;
+    }
+    #map
+    {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .sidebar h2 {
+        font-size: 1.2rem;
+    }
+    .sidebar .card {
+        padding: 5%;
+    }
+    .filtri img {
+        height: 30px;
+    }
+}

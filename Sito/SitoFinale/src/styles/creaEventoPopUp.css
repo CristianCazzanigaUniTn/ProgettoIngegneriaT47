@@ -13,19 +13,35 @@
 .contenitore-form-evento {
   position: fixed;
     top: 50%;
-    left: 55%;
+    left: 50%;
     transform: translate(-50%, -50%);
     background-color: white;
     max-width: 600px;
+    height: auto;
     padding: 20px;
     border-radius: 15px;
     box-shadow: 0 10px 20px rgba(0, 2, 0, 12);
     max-width: 800px;
+    max-height: 90%;
     width: 90%;
     z-index: 1000;
+    overflow: auto;
     flex-direction: column;
 }
 
+.contenitore-form-evento::-webkit-scrollbar {
+  width: 10px; 
+}
+.contenitore-form-evento::-webkit-scrollbar-thumb {
+  background-color: #161d1a67;
+  border-radius: 10px;
+  border: 2px solid #ffffff; 
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+.contenitore-form-evento::-webkit-scrollbar-track {
+  background: #00000017;
+  border-radius: 10px;
+}
 .contenitore-form-evento .close-button {
   position: absolute;
   top: 10px;

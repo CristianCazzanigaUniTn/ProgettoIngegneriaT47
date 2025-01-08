@@ -1,7 +1,7 @@
 <template>
     <div v-if="isVisible" class="popup-overlay">
         <div class="party-form-container" id="creaParty">
-            <div class="party-form-header">
+            <div class="event-form-header">
                 <h2>Crea il Tuo Party</h2>
                 <p>Divertiti e condividi il tuo evento con amici!</p>
                 <span @click="closePopup" class="close-button">&times;</span>
