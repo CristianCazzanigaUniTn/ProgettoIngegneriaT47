@@ -11,7 +11,7 @@
 
     <!-- Sezione destra: Post dell'utente -->
     <div class="right">
-      <h2 class="titoloOggi">POST DI OGGI</h2>
+      <h2 class="titoloOggi">POST</h2>
       <div class="listacards">
         <Card 
           v-for="(post, index) in posts" 

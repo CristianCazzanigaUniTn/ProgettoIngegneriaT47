@@ -523,3 +523,20 @@ export async function rispondiFaq(id: any, risposta: string) {
         alert("Errore durante l'aggiunta: " + error);
     }
 }
+
+// Function to fetch all categories (as per your previous requirement)
+export async function estraiCategorie() {
+    try {
+        const response = await fetch('http://localhost:3000/api/categoria');
+        if (!response.ok) {
+            throw new Error(`Errore nella richiesta: ${response.status} ${response.statusText}`);
+        }
+        
+        const categorie = await response.json();
+        return categorie; // Return the list of categories
+        
+    } catch (error) {
+        console.error("Errore nell'estrazione delle categorie:", error);
+        return [];
+    }
+}

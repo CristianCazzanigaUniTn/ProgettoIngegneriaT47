@@ -1,10 +1,8 @@
 var map: any;
 var behavior: any;
 
-
-
 import { getPosition, Posizione } from '../Tools/posizione';
-let posizione: Posizione | null = await getPosition();;
+let posizione: Posizione | null = await getPosition();
 
 export const initializeMap = () => {
     // Ottieni la chiave API dalla variabile d'ambiente

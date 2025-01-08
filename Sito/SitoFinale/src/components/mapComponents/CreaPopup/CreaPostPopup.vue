@@ -43,13 +43,12 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue';
+import { computed, ref, onMounted } from 'vue';
 import { loggedUser } from '@/states/loggedUser.ts';
-import router from '../../../router';
-import { getPosition } from '@/scripts/Tools/posizione';
+import { getPosition, fetchCityName } from '@/scripts/Tools/posizione';
 import { Aggiorna } from '@/scripts/MapPage/PageScript';
-const isSubmitting = ref(false); // Variabile per il controllo dello stato di invio
 
+const isSubmitting = ref(false); // Variabile per il controllo dello stato di invio
 const isAuthenticated = computed(() => loggedUser.token !== undefined);
 const userId = computed(() => loggedUser.id);
 const userName = computed(() => loggedUser.username);
@@ -58,9 +57,20 @@ const emit = defineEmits(['close-popup']);
 const isVisible = ref(true);
 const description = ref('');
 const imagePreview = ref(null);
-const location = ref('Posizione generica');
+const location = ref('');
+const posizionePost = ref();
 const dateTime = ref(new Date().toLocaleString());
 
+// Funzione asincrona che verrà eseguita quando il componente è montato
+onMounted(async () => {
+  try {
+    posizionePost.value = await getPosition();
+    location.value = await fetchCityName(posizionePost.value.latitudine, posizionePost.value.longitudine);
+
+  } catch (error) {
+    console.error('Errore nel recupero della posizione o del luogo:', error);
+  }
+});
 
 function closePopup() {
   emit('close-popup');
@@ -88,12 +98,11 @@ async function postFormHandler() {
     alert("Per creare un post è necessario inserire una descrizione.");
     if (!file) {
       try {
-        let posizionePost = await getPosition();
         const postData = {
           descrizione: descriptionValue,
           contenuto: null,
-          luogo: location.value,
-          posizione: posizionePost,
+          luogo: location.value, // Usa il luogo aggiornato
+          posizione: posizionePost.value,
           data_creazione: dateTime.value,
         };
 
@@ -103,7 +112,7 @@ async function postFormHandler() {
         const postResponse = await fetch('http://localhost:3000/api/Post', {
           method: 'POST',
           headers: {
-            'Authorization': `Bearer ${tokenFromStorage}`,
+            'Authorization': `Bearer ${loggedUser.token}`,
             'Content-Type': 'application/json',
           },
           body: JSON.stringify(postData),
@@ -152,13 +161,12 @@ async function postFormHandler() {
       const uploadData = await uploadResponse.json();
 
       imageUrl = uploadData.secure_url || "null";
-      let posizionePost = await getPosition(); // Ottieni la posizione dal dispositivo o usa Trento
 
       const postData = {
         descrizione: descriptionValue,
         contenuto: imageUrl,
-        luogo: location.value,
-        posizione: posizionePost,
+        luogo: location.value, // Usa il luogo aggiornato
+        posizione: posizionePost.value, // Ottieni la posizione
         data_creazione: dateTime.value,
       };
 
@@ -180,7 +188,6 @@ async function postFormHandler() {
       isSubmitting.value = false; // Riabilita il bottone dopo la richiesta
     }
   }
-
 
   emit('close-popup');
 }
