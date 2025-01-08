@@ -1,53 +1,68 @@
-
 .container-box {
     padding: 40px 30px;
     border-radius: 55px;
     text-align: center;
     display: flex;
-    padding: 20px; 
-    overflow: hidden;
     justify-content: center;
     align-items: center;
-    display: flex;
     font-family: "Montserrat", sans-serif;
     color: white;
     width: 90vw;
-    height: 100vh;
+    position: absolute;
+    height: 100%;
+    overflow: auto;
 }
 
-.left
-{
+
+.container-box::-webkit-scrollbar {
+    width: 10px; 
+}
+.container-box::-webkit-scrollbar-thumb {
+    background-color: #161d1a67;
+    border-radius: 10px;
+    border: 2px solid #ffffff; 
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+.container-box::-webkit-scrollbar-track {
+    background: #00000017;
+    border-radius: 10px;
+}
+
+
+
+.left {
     padding: 40px 30px;
     width: 30%;
     height: 60%;
     border-radius: 55px;
-    background-size: cover; 
-    background-repeat: no-repeat; 
+    background-size: cover;
+    background-repeat: no-repeat;
     background-position: center;
     justify-content: center;
-    display: flex; 
+    display: flex;
     flex-direction: column;
     align-items: center;
     margin-right: 5%;
     text-align: center;
 }
-.user-profile
-{
+
+.user-profile {
     width: 100%;
-    background-size: cover; 
-    background-repeat: no-repeat; 
+    background-size: cover;
+    background-repeat: no-repeat;
     background-position: center;
     justify-content: center;
-    display: flex; 
+    display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
 }
-.nomeUtente{
+
+.nomeUtente {
     max-width: 70%;
-    font-size: 50px;
+    font-size: 43px;
     margin-bottom: 20px;
-    text-shadow: 0 6px 15px rgb(0, 0, 0); 
+    text-shadow: 0 6px 15px rgb(0, 0, 0);
     word-wrap: break-word;
 }
 
@@ -55,44 +70,44 @@
     width: 50%;
     background-image: url('../image/logo.png');
     height: 0;
-    padding-top: 50%; 
+    padding-top: 50%;
     border-radius: 50%;
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4); 
-    background-size:cover;
-    background-repeat: no-repeat; 
-    overflow: hidden; 
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+    background-size: cover;
+    background-repeat: no-repeat;
+    overflow: hidden;
 }
 
-
 .right {
-    background-color: rgba(15, 31, 58, 0.713); 
+    background-color: rgba(15, 31, 58, 0.713);
     padding: 40px 30px;
     border-radius: 55px;
     width: 70%;
-    background-size: cover; 
+    background-size: cover;
     border: 3px solid rgb(97, 109, 185);
     align-items: center;
     display: flex;
     flex-direction: column;
     text-align: center;
     box-shadow: 4px 4px 8px rgba(255, 255, 255, 0.3);
-    height: 60%;
+    height: 80%;
     margin-left: 5%;
-    overflow-y: auto; 
+    overflow-y: auto;
     scroll-behavior: smooth;
-    padding-top: 20px;  
+    min-height: 500px;
+    padding-top: 20px;
 }
 
 .right::-webkit-scrollbar {
-    width: 0; 
-    height: 0; 
+    width: 0;
+    height: 0;
 }
 
 .right {
     scrollbar-width: none; /* Firefox */
 }
-.listacards
-{
+
+.listacards {
     border-radius: 55px;
     width: 65%;
     align-items: center;
@@ -100,7 +115,7 @@
     flex-direction: column;
     text-align: center;
     height: 60%;
-    padding-top: 20px;  
+    padding-top: 20px;
 }
 
 .card {
@@ -108,13 +123,13 @@
     height: 0;
     padding-top: 50%;
     margin-bottom: 20px;
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4); 
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
     background-size: cover;
-    background-repeat: no-repeat; 
+    background-repeat: no-repeat;
     background-position: center;
     display: flex;
     position: relative;
-    overflow: hidden; 
+    overflow: hidden;
 }
 
 .card-content {
@@ -144,15 +159,113 @@
     transition: all 0.3s ease; /* Aggiungi transizione fluida */
 }
 
-.titoloOggi
-{
-    text-shadow: 0 6px 15px rgb(0, 0, 0); 
+.titoloOggi {
+    text-shadow: 0 6px 15px rgb(0, 0, 0);
     font-weight: bold;
     font-size: 40px;
     margin-top: 2%;
     margin-bottom: 2%;
 }
 
+@media (max-width: 1824px) {
+   
+
+    .nomeUtente {
+        font-size: 35px;
+    }
+
+ 
+}
 
 
+/* Media Queries per la responsività */
+@media (max-width: 1024px) {
+    .container-box {
+        display: block;
+        padding: 20px;
+    }
 
+    .left, .right {
+        width: 100%;
+        margin-right: 0;
+        margin-left: 0;
+        height: auto;
+    }
+
+    .nomeUtente {
+        font-size: 35px;
+    }
+
+    .fotoProfilo {
+        width: 70%;
+        padding-top: 70%;
+    }
+
+    .right {
+        padding: 20px;
+        height: auto;
+    }
+
+    .card {
+        width: 80%;
+        padding-top: 60%;
+    }
+
+    .listacards {
+        width: 100%;
+        padding-top: 10px;
+    }
+}
+
+@media (max-width: 768px) {
+    .container-box {
+        padding: 15px;
+    }
+
+    .left, .right {
+        width: 100%;
+        height: auto;
+    }
+
+    .nomeUtente {
+        font-size: 28px;
+    }
+
+    .fotoProfilo {
+        width: 80%;
+        padding-top: 80%;
+    }
+
+    .card {
+        width: 90%;
+        padding-top: 70%;
+    }
+
+    .titoloOggi {
+        font-size: 30px;
+    }
+}
+
+@media (max-width: 480px) {
+    .container-box {
+        padding: 10px;
+    }
+
+    .nomeUtente {
+        font-size: 24px;
+    }
+
+    .fotoProfilo {
+        width: 90%;
+        padding-top: 90%;
+    }
+
+    .card {
+        width: 100%;
+        padding-top: 80%;
+    }
+
+    .titoloOggi {
+        font-size: 24px;
+    }
+}
