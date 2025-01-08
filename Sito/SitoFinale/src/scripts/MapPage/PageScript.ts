@@ -225,7 +225,7 @@ export async function Aggiorna(lat?: number, lng?: number, rad: number = 15): Pr
   try {
     // Attiva il loader
     isLoading.value = true;
-
+    console.log("eccomi");
     let posizioneLat: number;
     let posizioneLng: number;
 
@@ -240,7 +240,7 @@ export async function Aggiorna(lat?: number, lng?: number, rad: number = 15): Pr
 
     // Aggiorna i dati
     await aggiornaTutto(filtri.value, posizioneLat, posizioneLng, rad);
-
+    
     // Ordina la sidebar se un'opzione è selezionata
     if (selectedOption.value) {
       await ordinaSidebar(selectedOption.value);

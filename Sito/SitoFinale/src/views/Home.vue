@@ -25,7 +25,7 @@ function login() {
       setLoggedUser(data);
       emit('login', loggedUser);
       if (loggedUser.token) {
-        router.push("/mappa");
+        router.push("/");
       }
       return;
     })
