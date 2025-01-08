@@ -39,14 +39,11 @@ export interface FiltriRicerca {
   party: boolean;
 }
 
-export async function aggiornaTutto(filtri: FiltriRicerca) {
-  const posizione = await getPosition();
-  const lat = posizione.latitudine; // Latitudine, puoi cambiarla con i dati correnti della mappa
-  const lng = posizione.longitudine; // Longitudine, anche qui usa i dati correnti
-  const rad = 15;
+export async function aggiornaTutto(filtri: FiltriRicerca, latitudine: number, longitudine: number, raggio :number) {
+  
 
   // Recupera i dati
-  const cards = await estraiDati(lat, lng, rad);
+  const cards = await estraiDati(latitudine, longitudine, raggio);
  
   // Filtra i dati in base ai filtri attivi
   const filteredCards = cards.filter((card) => {
@@ -225,8 +222,12 @@ export function selectOption(option: string) {
 
 
 export async function Aggiorna() {
-  aggiornaTutto(filtri.value);
+  const posizione = await getPosition();
+  const lat = posizione.latitudine; // Latitudine, puoi cambiarla con i dati correnti della mappa
+  const lng = posizione.longitudine; // Longitudine, anche qui usa i dati correnti
+  const rad = 15;
+  await aggiornaTutto(filtri.value, lat, lng, rad);
   if (selectedOption.value) {
-    ordinaSidebar(selectedOption.value);
+    await ordinaSidebar(selectedOption.value);
   }
 }

@@ -38,11 +38,20 @@ function handleLogout() {
 }
 
 
+const isLoading = ref(true);
 
-function initMap() {
-  initializeMap();
-  console.log("Mappa inizializzata");
-  Aggiorna();
+async function initMap() {
+  try {
+    initializeMap();
+    console.log("Mappa inizializzata");
+    await Aggiorna();
+  } catch (error) {
+    console.error("Errore durante l'inizializzazione della mappa:", error);
+  } finally {
+    // Assicurati che il caricamento sia completato anche in caso di errore
+    console.log("qua");
+    isLoading.value = false;
+  }
 }
 
 
@@ -56,14 +65,12 @@ onMounted(() => {
 
 <template>
   <!-- Loader -->
-  <!-- <div id="loader" v-if="!isAuthenticated">
-    <div class="left-curtain"></div>
-    <div class="right-curtain"></div>
-    <div class="center-content">
-      <h1>Loading..</h1>
-      <img src="@/assets/attendi.png" alt="Logoload" class="logoload" />
+  <div v-if="isLoading" class="loading-overlay">
+    <div class="loading-spinner">
+      <div class="spinner"></div>
+      <h1>Caricamento...</h1>
     </div>
-  </div> -->
+  </div>
 
   <!-- Contenuto -->
   <div class="content">

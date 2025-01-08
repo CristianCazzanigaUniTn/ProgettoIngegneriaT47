@@ -179,89 +179,6 @@
 
 
 
-#loader {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 88vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-    opacity: 1;
-    animation: loaderAnimation 4s ease-in-out forwards;
-    /* Animazione per caricare */
-}
-
-.left-curtain,
-.right-curtain {
-    position: absolute;
-    top: 0;
-    height: 100%;
-    background-color: #000;
-    z-index: 999;
-}
-
-.left-curtain {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 50%;
-    background-image: url("@/assets/background.png");
-    background-repeat: no-repeat;
-    background-size: 200% 100%;
-    filter: brightness(0.6);
-    background-position: left center;
-    animation: moveLeft 3.5s ease-in-out forwards;
-}
-
-.right-curtain {
-    position: absolute;
-    top: 0;
-    right: 0;
-    height: 100%;
-    width: 50%;
-    background-image: url("@/assets/background.png");
-    background-repeat: no-repeat;
-    filter: brightness(0.6);
-    background-size: 200% 100%;
-    background-position: right center;
-    animation: moveRight 3.5s ease-in-out forwards;
-}
-
-
-@keyframes moveLeft {
-    0% {
-        left: 0;
-    }
-
-    50% {
-        left: 0;
-    }
-
-    100% {
-        left: -100%;
-    }
-}
-
-
-@keyframes moveRight {
-    0% {
-        right: 0;
-    }
-
-    50% {
-        right: 0;
-    }
-
-    100% {
-        right: -100%;
-    }
-}
-
-
 .center-content {
     position: absolute;
     z-index: 1001;
@@ -277,66 +194,6 @@
     font-size: 80px;
 }
 
-@keyframes splitAndFade {
-    0% {
-        opacity: 1;
-    }
-
-    50% {
-        opacity: 0.5;
-    }
-
-    100% {
-        opacity: 0;
-    }
-}
-
-
-.logoload {
-    animation: rotateLogo 3.5s ease-in-out forwards;
-}
-
-@keyframes rotateLogo {
-    0% {
-        transform: rotate(0deg);
-        /* Inizia senza rotazione */
-    }
-
-    50% {
-        transform: rotate(360deg);
-    }
-
-    100% {
-        transform: rotate(360deg);
-        /* Completa un giro completo */
-    }
-}
-
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-
-    to {
-        opacity: 1;
-    }
-}
-
-
-@keyframes loaderAnimation {
-    0% {
-        opacity: 1;
-    }
-
-    50% {
-        opacity: 1;
-    }
-
-    100% {
-        opacity: 0;
-    }
-}
 
 
 /* + bottone */
@@ -366,7 +223,7 @@
     width: 200px;
     height: 60px;
     background-color: #000000;
-    border-radius: 30px; 
+    border-radius: 30px;
     display: flex;
 }
 
@@ -379,36 +236,39 @@
 }
 
 #floatingButton .plus {
-    font-size: 30px; 
+    font-size: 30px;
 }
 
 #floatingButton:hover .plus {
     display: none;
 }
 
-#floatingButton .text1, #floatingButton .text2, #floatingButton .text3{
+#floatingButton .text1,
+#floatingButton .text2,
+#floatingButton .text3 {
     width: 50%;
     height: 60px;
     text-align: center;
     color: rgb(255, 255, 255);
     font-size: 16px;
     font-weight: normal;
-    background-color: #000000; 
+    background-color: #000000;
     flex-grow: 1;
     display: none;
     padding: 0 10px;
     position: absolute;
     flex: 1;
-    box-sizing: border-box; 
+    box-sizing: border-box;
 }
 
 
-#floatingButton:hover .text1, #floatingButton:hover .text2, #floatingButton:hover .text3 {
-    display: flex; 
+#floatingButton:hover .text1,
+#floatingButton:hover .text2,
+#floatingButton:hover .text3 {
+    display: flex;
 }
 
-#floatingButton 
-.text1{
+#floatingButton .text1 {
     border-top-left-radius: 30px;
     border-bottom-left-radius: 30px;
     border: 2px solid black;
@@ -416,6 +276,7 @@
     top: 0;
     border-right: 1px solid black;
 }
+
 #floatingButton .text2 {
     border-top-right-radius: 30px;
     border-bottom-right-radius: 30px;
@@ -435,7 +296,9 @@
 }
 
 
-#floatingButton .text1:hover, #floatingButton .text2:hover, #floatingButton .text3:hover  {
+#floatingButton .text1:hover,
+#floatingButton .text2:hover,
+#floatingButton .text3:hover {
     background-color: #ffffff;
     color: rgb(0, 0, 0);
 }
@@ -449,21 +312,21 @@
     display: flex;
     gap: 20px;
     position: relative;
-  }
-  
-  .filter-container {
+}
+
+.filter-container {
     position: relative;
     display: inline-block;
-  }
-  
-  .filter-container img {
+}
+
+.filter-container img {
     width: 40px;
     height: 40px;
     cursor: pointer;
     margin-right: 10px;
-  }
-  
-  .filter-window {
+}
+
+.filter-window {
     position: absolute;
     background-color: white;
     color: black;
@@ -476,45 +339,86 @@
     left: 10px;
     max-height: 400px;
     overflow-y: auto;
-  }
-  
-  .filter-window[style*="display: block"] {
+}
+
+.filter-window[style*="display: block"] {
     display: block;
-  }
-  
-  h4 {
+}
+
+h4 {
     font-size: 16px;
     font-weight: bold;
     margin-bottom: 10px;
-  }
-  
-  .filter-options {
+}
+
+.filter-options {
     margin-bottom: 15px;
-  }
-  
-  .filter-options div {
+}
+
+.filter-options div {
     margin-bottom: 10px;
-  }
-  
-  .filter-options label {
+}
+
+.filter-options label {
     display: block;
     font-size: 14px;
     margin-bottom: 5px;
     cursor: pointer;
-  }
-  
-  .filter-options input[type="checkbox"] {
+}
+
+.filter-options input[type="checkbox"] {
     margin-right: 8px;
-  }
-  
-  hr {
+}
+
+hr {
     border: none;
     border-top: 1px solid #ccc;
     margin: 10px 0;
-  }
-  
-  .filter-options div:last-child {
+}
+
+.filter-options div:last-child {
     margin-bottom: 0;
+}
+
+.loading-overlay {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100vw;
+  height: 88%;
+  background-color: rgba(255, 255, 255, 0.9);
+  z-index: 9999; /* Assicurati che il loader sia sopra tutto tranne la navbar */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.loading-spinner {
+  text-align: center;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 6px solid #e0e0e0;
+  border-top-color: #3498db; /* Colore principale */
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
   }
-  
-  
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+h1 {
+  font-size: 1.5rem;
+  color: #3498db; /* Colore del testo */
+  margin-top: 20px;
+}
+
