@@ -34,7 +34,7 @@ CloseAllPopup();
 // Logica di logout
 function handleLogout() {
   clearLoggedUser();
-  router.push("/");
+  router.push("/login");
 }
 
 
