@@ -146,7 +146,7 @@ import postImage from '@/assets/post.png';
 import partyImage from '@/assets/party.png';
 import shopImage from '@/assets/shop.png';
 import textImage from '@/assets/text.png';
-import { apriPopUpVisualizza } from './PageScript';
+import { Aggiorna, apriPopUpVisualizza } from './PageScript';
 
 async function aggiungiPost(post: any) {
     var punto = new H.geo.Point(post.latitudine, post.longitudine);
@@ -298,6 +298,7 @@ export function teletrasportati(lat: number, lng: number) {
 
         // Avvia l'animazione
         requestAnimationFrame(animate);
+        Aggiorna(lat, lng);
     } else {
         console.error("La mappa non è stata inizializzata.");
     }

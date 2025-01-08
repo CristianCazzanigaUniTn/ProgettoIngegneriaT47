@@ -220,14 +220,36 @@ export function selectOption(option: string) {
   }
 }
 
+export const isLoading = ref(true);
 
-export async function Aggiorna() {
-  const posizione = await getPosition();
-  const lat = posizione.latitudine; // Latitudine, puoi cambiarla con i dati correnti della mappa
-  const lng = posizione.longitudine; // Longitudine, anche qui usa i dati correnti
-  const rad = 15;
-  await aggiornaTutto(filtri.value, lat, lng, rad);
-  if (selectedOption.value) {
-    await ordinaSidebar(selectedOption.value);
+export async function Aggiorna(lat?: number, lng?: number, rad: number = 15): Promise<void> {
+  try {
+    // Attiva il loader
+    isLoading.value = true;
+
+    let posizioneLat: number;
+    let posizioneLng: number;
+
+    if (lat !== undefined && lng !== undefined) {
+      posizioneLat = lat;
+      posizioneLng = lng;
+    } else {
+      const posizione = await getPosition();
+      posizioneLat = posizione.latitudine;
+      posizioneLng = posizione.longitudine;
+    }
+
+    // Aggiorna i dati
+    await aggiornaTutto(filtri.value, posizioneLat, posizioneLng, rad);
+
+    // Ordina la sidebar se un'opzione è selezionata
+    if (selectedOption.value) {
+      await ordinaSidebar(selectedOption.value);
+    }
+  } catch (error) {
+    console.error("Errore durante l'aggiornamento:", error);
+  } finally {
+    // Disattiva il loader
+    isLoading.value = false;
   }
 }

@@ -12,7 +12,7 @@ import SideCard from '@/components/mapComponents/mapElements/SideCard.vue';
 import PartyEventoPopup from '@/components/mapComponents/ViewPopup/VisualizzaEventoParty.vue';
 
 import { showPopupPartyEvento, showPopupCreaEvento, showPopupCreaParty, showPopupCreaPost, showPopupPost, aggiornaTutto, sideCards, openPopup, closePopup, description, location, dateTime, apriPopUpVisualizza, postUserName, postProfilePicture, postTime, postImage, postDescription, userIdView } from '@/scripts/MapPage/PageScript.ts';
-import { filtri, selectedOption, selectOption, Aggiorna, ordinaSidebar, CloseAllPopup, idep, isParty, organizza, profileNameep, profileImageep, partyImageep, descriptionep, timeep, userIdViewep, maxParticipantsep, categoryep } from '@/scripts/MapPage/PageScript.ts';
+import { isLoading, filtri, selectedOption, selectOption, Aggiorna, ordinaSidebar, CloseAllPopup, idep, isParty, organizza, profileNameep, profileImageep, partyImageep, descriptionep, timeep, userIdViewep, maxParticipantsep, categoryep } from '@/scripts/MapPage/PageScript.ts';
 
 
 import { eliminaEvento, eliminaParty, partecipaEvento, partecipaParty, disinscriviEvento, disinscriviParty } from '../scripts/MapPage/popup';
@@ -38,19 +38,18 @@ function handleLogout() {
 }
 
 
-const isLoading = ref(true);
+
 
 async function initMap() {
   try {
+    // Inizializza la mappa
     initializeMap();
     console.log("Mappa inizializzata");
+
+    // Aggiorna i dati (il loader è gestito internamente da Aggiorna)
     await Aggiorna();
   } catch (error) {
     console.error("Errore durante l'inizializzazione della mappa:", error);
-  } finally {
-    // Assicurati che il caricamento sia completato anche in caso di errore
-    console.log("qua");
-    isLoading.value = false;
   }
 }
 
