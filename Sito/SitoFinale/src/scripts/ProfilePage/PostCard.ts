@@ -5,11 +5,84 @@ export interface Post {
   image: string;  // URL dell'immagine del post
 }
 
+export interface Event {
+  id: string;  // ID dell'evento
+  name: string;  // Nome dell'evento
+  date: string;  // Data dell'evento
+  image: string;  // URL immagine dell'evento
+}
+
+export interface Party {
+  id: string;  // ID del party
+  name: string;  // Nome del party
+  description: string;  // Descrizione del party
+  image: string;  // URL immagine del party
+}
+
+export const getEvents = async (id: string): Promise<Event[]> => {
+  try {
+    const response = await fetch(`http://localhost:3000/api/eventi/organizzatore/${id}`);
+    
+    if (!response.ok) {
+      throw new Error('Eventi non trovati');
+    }
+
+    const eventData = await response.json();
+
+    // Controlla se la risposta è un array diretto
+    if (!Array.isArray(eventData)) {
+      throw new Error('La risposta non contiene un array di eventi');
+    }
+
+    // Mappa i dati in un formato utilizzabile
+    return eventData.map((event: any) => ({
+      id: event._id,
+      name: event.nome || "Evento dinamico",
+      date: event.data_creazione || "Data non disponibile",
+      image: event.foto || "/image/default-event.png",
+      description: event.descrizione || "Nessuna descrizione disponibile",
+      location: event.luogo || "Luogo non specificato",
+    }));
+  } catch (error: any) {
+    return [];
+  }
+};
+
+export const getParty = async (id: string): Promise<Party[]> => {
+  try {
+    const response = await fetch(`http://localhost:3000/api/party/organizzatore/${id}`);
+
+    if (!response.ok) {
+      throw new Error('Party non trovati');
+    }
+
+    const partyData = await response.json();
+
+    // Controlla se la risposta è un array diretto
+    if (!Array.isArray(partyData)) {
+      throw new Error('La risposta non contiene un array di party');
+    }
+
+    // Mappa i dati in un formato utilizzabile
+    return partyData.map((party: any) => ({
+      id: party._id,
+      name: party.nome || "Party dinamico",
+      description: party.descrizione || "Descrizione dinamica",
+      image: party.foto || "/image/default-party.png",
+      location: party.luogo || "Luogo non specificato",
+      date: party.data_creazione || "Data non disponibile",
+    }));
+  } catch (error: any) {
+    return [];
+  }
+};
+
 export const getPost = async (id: string): Promise<Post[]> => {
   try {
     const response = await fetch(`http://localhost:3000/api/post/${id}`);
 
     if (!response.ok) {
+      console.log("c");
       throw new Error('Post non trovati');
     }
 
@@ -28,7 +101,7 @@ export const getPost = async (id: string): Promise<Post[]> => {
       }));
   } catch (error: any) {
     // Gestione degli errori
-    console.error('Errore durante il recupero del post:', error.message);
+    console.log("cc");
     return [];  
   }
 };

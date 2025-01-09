@@ -14,6 +14,7 @@
 }
 
 
+
 .container-box::-webkit-scrollbar {
     width: 10px; 
 }
@@ -98,6 +99,8 @@
     padding-top: 20px;
 }
 
+
+
 .right::-webkit-scrollbar {
     width: 0;
     height: 0;
@@ -109,14 +112,41 @@
 
 .listacards {
     border-radius: 55px;
-    width: 65%;
+    width: 80%; /* Usa tutta la larghezza disponibile */
+    display: flex;
+    flex-wrap: wrap; /* Permette alle card di andare a capo */
+    justify-content: center; /* Centra le card */
+    gap: 20px; /* Spaziatura tra le card */
+    padding: 20px;
+    text-align: center;
+    max-height: 1000px;
+    overflow: auto;
+}
+
+.listacards::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+}
+
+
+.sezione-contenuti
+{
+    position: relative;
+    padding: 40px 30px;
+    border-radius: 55px;
+    margin-bottom: 40px; /* Spaziatura tra sezioni */
+    width: 100%; /* Usa tutta la larghezza */
+    height: auto;
+    background-size: cover;
     align-items: center;
     display: flex;
     flex-direction: column;
     text-align: center;
-    height: 60%;
+    margin-left: 5%;
+    scroll-behavior: smooth;
     padding-top: 20px;
 }
+
 
 .card {
     width: 90%;
