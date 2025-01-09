@@ -1,6 +1,7 @@
 <script setup>
     import { ref, onMounted } from 'vue'
     import { loggedUser, setLoggedUser, clearLoggedUser } from '@/states/loggedUser.ts'
+import router from '../../router';
 
     const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || `http://localhost:3000`;
     const VITE_GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID
@@ -14,7 +15,7 @@
         .then((resp) => resp.json()) 
         .then(function (data) { 
             setLoggedUser(data)
-            emit('login', loggedUser)
+            router.push('/');
             return;
         })
         .catch(error => console.error(error));
@@ -23,32 +24,36 @@
     const googleLoginBtn = ref(null);
 
     onMounted(() => {
-        // Carica lo script di Google
-        let google_gsi_client = document.createElement('script');
-        google_gsi_client.setAttribute('src', 'https://accounts.google.com/gsi/client');
-        document.head.appendChild(google_gsi_client);
+    let google_gsi_client = document.createElement('script');
+    google_gsi_client.setAttribute('src', 'https://accounts.google.com/gsi/client');
+    google_gsi_client.onload = function () {
+        if (google && google.accounts && google.accounts.id) {
+            console.log("ciao eccomi");
+            console.log("Client ID usato:", VITE_GOOGLE_CLIENT_ID);
 
-        window.onload = function () {
             google.accounts.id.initialize({
                 client_id: VITE_GOOGLE_CLIENT_ID,
                 callback: handleCredentialResponse,
-                federated_signin: true, // Disabilita FedCM
             });
 
-            // Collega il pulsante di login tradizionale Google alla tua immagine personalizzata
             google.accounts.id.renderButton(
                 googleLoginBtn.value, {
                     theme: 'outline',
                     size: 'large',
-                    text: 'signin_with', // Utilizza la stringa 'signin_with' per il testo
-                    width: 300,  // Imposta la larghezza
-                    logo_alignment: 'center', // Centra il logo
+                    text: 'signin_with',
+                    width: 300,
+                    logo_alignment: 'center',
                 }
             );
-        };
-    });
+        } else {
+            console.error('Google accounts API non disponibile.');
+        }
+    };
+    document.head.appendChild(google_gsi_client);
+});
 
     function handleCredentialResponse(response) {
+        console.log("cc");
         console.log(response);
         if (response.credential) {
             myLogin(response.credential);
