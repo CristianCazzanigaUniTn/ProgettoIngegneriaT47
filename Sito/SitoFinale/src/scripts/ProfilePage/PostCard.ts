@@ -82,7 +82,6 @@ export const getPost = async (id: string): Promise<Post[]> => {
     const response = await fetch(`http://localhost:3000/api/post/${id}`);
 
     if (!response.ok) {
-      console.log("c");
       throw new Error('Post non trovati');
     }
 
@@ -100,8 +99,6 @@ export const getPost = async (id: string): Promise<Post[]> => {
         image: post.contenuto || "/image/default-image.png", 
       }));
   } catch (error: any) {
-    // Gestione degli errori
-    console.log("cc");
     return [];  
   }
 };
