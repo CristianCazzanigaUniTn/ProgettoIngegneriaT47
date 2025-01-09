@@ -62,7 +62,6 @@ async function sendEmail() {
   const emailSubject = 'Messaggio di verifica per la registrazione';
 
   const encoded = encodeURIComponent(verificationToken.value);
-  console.log(encoded);
   const verificationLink = `http://localhost:5173/verifica?token=${encoded}`; // Inserisci il token dinamico
   const emailMessage = `Ciao ${userName.value},\n\nBenvenuto nel nostro servizio! La tua registrazione è stata ricevuta.\n\nClicca sul link per verificare il tuo account:\n${verificationLink}`;
 
