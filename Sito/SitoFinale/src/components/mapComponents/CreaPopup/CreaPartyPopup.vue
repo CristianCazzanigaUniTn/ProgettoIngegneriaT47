@@ -17,18 +17,17 @@
                     <input type="datetime-local" id="partyDate" v-model="partyDate" required />
                 </div>
                 <div class="form-group">
-                    <label for="partyLocation">Luogo</label>
-                    <input type="text" id="partyLocation" v-model="partyLocation" placeholder="Es: Casa di Marco"
-                        required />
+                    <label for="luogoEvento">Luogo</label>
+                    <input type="text" id="luogoEvento" name="luogoEvento" readonly
+                        :placeholder="partyLocation" required />
                 </div>
                 <div class="form-group">
-                    <label for="partyType">Tipologia</label>
-                    <select id="partyType" v-model="partyType" required>
+                    <label for="tipologiaEvento">Tipologia</label>
+                    <select id="tipologiaEvento" name="tipologiaEvento" v-model="partyType" required>
                         <option value="" disabled selected>Scegli una tipologia</option>
-                        <option value="compleanno">Compleanno</option>
-                        <option value="festa">Festa Privata</option>
-                        <option value="barbecue">Barbecue</option>
-                        <option value="picnic">Picnic</option>
+                        <option v-for="(c, index) in categorie" :key="index" :value="c._id">
+                        {{ c.nome }}
+                        </option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -63,15 +62,16 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { loggedUser } from '@/states/loggedUser.ts';
-import { getPosition } from '@/scripts/Tools/posizione';
-import { Aggiorna } from '@/scripts/MapPage/PageScript';
+import { getPosition, fetchCityName } from '@/scripts/Tools/posizione';
+import { Aggiorna, categorie } from '@/scripts/MapPage/PageScript';
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || `http://localhost:3000`;
 const isVisible = ref(true);
 const partyName = ref('');
 const partyDate = ref('');
 const partyLocation = ref('');
+const partyPosition = ref();
 const partyType = ref('');
 const partyParticipants = ref('');
 const partyDescription = ref('');
@@ -84,6 +84,18 @@ const tokenFromStorage = computed(() => loggedUser.token);
 function closePopup() {
     emit('close-popup');
 }
+
+// Funzione asincrona che verrà eseguita quando il componente è montato
+onMounted(async () => {
+  try {
+    partyPosition.value = await getPosition();
+    partyLocation.value = await fetchCityName(partyPosition.value.latitudine, partyPosition.value.longitudine);
+
+
+  } catch (error) {
+    console.error('Errore nel recupero della posizione o del luogo:', error);
+  }
+});
 
 function handleImageUpload(event) {
     const file = event.target.files && event.target.files[0];
@@ -161,13 +173,13 @@ async function partyFormHandler() {
         });
         const uploadData = await uploadResponse.json();
         const imageUrl = uploadData.secure_url || 'null';
-        let posizioneEvento = await getPosition(); // Ottieni la posizione dal dispositivo o usa Trento
+
         const partyData = {
             nome: partyName.value,
             data_inizio: partyDate.value,
             luogo: partyLocation.value,
-            posizione: posizioneEvento,
-            id_categoria: '673603662b45400acaf456d0',
+            posizione: partyPosition.value,
+            id_categoria: partyType.value,
             numero_massimo_partecipanti: parseInt(partyParticipants.value, 10),
             descrizione: partyDescription.value,
             foto: imageUrl,

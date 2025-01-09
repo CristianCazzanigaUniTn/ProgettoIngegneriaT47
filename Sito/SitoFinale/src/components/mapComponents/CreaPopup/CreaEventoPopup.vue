@@ -18,19 +18,17 @@
                 </div>
                 <div class="gruppo-campo">
                     <label for="luogoEvento">Luogo</label>
-                    <input type="text" id="luogoEvento" name="luogoEvento" v-model="eventLocation"
-                        placeholder="Es: Piazza Duomo" required />
+                    <input type="text" id="luogoEvento" name="luogoEvento" readonly
+                        :placeholder="eventLocation" required />
                 </div>
                 <div class="gruppo-campo">
-                    <label for="tipologiaEvento">Tipologia</label>
-                    <select id="tipologiaEvento" name="tipologiaEvento" v-model="eventType" required>
-                        <option value="" disabled selected>Scegli una tipologia</option>
-                        <option value="networking">Networking</option>
-                        <option value="workshop">Workshop</option>
-                        <option value="seminario">Seminario</option>
-                        <option value="concerto">Concerto</option>
-                        <option value="festa">Festa</option>
-                    </select>
+                <label for="tipologiaEvento">Tipologia</label>
+                <select id="tipologiaEvento" name="tipologiaEvento" v-model="eventType" required>
+                    <option value="" disabled selected>Scegli una tipologia</option>
+                    <option v-for="(c, index) in categorie" :key="index" :value="c._id">
+                    {{ c.nome }}
+                    </option>
+                </select>
                 </div>
                 <div class="gruppo-campo">
                     <label for="numeroPartecipanti">Numero Massimo di Partecipanti</label>
@@ -65,15 +63,16 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { loggedUser } from '@/states/loggedUser.ts';
-import { getPosition } from '@/scripts/Tools/posizione';
-import { Aggiorna } from '@/scripts/MapPage/PageScript';
+import { getPosition, fetchCityName } from '@/scripts/Tools/posizione';
+import { Aggiorna, categorie } from '@/scripts/MapPage/PageScript';
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || `http://localhost:3000`;
 
 const isVisible = ref(true);
 const nomeEvento = ref('');
 const eventDate = ref('');
+const eventPosition = ref();
 const eventLocation = ref('');
 const eventType = ref('');
 const eventParticipants = ref('');
@@ -83,6 +82,18 @@ const isSubmitting = ref(false);  // Variabile per tenere traccia dello stato di
 const emit = defineEmits(['close-popup']);
 
 const tokenFromStorage = computed(() => loggedUser.token);
+
+// Funzione asincrona che verrà eseguita quando il componente è montato
+onMounted(async () => {
+  try {
+    eventPosition.value = await getPosition();
+    eventLocation.value = await fetchCityName(eventPosition.value.latitudine, eventPosition.value.longitudine);
+
+
+  } catch (error) {
+    console.error('Errore nel recupero della posizione o del luogo:', error);
+  }
+});
 
 function closePopup() {
     emit('close-popup');
@@ -117,7 +128,7 @@ function removeImage() {
 }
 
 async function eventFormHandler() {
-    if (!nomeEvento.value || !eventDate.value || !eventLocation.value || !eventType.value || !eventParticipants.value || !eventDescription.value) {
+    if (!nomeEvento.value || !eventDate.value || !eventType.value || !eventParticipants.value || !eventDescription.value) {
         alert('Tutti i campi sono obbligatori.');
         return;
     }
@@ -157,14 +168,13 @@ async function eventFormHandler() {
         });
         const uploadData = await uploadResponse.json();
         const imageUrl = uploadData.secure_url || 'null';
-        let posizioneEvento = await getPosition(); // Ottieni la posizione dal dispositivo o usa Trento
 
         const eventData = {
             nome: nomeEvento.value,
             data_inizio: eventDate.value,
             luogo: eventLocation.value,
-            posizione: posizioneEvento,
-            id_categoria: '673603662b45400acaf456c7', // Assicurati di usare la categoria giusta
+            posizione: eventPosition.value,
+            id_categoria: eventType.value, // Assicurati di usare la categoria giusta
             numero_massimo_partecipanti: parseInt(eventParticipants.value, 10),
             descrizione: eventDescription.value,
             foto: imageUrl,
