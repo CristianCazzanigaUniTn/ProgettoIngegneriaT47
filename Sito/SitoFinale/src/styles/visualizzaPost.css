@@ -92,11 +92,16 @@
 .instagram-card-content {
     padding: 20px;
     background-color: #fafafa;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    gap: 10px;
 }
 
 .likes {
     font-weight: bold;
     color: #333;
+    
 }
 
 /* Pulsante di chiusura */
@@ -210,6 +215,22 @@
 
 #addCommentButton:hover {
     background-color: #672d55;
+}
+
+.button-iscrizione {
+    position: relative; /* Cambiato da absolute a fixed */
+
+    background-color: #007bff;
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 25px;
+    padding: 10px 25px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    z-index: 10;
 }
 
 

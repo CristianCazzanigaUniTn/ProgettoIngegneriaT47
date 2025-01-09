@@ -60,7 +60,7 @@ const description = ref('');
 const imagePreview = ref(null);
 const location = ref('Posizione generica');
 const dateTime = ref(new Date().toLocaleString());
-
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || `http://localhost:3000`;
 
 function closePopup() {
   emit('close-popup');
@@ -100,7 +100,7 @@ async function postFormHandler() {
         // Disabilita il bottone "Pubblica"
         isSubmitting.value = true;
 
-        const postResponse = await fetch('http://localhost:3000/api/Post', {
+        const postResponse = await fetch(`${API_BASE_URL}/api/Post`, {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${tokenFromStorage}`,
@@ -127,7 +127,7 @@ async function postFormHandler() {
     }
 
     try {
-      const response = await fetch('http://localhost:3000/generate-signed-url-post', {
+      const response = await fetch(`${API_BASE_URL}/generate-signed-url-post`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${tokenFromStorage}`,
@@ -162,7 +162,7 @@ async function postFormHandler() {
         data_creazione: dateTime.value,
       };
 
-      const postResponse = await fetch('http://localhost:3000/api/Post', {
+      const postResponse = await fetch(`${API_BASE_URL}/api/Post`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${tokenFromStorage}`,

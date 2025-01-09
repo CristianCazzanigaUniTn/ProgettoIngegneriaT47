@@ -1,3 +1,5 @@
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || `http://localhost:3000`;
+
 export interface userData {
   username: string;
   profileImage: string;
@@ -5,7 +7,7 @@ export interface userData {
 
 export const getUser = async (id: string): Promise<userData | null> => {
   try {
-    const response = await fetch(`http://localhost:3000/api/Utenti/${id}`);
+    const response = await fetch(`${API_BASE_URL}/api/Utenti/${id}`);
     if (!response.ok) {
       throw new Error('Utente non trovato');
     }

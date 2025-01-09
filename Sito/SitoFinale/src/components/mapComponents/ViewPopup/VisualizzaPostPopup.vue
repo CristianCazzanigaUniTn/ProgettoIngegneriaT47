@@ -19,7 +19,11 @@
             </div>
             <div class="instagram-card-content">
                 <p class="likes">{{ description }}</p>
+                <button id="azionePartyButton" class="button-iscrizione" @click="deletePost" v-if="organizzaP && loggedUser.token !== undefined">
+                    Elimina
+                </button>
             </div>
+           
 
 
             <!-- Sezione dei like (posizionata sopra) -->
@@ -52,10 +56,7 @@
                 </div>
             </div>
 
-            <button id="azionePartyButton" class="button-iscrizione" @click="deletePost" v-if="organizzaP && loggedUser.token !== undefined">
-                Elimina
-            </button>
-
+         
         </div>
     </div>
     </div>  

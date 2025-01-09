@@ -1,8 +1,11 @@
 import { loggedUser } from "../../states/loggedUser";
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || `http://localhost:3000`;
+
 //Numero di like ad un commento
 async function estraiLikeAiCommenti(id: any) {
     try {
-        const l = await fetch(`http://localhost:3000/api/commenti/${id}/like`);
+        const l = await fetch(`${API_BASE_URL}/api/commenti/${id}/like`);
 
         if (l.status === 404) {
             return 0;
@@ -22,7 +25,7 @@ async function estraiLikeAiCommenti(id: any) {
 
 async function estraiCategoria(id: any) {
     try {
-        const c = await fetch(`http://localhost:3000/api/categoria/${id}`);
+        const c = await fetch(`${API_BASE_URL}/api/categoria/${id}`);
 
         if (c.status === 404) {
             return 0;
@@ -41,7 +44,7 @@ async function estraiCategoria(id: any) {
 
 export async function estraipartyid(id: any) {
     try {
-        const p = await fetch(`http://localhost:3000/api/party/${id}`);
+        const p = await fetch(`${API_BASE_URL}/api/party/${id}`);
 
         if (p.status === 404) {
             return;
@@ -81,7 +84,7 @@ export async function estraipartyid(id: any) {
 
 export async function estraieventoid(id: any) {
     try {
-        const e = await fetch(`http://localhost:3000/api/eventi/${id}`);
+        const e = await fetch(`${API_BASE_URL}/api/eventi/${id}`);
 
         if (e.status === 404) {
             return;
@@ -122,7 +125,7 @@ export async function estraieventoid(id: any) {
 //Estrai utente da id
 async function estraiUtente(id : any) {
     try {
-        const response = await fetch(`http://localhost:3000/api/Utenti/${id}`);
+        const response = await fetch(`${API_BASE_URL}/api/Utenti/${id}`);
         if (response.status === 404) {
             return null;
         }
@@ -147,8 +150,8 @@ export async function estraiInformazioniPost(id: any) {
     var idLike: any = undefined;
     
     try {
-        const l = await fetch(`http://localhost:3000/api/like/post/${id}`);
-        const c = await fetch(`http://localhost:3000/api/commenti/post/${id}`);
+        const l = await fetch(`${API_BASE_URL}/api/like/post/${id}`);
+        const c = await fetch(`${API_BASE_URL}/api/commenti/post/${id}`);
 
         if (l.ok) {
             const likes = await l.json();
@@ -197,7 +200,7 @@ export async function estraiInformazioniPost(id: any) {
 //Ritorna il numero di partecipazioni ad un Party
 export async function estraiPartecipazioniParty(id: any){
     try {
-        const response = await fetch(`http://localhost:3000/api/Partecipazioni/Party/${id}`);
+        const response = await fetch(`${API_BASE_URL}/api/Partecipazioni/Party/${id}`);
         
         var partecipa = false;
         var npart = 0;
@@ -236,8 +239,8 @@ export async function estraiInformazioniEventi(id: any) {
     var faq = [];
     
     try {
-        const p = await fetch(`http://localhost:3000/api/Partecipazioni/Eventi/${id}`);
-        const f = await fetch(`http://localhost:3000/api/faqeventi/evento/${id}`);
+        const p = await fetch(`${API_BASE_URL}/api/Partecipazioni/Eventi/${id}`);
+        const f = await fetch(`${API_BASE_URL}/api/faqeventi/evento/${id}`);
 
         if (f.ok){
             faq = await f.json();
@@ -272,7 +275,7 @@ export async function estraiInformazioniEventi(id: any) {
 
 export async function partecipaParty(id_party: any) {
     try {
-        const response = await fetch(`http://localhost:3000/api/Partecipazioni/Party/${id_party}`, {
+        const response = await fetch(`${API_BASE_URL}/api/Partecipazioni/Party/${id_party}`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${loggedUser.token}`
@@ -289,7 +292,7 @@ export async function partecipaParty(id_party: any) {
 
 export async function partecipaEvento(id_evento: any) {
     try {
-        const response = await fetch(`http://localhost:3000/api/Partecipazioni/Eventi/${id_evento}`, {
+        const response = await fetch(`${API_BASE_URL}/api/Partecipazioni/Eventi/${id_evento}`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${loggedUser.token}`
@@ -306,7 +309,7 @@ export async function partecipaEvento(id_evento: any) {
 }
 export async function disinscriviParty(id_party: any) {
     try {
-        const response = await fetch(`http://localhost:3000/api/Partecipazioni/Party/${id_party}`, {
+        const response = await fetch(`${API_BASE_URL}/api/Partecipazioni/Party/${id_party}`, {
             method: 'DELETE', 
             headers: {
                 'Authorization': `Bearer ${loggedUser.token}`
@@ -321,7 +324,7 @@ export async function disinscriviParty(id_party: any) {
 }
 export async function disinscriviEvento(id_evento: any) {
     try {
-        const response = await fetch(`http://localhost:3000/api/Partecipazioni/Eventi/${id_evento}`, {
+        const response = await fetch(`${API_BASE_URL}/api/Partecipazioni/Eventi/${id_evento}`, {
             method: 'DELETE', 
             headers: {
                 'Authorization': `Bearer ${loggedUser.token}`
@@ -337,7 +340,7 @@ export async function disinscriviEvento(id_evento: any) {
 }
 export async function eliminaParty(id_party: any) {
     try {
-        const response = await fetch(`http://localhost:3000/api/party/${id_party}`, {
+        const response = await fetch(`${API_BASE_URL}/api/party/${id_party}`, {
             method: 'DELETE', 
             headers: {
                 'Authorization': `Bearer ${loggedUser.token}`
@@ -354,7 +357,7 @@ export async function eliminaParty(id_party: any) {
 }
 export async function eliminaEvento(id_evento: any) {
     try {
-        const response = await fetch(`http://localhost:3000/api/eventi/${id_evento}`, {
+        const response = await fetch(`${API_BASE_URL}/api/eventi/${id_evento}`, {
             method: 'DELETE', 
             headers: {
                 'Authorization': `Bearer ${loggedUser.token}`
@@ -372,7 +375,7 @@ export async function eliminaEvento(id_evento: any) {
 
 export async function eliminaPost(id_post: any) {
     try {
-        const response = await fetch(`http://localhost:3000/api/Post/${id_post}`, {
+        const response = await fetch(`${API_BASE_URL}/api/Post/${id_post}`, {
             method: 'DELETE', 
             headers: {
                 'Authorization': `Bearer ${loggedUser.token}`
@@ -389,7 +392,7 @@ export async function eliminaPost(id_post: any) {
 
 export async function aggiungiCommento(post_id: any, contenuto: string) {
     try {
-        const response = await fetch(`http://localhost:3000/api/commenti`, {
+        const response = await fetch(`${API_BASE_URL}/api/commenti`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json', // Specifica il formato JSON
@@ -409,7 +412,7 @@ export async function aggiungiCommento(post_id: any, contenuto: string) {
 
 export async function aggiungiLikePost(post_id: any) {
     try {
-        const response = await fetch(`http://localhost:3000/api/like/${post_id}`, {
+        const response = await fetch(`${API_BASE_URL}/api/like/${post_id}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json', // Specifica il formato JSON
@@ -430,7 +433,7 @@ export async function aggiungiLikePost(post_id: any) {
 
 export async function eliminaLikePost(like_id: any) {
     try {
-        const response = await fetch(`http://localhost:3000/api/like/${like_id}`, {
+        const response = await fetch(`${API_BASE_URL}/api/like/${like_id}`, {
             method: 'DELETE', 
             headers: {
                 'Authorization': `Bearer ${loggedUser.token}`
@@ -449,7 +452,7 @@ export async function eliminaLikePost(like_id: any) {
 
 export async function aggiungiLikeCommenti(commenti_id: any) {
     try {
-        const response = await fetch(`http://localhost:3000/api/commenti/${commenti_id}/like`, {
+        const response = await fetch(`${API_BASE_URL}/api/commenti/${commenti_id}/like`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json', // Specifica il formato JSON
@@ -468,7 +471,7 @@ export async function aggiungiLikeCommenti(commenti_id: any) {
 
 export async function eliminaLikeCommenti(commenti_id: any) {
     try {
-        const response = await fetch(`http://localhost:3000/api/commenti/${commenti_id}/like`, {
+        const response = await fetch(`${API_BASE_URL}/api/commenti/${commenti_id}/like`, {
             method: 'DELETE', 
             headers: {
                 'Authorization': `Bearer ${loggedUser.token}`
@@ -486,7 +489,7 @@ export async function eliminaLikeCommenti(commenti_id: any) {
 
 export async function aggiungiFaq(id_evento: any, domanda: string) {
     try {
-        const response = await fetch(`http://localhost:3000/api/faqeventi`, {
+        const response = await fetch(`${API_BASE_URL}/api/faqeventi`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json', // Specifica il formato JSON
@@ -506,7 +509,7 @@ export async function aggiungiFaq(id_evento: any, domanda: string) {
 
 export async function rispondiFaq(id: any, risposta: string) {
     try {
-        const response = await fetch(`http://localhost:3000/api/faqeventi`, {
+        const response = await fetch(`${API_BASE_URL}/api/faqeventi`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json', // Specifica il formato JSON
