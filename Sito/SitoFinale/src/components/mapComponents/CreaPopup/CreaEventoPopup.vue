@@ -69,6 +69,7 @@ import { ref, computed } from 'vue';
 import { loggedUser } from '@/states/loggedUser.ts';
 import { getPosition } from '@/scripts/Tools/posizione';
 import { Aggiorna } from '@/scripts/MapPage/PageScript';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || `http://localhost:3000`;
 
 const isVisible = ref(true);
 const nomeEvento = ref('');
@@ -135,7 +136,7 @@ async function eventFormHandler() {
         // Impostiamo isSubmitting a true per bloccare ulteriori invii
         isSubmitting.value = true;
 
-        const signedUrlResponse = await fetch('http://localhost:3000/generate-signed-url-eventi', {
+        const signedUrlResponse = await fetch(`${API_BASE_URL}/generate-signed-url-eventi`, {
             method: 'POST',
             headers: {
                 Authorization: `Bearer ${tokenFromStorage.value}`,
@@ -169,7 +170,7 @@ async function eventFormHandler() {
             foto: imageUrl,
         };
 
-        const eventResponse = await fetch('http://localhost:3000/api/eventi', {
+        const eventResponse = await fetch(`${API_BASE_URL}/api/eventi`, {
             method: 'POST',
             headers: {
                 Authorization: `Bearer ${tokenFromStorage.value}`,

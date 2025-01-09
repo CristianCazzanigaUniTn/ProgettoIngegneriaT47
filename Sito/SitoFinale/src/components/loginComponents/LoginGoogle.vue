@@ -2,11 +2,11 @@
     import { ref, onMounted } from 'vue'
     import { loggedUser, setLoggedUser, clearLoggedUser } from '@/states/loggedUser.ts'
 
-    const VITE_API_HOST = import.meta.env.VITE_API_HOST || `http://localhost:3000`
+    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || `http://localhost:3000`;
     const VITE_GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID
 
     function myLogin(googleToken) {
-        fetch(API_URL + '/api/v1/authentications/google', {
+        fetch(API_BASE_URL + '/api/v1/authentications/google', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ googleToken: googleToken }),

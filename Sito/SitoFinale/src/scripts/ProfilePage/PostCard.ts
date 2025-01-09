@@ -1,3 +1,5 @@
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || `http://localhost:3000`;
+
 export interface Post {
   id: string;  // ID del post
   title: string;  // Titolo del post
@@ -21,7 +23,7 @@ export interface Party {
 
 export const getEvents = async (id: string): Promise<Event[]> => {
   try {
-    const response = await fetch(`http://localhost:3000/api/eventi/organizzatore/${id}`);
+    const response = await fetch(`${API_BASE_URL}/api/eventi/organizzatore/${id}`);
     
     if (!response.ok) {
       throw new Error('Eventi non trovati');
@@ -50,7 +52,7 @@ export const getEvents = async (id: string): Promise<Event[]> => {
 
 export const getParty = async (id: string): Promise<Party[]> => {
   try {
-    const response = await fetch(`http://localhost:3000/api/party/organizzatore/${id}`);
+    const response = await fetch(`${API_BASE_URL}/api/party/organizzatore/${id}`);
 
     if (!response.ok) {
       throw new Error('Party non trovati');
@@ -79,7 +81,7 @@ export const getParty = async (id: string): Promise<Party[]> => {
 
 export const getPost = async (id: string): Promise<Post[]> => {
   try {
-    const response = await fetch(`http://localhost:3000/api/post/${id}`);
+    const response = await fetch(`${API_BASE_URL}/api/post/${id}`);
 
     if (!response.ok) {
       throw new Error('Post non trovati');

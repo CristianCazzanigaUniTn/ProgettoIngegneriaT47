@@ -5,8 +5,8 @@ import router from '../router';
 import LoginGoogle from '@/components/loginComponents/LoginGoogle.vue'
 import * as CryptoJS from 'crypto-js';
 
-const HOST = import.meta.env.VITE_API_HOST || `http://localhost:3000`;
-const API_URL = HOST + `/api/v1`;
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || `http://localhost:3000`;
+const API_URL = API_BASE_URL + `/api/v1`;
 
 const userName = ref('');
 const userUsername = ref('');
@@ -61,11 +61,11 @@ function login() {
 async function sendEmail() {
 
   const emailSubject = 'Messaggio di verifica per la registrazione';
-  const verificationLink = `http://localhost:3000/verify?token=${verificationToken.value}`; // Inserisci il token dinamico
+  const verificationLink = `${API_BASE_URL}/verify?token=${verificationToken.value}`; // Inserisci il token dinamico
   const emailMessage = `Ciao ${userName.value},\n\nBenvenuto nel nostro servizio! La tua registrazione è stata ricevuta.\n\nClicca sul link per verificare il tuo account:\n${verificationLink}`;
 
   try {
-    const response = await fetch('http://localhost:3000/send-email', {
+    const response = await fetch(`${API_BASE_URL}/send-email`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -104,7 +104,7 @@ async function registerUser() {
       return;
     }
 
-    const signedUrlResponse = await fetch('http://localhost:3000/generate-signed-url-foto-profilo', {
+    const signedUrlResponse = await fetch(`${API_BASE_URL}/generate-signed-url-foto-profilo`, {
       method: 'POST',
       headers: {
       },
@@ -136,7 +136,7 @@ async function registerUser() {
 
     verificationToken.value = generateVerificationToken();
 
-    const response = await fetch('http://localhost:3000/api/Utenti', {
+    const response = await fetch(`${API_BASE_URL}/api/Utenti`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
