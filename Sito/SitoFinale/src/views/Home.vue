@@ -37,8 +37,8 @@ function login() {
 
   // Hash della password prima di inviarla
   const hashedPassword = String(CryptoJS.SHA256(password).toString(CryptoJS.enc.Base64));
-
-  fetch(API_URL + '/authentications', {
+  try {
+    fetch(API_URL + '/authentications', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     //hasha password
@@ -51,9 +51,16 @@ function login() {
       if (loggedUser.token) {
         router.push("/");
       }
+      else
+      {
+        alert("Credenziali sbagliate o mail non verificata");
+      }
       return;
     })
-    .catch((error) => console.error(error));
+    .catch((error) => function(error) {throw new Error("Sbagliato")});
+  } catch (error) {
+    alert("Errore nella chiamata per il login, ci scusiamo, ritenta più tardi!");
+  }
 }
 
 
@@ -160,12 +167,12 @@ async function registerUser() {
     }
 
     const data = await response.json();
-    console.log(`Utente ${data.user.username} creato con successo!`);
-
+    alert(`Utente ${data.user.username} creato con successo!, verifica la mail e accedi`);
+    isLoginForm.value = !isLoginForm.value;
     sendEmail();
 
   } catch (error) {
-    console.error(error.message);
+    alert("Qualcosa non è andato a buon fine");
   }
 };
 
