@@ -22,7 +22,6 @@
 </template>
 
 <script setup>
-import { defineProps } from 'vue';
 import { apriPopUpVisualizza } from '@/scripts/MapPage/PageScript';
 
 const props = defineProps({
