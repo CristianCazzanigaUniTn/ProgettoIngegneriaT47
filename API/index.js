@@ -48,7 +48,7 @@ const swaggerOptions = {
             },
         }
     },
-    apis: ['./routes/authRoutes.js', './routes/userRoutes.js', './routes/commentiRoutes.js', './routes/likeRoutes.js', './routes/partecipazioniRoutes.js', './routes/eventRoutes.js', './routes/partyRoutes.js', './routes/faqRoutes.js', './routes/postRoutes.js', './routes/cloudFotoRoutes.js', './routes/EmailRoutes.js', './routes/categoriaRoutes.js'] 
+    apis: ['./routes/authRoutes.js', './routes/userRoutes.js', './routes/commentiRoutes.js', './routes/likeRoutes.js', './routes/partecipazioniRoutes.js', './routes/eventRoutes.js', './routes/partyRoutes.js', './routes/faqRoutes.js', './routes/postRoutes.js', './routes/cloudFotoRoutes.js', './routes/EmailRoutes.js', './routes/categoriaRoutes.js']
 };
 
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
@@ -81,10 +81,16 @@ app.use(categoryRoutes);
 mongoose.connect(DB)
     .then(() => {
         console.log('Connected to MongoDB');
-        app.listen(PORT, () => {
-            console.log(`Example app listening at http://localhost:${PORT}`);
-        });
+        const PORT = process.env.PORT || 3000; 
+if (process.env.NODE_ENV !== 'test') {
+    app.listen(PORT, () => {
+        console.log(`Example app listening at http://localhost:${PORT}`);
+    });
+}
     })
     .catch((err) => {
         console.log('Failed to connect to MongoDB', err);
-    });
+});
+
+
+module.exports = app;
