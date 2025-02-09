@@ -1,17 +1,18 @@
 const request = require('supertest');
-const app = require('../index'); 
+const app = require('../index'); // Assicurati che il percorso sia corretto
 const mongoose = require('mongoose');
 
-describe('GET /api/commenti/post/:id', () => {
+describe('GET /api/like/', () => {
     let postSpyFindById;
-    let commentoSpyFind;
+    let likeSpyFind;
     let connection;
 
     beforeAll(async () => {
         const Post = require('../model/Post');
-        const Commento = require('../model/Commento');
+        const Like = require('../model/Like');
 
         jest.setTimeout(8000);
+        
         connection = await mongoose.connect(process.env.DB, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
@@ -19,20 +20,20 @@ describe('GET /api/commenti/post/:id', () => {
         console.log('Database connected for testing!');
 
         postSpyFindById = jest.spyOn(Post, 'findById').mockImplementation((id) => {
-            if (id === 'correctPostId') {
-                return Promise.resolve({ _id: 'correctPostId', nome: 'Dummy Post' });
+            if (id === 'validPostId') {
+                return Promise.resolve({ _id: 'validPostId', nome: 'Dummy Post' });
             } else {
                 return Promise.resolve(null);
             }
         });
 
-        commentoSpyFind = jest.spyOn(Commento, 'find').mockImplementation((criteria) => {
-            if (criteria.post_id === 'correctPostId') {
+  
+        likeSpyFind = jest.spyOn(Like, 'find').mockImplementation((criteria) => {
+            if (criteria.post_id === 'validPostId') {
                 return Promise.resolve([{
-                    _id: 'commentId1',
-                    commento: 'Questo è un commento di test',
-                    utente_id: 'userId1',
-                    post_id: 'correctPostId',
+                    _id: 'dummyLikeId',
+                    utente_id: 'dummyUserId',
+                    post_id: 'validPostId',
                     data_creazione: new Date()
                 }]);
             } else {
@@ -43,32 +44,32 @@ describe('GET /api/commenti/post/:id', () => {
 
     afterAll(async () => {
         postSpyFindById.mockRestore();
-        commentoSpyFind.mockRestore();
+        likeSpyFind.mockRestore();
         await mongoose.connection.close();
         console.log('Database connection closed after tests');
     });
 
-    test('Id giusto, dovrebbe restituire 200 e commenti', async () => {
+    test('Id giusto, 200: dovrebbe restituire tutti i like del post', async () => {
         const res = await request(app)
-            .get('/api/commenti/post/correctPostId')
+            .get('/api/like/post/validPostId')
             .expect(200)
             .expect('Content-Type', /json/);
 
         expect(Array.isArray(res.body)).toBe(true);
         expect(res.body.length).toBeGreaterThan(0);
-        expect(res.body[0]).toHaveProperty('commento', 'Questo è un commento di test');
+        expect(res.body[0]).toHaveProperty('post_id', 'validPostId');
 
-        expect(postSpyFindById).toHaveBeenCalledWith('correctPostId');
-        expect(commentoSpyFind).toHaveBeenCalledWith({ post_id: 'correctPostId' });
+        expect(postSpyFindById).toHaveBeenCalledWith('validPostId');
+        expect(likeSpyFind).toHaveBeenCalledWith({ post_id: 'validPostId' });
     });
 
-    test('Id sbagliato, dovrebbe restituire 404', async () => {
+    test('Id sbagliato, 404: dovrebbe restituire 404 se il post non è trovato', async () => {
         const res = await request(app)
-            .get('/api/commenti/post/incorrectPostId')
+            .get('/api/like/post/invalidPostId')
             .expect(404)
             .expect('Content-Type', /json/);
 
         expect(res.body).toHaveProperty('error', 'Post non trovato');
-        expect(postSpyFindById).toHaveBeenCalledWith('incorrectPostId');
+        expect(postSpyFindById).toHaveBeenCalledWith('invalidPostId');
     });
 });
