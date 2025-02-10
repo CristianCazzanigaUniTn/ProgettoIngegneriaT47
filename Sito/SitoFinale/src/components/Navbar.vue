@@ -10,7 +10,7 @@ const userId = computed(() => loggedUser.id);
 const username = computed(() => loggedUser.username);
 const userProfilePicture = computed(() => loggedUser.foto_profilo);
 
-const API_KEY = '_jHN61-qnqIeFE6EWtK6XQXa-FWYuKNGtu2NPEI1bCw';
+const API_KEY = import.meta.env.VITE_HERE_API_KEY2;
 const searchQuery = ref('');
 const suggestions = ref([]);
 const result = ref('');

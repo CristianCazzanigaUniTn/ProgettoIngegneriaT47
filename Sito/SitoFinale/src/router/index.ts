@@ -17,7 +17,7 @@ const routes = [
   },
   { path: '/chiSiamo', component: ChiSiamo },
   {
-    path: '/verifica/:id',  
+    path: '/verifica/:token',  
     name: 'verifica',
     component: Verifica,
     props: true, 

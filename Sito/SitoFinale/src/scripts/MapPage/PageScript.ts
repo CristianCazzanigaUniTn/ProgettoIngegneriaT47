@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 import { estraiDati, Posted } from './estraiDati.ts'
 import { AggiornaMappa, chiudiPopUpAnim, apriPopUpAnim } from './map.ts';
-import { estraieventoid, estraipartyid } from './popup';
+import { estraiCategorie, estraieventoid, estraipartyid } from './popup';
 import { loggedUser } from '../../states/loggedUser.ts';
 import { getPosition } from '../Tools/posizione';
 
@@ -24,13 +24,9 @@ export function CloseAllPopup() {
   showPopupPartyEvento.value = false;
 }
 
-
-export const description = 'This is a post description.';
-export const location = '12.21341, 48.123143';
-export const dateTime = '2024-12-08 14:30';
-
 // Stato per le sideCards
 export var sideCards = ref<Posted[]>([]);
+export var categorie = ref([]);
 
 export interface FiltriRicerca {
   post: boolean;
@@ -67,6 +63,7 @@ export async function aggiornaTutto(filtri: FiltriRicerca, latitudine: number, l
 
   // Aggiorna la sideBar
   sideCards.value = shuffledCards;
+  categorie.value = await estraiCategorie();
 
   // Aggiorna la mappa
   await AggiornaMappa(shuffledCards);

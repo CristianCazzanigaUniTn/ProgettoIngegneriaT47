@@ -179,3 +179,17 @@ async function estraiUtente(userId: number) {
     }
 }
 
+export async function verificaUtente(token:any) {
+    try {
+        const tokenen = encodeURIComponent(token);
+        console.log(`http://localhost:3000/verify?token=${tokenen}`)
+        const response = await fetch(`http://localhost:3000/verify?token=${tokenen}`);
+
+        if (!response.ok) {
+            throw new Error(`Errore nella richiesta: ${response.status} ${response.statusText}`);
+        }
+    } catch (error) {
+        alert("Errore nella verifica: " + error);
+    }
+    
+}

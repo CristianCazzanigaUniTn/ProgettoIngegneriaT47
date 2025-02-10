@@ -38,6 +38,28 @@ router.get('/api/categoria/:id', async (req, res) => {
 
 /**
  * @swagger
+ * /api/categoria:
+ *   get:
+ *     summary: Recupera tutte le categorie
+ *     tags: [Category]
+ *     responses:
+ *       200:
+ *         description: Categorie trovate
+ *       500:
+ *         description: Errore nel recupero delle categorie
+ */
+router.get('/api/categoria', async (req, res) => {
+    try {
+        const categorie = await Categoria.find(); // Retrieves all categories
+        res.json(categorie); // Respond with all categories
+    } catch (err) {
+        res.status(500).json({ error: 'Errore nel recupero delle categorie' });
+    }
+});
+
+
+/**
+ * @swagger
  * /api/categoria/{id}:
  *   delete:
  *     summary: Elimina una categoria
