@@ -1,61 +1,87 @@
 <script setup>
-import { ref, onMounted } from 'vue';
-import { loggedUser, setLoggedUser, clearLoggedUser } from '@/states/loggedUser.ts';
+    import { ref, onMounted } from 'vue'
+    import { loggedUser, setLoggedUser, clearLoggedUser } from '@/states/loggedUser.ts'
+import router from '../../router';
 
-const VITE_API_HOST = import.meta.env.VITE_API_HOST || 'http://localhost:3000';
-const VITE_GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || `http://localhost:3000`;
+    const VITE_GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID
 
-function myLogin(googleToken) {
-    fetch(`${VITE_API_HOST}/api/v1/authentications/google`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ googleToken }),
-    })
-        .then(resp => resp.json())
-        .then(data => {
-            setLoggedUser(data);
-            emit('login', loggedUser);
+    function myLogin(googleToken) {
+        fetch(API_BASE_URL + '/api/v1/authentications/google', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ googleToken: googleToken }),
         })
-        .catch(error => console.error('Login error:', error));
-}
-
-const googleLoginBtn = ref(null);
-
-onMounted(() => {
-    const googleGsiClient = document.createElement('script');
-    googleGsiClient.setAttribute('src', 'https://accounts.google.com/gsi/client');
-    googleGsiClient.onload = () => {
-        google.accounts.id.initialize({
-            client_id: VITE_GOOGLE_CLIENT_ID,
-            callback: handleCredentialResponse,
-            login_uri: `${VITE_API_HOST}/api/v1/authentications/google`, // Redirect URI corrisponde al backend
-            federated_signin: false,
-        });
-        google.accounts.id.renderButton(
-            googleLoginBtn.value,
-            {
-                text: 'signin_with', // Può essere anche 'signup_with', a seconda dell'uso
-                size: 'medium', // Puoi scegliere 'small' o 'large'
-                width: '300', // Larghezza massima
-                theme: 'outline', // Stile del bottone
-                logo_alignment: 'center', // Allineamento del logo
-            }
-        );
-        google.accounts.id.prompt(); // Mostra il popup di One Tap
+        .then((resp) => resp.json()) 
+        .then(function (data) { 
+            setLoggedUser(data)
+            router.push('/');
+            return;
+        })
+        .catch(error => console.error(error));
     };
-    document.head.appendChild(googleGsiClient);
+
+    const googleLoginBtn = ref(null);
+
+    onMounted(() => {
+    let google_gsi_client = document.createElement('script');
+    google_gsi_client.setAttribute('src', 'https://accounts.google.com/gsi/client');
+    google_gsi_client.onload = function () {
+        if (google && google.accounts && google.accounts.id) {
+            console.log("ciao eccomi");
+            console.log("Client ID usato:", VITE_GOOGLE_CLIENT_ID);
+
+            google.accounts.id.initialize({
+                client_id: VITE_GOOGLE_CLIENT_ID,
+                callback: handleCredentialResponse,
+            });
+
+            google.accounts.id.renderButton(
+                googleLoginBtn.value, {
+                    theme: 'outline',
+                    size: 'large',
+                    text: 'signin_with',
+                    width: 300,
+                    logo_alignment: 'center',
+                }
+            );
+        } else {
+            console.error('Google accounts API non disponibile.');
+        }
+    };
+    document.head.appendChild(google_gsi_client);
 });
 
-function handleCredentialResponse(response) {
-    console.log('Google credential response:', response);
-    if (response.credential) {
-        myLogin(response.credential);
-    } else {
-        console.error('No credential received.');
+    function handleCredentialResponse(response) {
+        console.log("cc");
+        console.log(response);
+        if (response.credential) {
+            myLogin(response.credential);
+        }
     }
-}
 </script>
 
 <template>
-    <div ref="googleLoginBtn"></div>
+    <!-- Contenitore del pulsante di login Google -->
+    <div ref="googleLoginBtn" class="google-login"></div>
 </template>
+
+<style scoped>
+/* Contenitore principale della pagina o sezione */
+body, html {
+    height: 100%;  /* Assicurati che il body e l'html abbiano una altezza del 100% */
+    margin: 0;  /* Rimuovi i margini di default */
+}
+
+/* Centra il contenuto del login usando Flexbox */
+.google-login {
+    display: flex;
+    justify-content: center;  
+    align-items: center;  
+}
+
+.google-icon {
+    width: 200px; 
+    object-fit: contain;
+}
+</style>

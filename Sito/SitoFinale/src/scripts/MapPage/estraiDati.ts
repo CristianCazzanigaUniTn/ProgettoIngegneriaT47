@@ -1,3 +1,4 @@
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || `http://localhost:3000`;
 
 // Definizione del tipo per la card
 export interface Posted {
@@ -40,7 +41,7 @@ export async function estraiDati(lat: number, lng: number, rad: number): Promise
 async function estraiPartyDaFile(lat: number, lng: number, rad: number, parties: Posted[]) {
     try {
         const payload = { lat, lng, rad };
-        const response = await fetch('http://localhost:3000/api/party/ricerca', {
+        const response = await fetch(`${API_BASE_URL}/api/party/ricerca`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload),
@@ -79,7 +80,7 @@ async function estraiPartyDaFile(lat: number, lng: number, rad: number, parties:
 async function estraiPostDaFile(lat: number, lng: number, rad: number, posts: Posted[], textuals: Posted[]) {
     try {
         const payload = { lat, lng, rad };
-        const response = await fetch('http://localhost:3000/api/Post/ricerca', {
+        const response = await fetch(`${API_BASE_URL}/api/Post/ricerca`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload),
@@ -131,7 +132,7 @@ async function estraiPostDaFile(lat: number, lng: number, rad: number, posts: Po
 async function estraiEventiDaFile(lat: number, lng: number, rad: number, eventi: Posted[]) {
     try {
         const payload = { lat, lng, rad };
-        const response = await fetch('http://localhost:3000/api/eventi/ricerca', {
+        const response = await fetch(`${API_BASE_URL}/api/eventi/ricerca`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload),
@@ -168,7 +169,7 @@ async function estraiEventiDaFile(lat: number, lng: number, rad: number, eventi:
 // Funzione per estrarre informazioni sull'utente (supponendo che esista un'API per gli utenti)
 async function estraiUtente(userId: number) {
     try {
-        const response = await fetch(`http://localhost:3000/api/utenti/${userId}`);
+        const response = await fetch(`${API_BASE_URL}/api/utenti/${userId}`);
         if (!response.ok) {
             throw new Error(`Errore nel recupero dell'utente: ${response.status} ${response.statusText}`);
         }

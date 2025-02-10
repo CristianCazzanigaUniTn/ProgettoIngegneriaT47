@@ -66,7 +66,7 @@ import { ref, computed, onMounted } from 'vue';
 import { loggedUser } from '@/states/loggedUser.ts';
 import { getPosition, fetchCityName } from '@/scripts/Tools/posizione';
 import { Aggiorna, categorie } from '@/scripts/MapPage/PageScript';
-
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || `http://localhost:3000`;
 const isVisible = ref(true);
 const partyName = ref('');
 const partyDate = ref('');
@@ -152,7 +152,7 @@ async function partyFormHandler() {
         // Impostiamo isSubmitting a true per bloccare ulteriori invii
         isSubmitting.value = true;
 
-        const signedUrlResponse = await fetch('http://localhost:3000/generate-signed-url-party', {
+        const signedUrlResponse = await fetch(`${API_BASE_URL}/generate-signed-url-party`, {
             method: 'POST',
             headers: {
                 Authorization: `Bearer ${tokenFromStorage.value}`,
@@ -185,7 +185,7 @@ async function partyFormHandler() {
             foto: imageUrl,
         };
 
-        const partyResponse = await fetch('http://localhost:3000/api/party', {
+        const partyResponse = await fetch(`${API_BASE_URL}/api/party`, {
             method: 'POST',
             headers: {
                 Authorization: `Bearer ${tokenFromStorage.value}`,
