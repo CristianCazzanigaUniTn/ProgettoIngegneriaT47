@@ -3,7 +3,7 @@ const jwt     = require('jsonwebtoken');
 const app     = require('./index');
 const mongoose = require('mongoose');
 
-let server;  // Variabile per l'istanza del server
+let server; 
 
 test('app module should be defined', () => {
   expect(app).toBeDefined();
