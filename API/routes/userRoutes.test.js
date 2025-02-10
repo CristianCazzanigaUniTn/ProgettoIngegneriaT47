@@ -2,7 +2,7 @@ const request = require('supertest');
 const app = require('../index'); 
 const mongoose = require('mongoose');
 
-describe('GET /api/Utenti/', () => {
+describe('GET /api/Utenti/ e POST /api/Utenti/', () => {
   let userSpyFindById;
   let connection;
 
@@ -42,7 +42,6 @@ describe('GET /api/Utenti/', () => {
   });
 
   afterAll(async () => {
-    // Ripristina il metodo originale e chiudi la connessione al DB
     userSpyFindById.mockRestore();
     await mongoose.connection.close();
     console.log("Database connection closed after tests");
@@ -60,6 +59,7 @@ describe('GET /api/Utenti/', () => {
     expect(res.body.user).toHaveProperty('username', 'dummyuser');
   });
 
+
   test('Id sbagliato, 404: dovrebbe restituire "User not found"', async () => {
     const res = await request(app)
       .get('/api/Utenti/invalidUserId')
@@ -69,4 +69,8 @@ describe('GET /api/Utenti/', () => {
     expect(res.body).toHaveProperty('success', false);
     expect(res.body).toHaveProperty('message', 'User not found');
   });
+
+
+
+    
 });
